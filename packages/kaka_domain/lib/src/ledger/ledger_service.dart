@@ -105,6 +105,18 @@ class LedgerService {
     }
   }
 
+  /// Categories are per-currency accounts. Returns the [type] category named
+  /// [name] in [currency], creating it the first time it is used there.
+  Future<Account> ensureCategory(String name, AccountType type, Currency currency) async {
+    final all = await _accounts.getAll();
+    for (final a in all) {
+      if (a.type == type && a.name == name && a.currency == currency) return a;
+    }
+    final created = Account(id: Ids.next(), name: name, type: type, currency: currency, createdAt: _now());
+    await _accounts.upsert(created);
+    return created;
+  }
+
   Future<void> _record(LedgerTransaction txn) async {
     final all = {for (final a in await _accounts.getAll()) a.id: a};
     LedgerRules.validate(txn, all);

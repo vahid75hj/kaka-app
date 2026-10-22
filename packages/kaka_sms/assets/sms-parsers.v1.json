@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "catalog_version": "2026.10.23",
+  "note": "Real formats are never guessed. These five banks ship with status needs_samples and no templates until masked real SMS samples are contributed (see CONTRIBUTING.md).",
+  "banks": [
+    {"bank_id": "melli", "name": {"en": "Bank Melli Iran", "fa": "بانک ملی"}, "senders": [], "status": "needs_samples", "templates": [], "tests": []},
+    {"bank_id": "mellat", "name": {"en": "Bank Mellat", "fa": "بانک ملت"}, "senders": [], "status": "needs_samples", "templates": [], "tests": []},
+    {"bank_id": "saderat", "name": {"en": "Bank Saderat Iran", "fa": "بانک صادرات"}, "senders": [], "status": "needs_samples", "templates": [], "tests": []},
+    {"bank_id": "tejarat", "name": {"en": "Tejarat Bank", "fa": "بانک تجارت"}, "senders": [], "status": "needs_samples", "templates": [], "tests": []},
+    {"bank_id": "pasargad", "name": {"en": "Bank Pasargad", "fa": "بانک پاسارگاد"}, "senders": [], "status": "needs_samples", "templates": [], "tests": []}
+  ]
+}

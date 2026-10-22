@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "catalog_version": "test",
+  "banks": [
+    {
+      "bank_id": "example",
+      "name": {"en": "Example Bank (fictional)", "fa": "بانک نمونه (ساختگی)"},
+      "senders": ["+98EXAMPLE"],
+      "status": "community",
+      "templates": [
+        {
+          "id": "example-v1",
+          "regex": "کارت (?<last4>\\d{4})\\s*(?<direction>برداشت|واریز)\\s*(?<amount>[\\d,]+)\\s*ریال\\s*مانده\\s*(?<balance>[\\d,]+)\\s*(?<date>\\d{4}/\\d{2}/\\d{2})\\s*(?<time>\\d{2}:\\d{2})",
+          "debit_words": ["برداشت"],
+          "credit_words": ["واریز"],
+          "unit": "IRR"
+        }
+      ],
+      "tests": [
+        {
+          "input": "کارت ۱۲۳۴ برداشت ۲,۵۰۰,۰۰۰ ریال مانده ۱۰,۰۰۰,۰۰۰ ۱۴۰۵/۰۸/۰۲ ۱۴:۳۰",
+          "expect": {"direction": "debit", "amount_minor": 2500000, "balance_minor": 10000000, "last4": "1234"}
+        },
+        {
+          "input": "كارت 1234 واريز 300,000 ريال مانده 10,300,000 1405/08/02 15:00",
+          "expect": {"direction": "credit", "amount_minor": 300000, "balance_minor": 10300000, "last4": "1234"}
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "catalog_version": "2026.10.23",
+  "note": "Placeholder catalog. Sizes, URLs and checksums are filled in after the on-device spike (TASKS.md MVP-2). Adding a model = one entry here, no code change.",
+  "models": []
+}

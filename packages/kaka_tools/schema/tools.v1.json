@@ -1,0 +1,144 @@
+{
+  "tools_version": 1,
+  "tools": [
+    {
+      "name": "list_accounts",
+      "description": "List the user's accounts (wallets, bank accounts, cards) with id, name, type and currency.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "get_balance",
+      "description": "Current balance of one account, or of all accounts when account_id is omitted. Amounts are integers in minor units: value = amount_minor / 10^scale.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "account_id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "list_transactions",
+      "description": "Transactions, newest first, optionally filtered by date range, account and text.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date",
+            "description": "ISO-8601 date (Gregorian), e.g. 2026-10-23"
+          },
+          "to": {
+            "type": "string",
+            "format": "date",
+            "description": "ISO-8601 date (Gregorian), e.g. 2026-10-23"
+          },
+          "account_id": {
+            "type": "string"
+          },
+          "query": {
+            "type": "string",
+            "description": "Matches note or category/account name"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200,
+            "default": 50
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "summarize_spending",
+      "description": "Total expenses per category between two dates, per currency.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date",
+            "description": "ISO-8601 date (Gregorian), e.g. 2026-10-23"
+          },
+          "to": {
+            "type": "string",
+            "format": "date",
+            "description": "ISO-8601 date (Gregorian), e.g. 2026-10-23"
+          }
+        },
+        "required": [
+          "from",
+          "to"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "add_transaction",
+      "description": "Propose a new expense, income or transfer. Nothing is recorded until the user approves it in Kaka.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "expense",
+              "income",
+              "transfer"
+            ]
+          },
+          "amount": {
+            "type": "string",
+            "description": "Decimal amount in the account currency, e.g. \"12.50\""
+          },
+          "account_id": {
+            "type": "string"
+          },
+          "to_account_id": {
+            "type": "string",
+            "description": "Only for transfers"
+          },
+          "category": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "ISO-8601 date (Gregorian), e.g. 2026-10-23"
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "amount",
+          "account_id"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": false
+      }
+    }
+  ]
+}

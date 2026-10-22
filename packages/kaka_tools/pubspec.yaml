@@ -1,0 +1,16 @@
+name: kaka_tools
+description: The stable Kaka tool set (JSON Schema) shared by the in-app AI loop, kaka-mcp and future AppFunctions.
+publish_to: none
+version: 0.1.0
+resolution: workspace
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  kaka_domain:
+    path: ../kaka_domain
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0
