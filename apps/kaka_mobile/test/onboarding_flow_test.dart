@@ -16,10 +16,7 @@ void main() {
     dir = Directory.systemTemp.createTempSync('kaka_widget');
     db = KakaDatabase.open(File('${dir.path}/ledger.db'), key: 'k');
   });
-  tearDown(() async {
-    await db.close();
-    dir.deleteSync(recursive: true);
-  });
+  tearDown(() => dir.deleteSync(recursive: true));
 
   testWidgets('Persian onboarding creates a toman account and lands on home', (tester) async {
     await tester.runAsync(() async {
@@ -50,6 +47,11 @@ void main() {
       expect(find.text('۱٬۲۵۰٬۰۰۰'), findsOneWidget);
       final accounts = await DriftAccountRepository(db).getAll();
       expect(accounts.firstWhere((a) => a.type == AccountType.asset).currency, Currency.irr);
+
+      // Dispose providers so drift's stream-cleanup timers run before the test ends.
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump(Duration.zero);
+      await db.close();
     });
   });
 }
