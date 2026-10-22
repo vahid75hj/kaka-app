@@ -7,6 +7,10 @@ environment:
 workspace:
   - packages/kaka_domain
   - packages/kaka_data
+  - packages/kaka_tools
+  - packages/kaka_sms
+  - packages/kaka_ai
+  - apps/kaka_mobile
 
 dev_dependencies:
   melos: ^7.0.0
