@@ -1,0 +1,16 @@
+name: kaka_domain
+description: Pure Dart core of Kaka — money, ledger rules, entities, repository contracts and use cases.
+publish_to: none
+version: 0.1.0
+resolution: workspace
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  meta: ^1.15.0
+  uuid: ^4.5.1
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0

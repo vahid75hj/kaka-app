@@ -1,11 +1,23 @@
-name: _
+name: kaka_workspace
 publish_to: none
 
 environment:
-  sdk: '^3.12.2'
+  sdk: ^3.9.0
 
 workspace:
-  - kaka_client
-  - kaka_server
-  - kaka_flutter
+  - packages/kaka_domain
 
+dev_dependencies:
+  melos: ^7.0.0
+
+melos:
+  scripts:
+    analyze: melos exec -- dart analyze --fatal-infos .
+    test:dart:
+      run: melos exec --no-flutter -- dart test
+      packageFilters:
+        dirExists: test
+    test:flutter:
+      run: melos exec --flutter -- flutter test
+      packageFilters:
+        dirExists: test
