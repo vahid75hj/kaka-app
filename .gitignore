@@ -17,3 +17,13 @@ pubspec_overrides.yaml
 
 # Serverpod Cloud CLI
 .scloud/
+
+# Flutter / Android
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+*.iml
+.idea/
+local.properties
+*.jks
+key.properties
