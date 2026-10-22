@@ -6,6 +6,7 @@ environment:
 
 workspace:
   - packages/kaka_domain
+  - packages/kaka_data
 
 dev_dependencies:
   melos: ^7.0.0
@@ -21,3 +22,8 @@ melos:
       run: melos exec --flutter -- flutter test
       packageFilters:
         dirExists: test
+
+hooks:
+  user_defines:
+    sqlite3:
+      source: sqlite3mc
