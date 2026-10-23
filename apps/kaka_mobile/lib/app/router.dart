@@ -3,8 +3,10 @@ import 'package:go_router/go_router.dart';
 
 import '../features/accounts/account_form_screen.dart';
 import '../features/accounts/accounts_screen.dart';
+import '../features/categories/categories_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/onboarding/onboarding_screen.dart';
+import '../features/queue/queue_screen.dart';
 import '../features/settings/settings_screen.dart';
 import '../features/shell/app_shell.dart';
 import '../features/transactions/add_transaction_screen.dart';
@@ -20,6 +22,9 @@ abstract final class Routes {
   static const addTransaction = '/add';
   static const newAccount = '/accounts/new';
   static String editAccount(String id) => '/accounts/$id';
+  static const queue = '/queue';
+  static const categories = '/categories';
+  static String confirmDraft(String id) => '/add?draft=$id';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -54,8 +59,13 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: Routes.addTransaction,
-        builder: (_, state) => AddTransactionScreen(initialAccountId: state.uri.queryParameters['account']),
+        builder: (_, state) => AddTransactionScreen(
+          initialAccountId: state.uri.queryParameters['account'],
+          draftId: state.uri.queryParameters['draft'],
+        ),
       ),
+      GoRoute(path: Routes.queue, builder: (_, _) => const QueueScreen()),
+      GoRoute(path: Routes.categories, builder: (_, _) => const CategoriesScreen()),
       GoRoute(path: Routes.newAccount, builder: (_, _) => const AccountFormScreen()),
       GoRoute(
         path: '/accounts/:id',

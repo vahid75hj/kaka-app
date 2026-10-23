@@ -1,7 +1,7 @@
 name: kaka_mobile
 description: "A new Flutter project."
 publish_to: 'none'
-version: 0.1.0+1
+version: 0.2.0+2
 
 resolution: workspace
 
@@ -9,6 +9,7 @@ environment:
   sdk: ^3.13.5
 
 dependencies:
+  file_picker: ^13.1.0
   flutter:
     sdk: flutter
   flutter_localizations:
@@ -21,8 +22,12 @@ dependencies:
     path: ../../packages/kaka_data
   kaka_domain:
     path: ../../packages/kaka_domain
+  kaka_sms:
+    path: ../../packages/kaka_sms
+  local_auth: ^3.0.2
   path_provider: ^2.1.6
   shamsi_date: ^1.1.1
+  share_plus: ^13.3.1
 
 dev_dependencies:
   flutter_test:

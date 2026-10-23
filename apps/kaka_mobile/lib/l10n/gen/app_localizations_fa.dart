@@ -61,8 +61,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get obCurrencyTitle => 'ارز پایه';
 
   @override
-  String get tomanNote =>
-      'تومان فقط واحد نمایشه؛ کاکا همه‌چیز رو به ریال ذخیره می‌کنه.';
+  String get tomanNote => 'تومان فقط واحد نمایشه؛ کاکا همه‌چیز رو به ریال ذخیره می‌کنه.';
 
   @override
   String get decimals => 'تعداد اعشار نمایش';
@@ -71,12 +70,10 @@ class AppLocalizationsFa extends AppLocalizations {
   String get obAccountTitle => 'اولین حسابت';
 
   @override
-  String get obAccountHint =>
-      'یه حساب بانکی، کارت یا کیف پول. بعداً می‌تونی بیشتر اضافه کنی.';
+  String get obAccountHint => 'یه حساب بانکی، کارت یا کیف پول. بعداً می‌تونی بیشتر اضافه کنی.';
 
   @override
-  String get offlineNote =>
-      'همه‌چیز رمزشده روی همین گوشی می‌مونه. بدون ثبت‌نام، بدون سرور.';
+  String get offlineNote => 'همه‌چیز رمزشده روی همین گوشی می‌مونه. بدون ثبت‌نام، بدون سرور.';
 
   @override
   String get accountName => 'نام حساب';
@@ -160,8 +157,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get archived => 'بایگانی‌شده';
 
   @override
-  String get archiveHint =>
-      'حساب‌ها حذف نمی‌شن، بایگانی می‌شن تا تاریخچه درست بمونه.';
+  String get archiveHint => 'حساب‌ها حذف نمی‌شن، بایگانی می‌شن تا تاریخچه درست بمونه.';
 
   @override
   String get addTransaction => 'تراکنش جدید';
@@ -191,8 +187,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get voidTitle => 'این تراکنش باطل بشه؟';
 
   @override
-  String get voidBody =>
-      'توی تاریخچه خط‌خورده می‌مونه و دیگه روی موجودی اثر نداره.';
+  String get voidBody => 'توی تاریخچه خط‌خورده می‌مونه و دیگه روی موجودی اثر نداره.';
 
   @override
   String get voidAction => 'باطل کن';
@@ -237,12 +232,10 @@ class AppLocalizationsFa extends AppLocalizations {
   String get about => 'درباره';
 
   @override
-  String get aboutBody =>
-      'رایگان و متن‌باز (MIT). آفلاین، با هوش مصنوعی دلخواه خودت.';
+  String get aboutBody => 'رایگان و متن‌باز (MIT). آفلاین، با هوش مصنوعی دلخواه خودت.';
 
   @override
-  String get baseCurrencyLocked =>
-      'تغییر ارز پایه فقط نمایش جمع‌ها رو عوض می‌کنه؛ مبالغ ذخیره‌شده دست نمی‌خورن.';
+  String get baseCurrencyLocked => 'تغییر ارز پایه فقط نمایش جمع‌ها رو عوض می‌کنه؛ مبالغ ذخیره‌شده دست نمی‌خورن.';
 
   @override
   String get errAmount => 'یه مبلغ درست وارد کن';
@@ -300,4 +293,176 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get saved => 'ثبت شد';
+
+  @override
+  String get categories => 'دسته‌بندی‌ها';
+
+  @override
+  String get addCategory => 'دستهٔ جدید';
+
+  @override
+  String get renameCategory => 'تغییر نام دسته';
+
+  @override
+  String get categoryName => 'نام دسته';
+
+  @override
+  String get noCategories => 'هنوز دسته‌ای نیست';
+
+  @override
+  String get errCategoryExists => 'دسته‌ای با این نام وجود دارد';
+
+  @override
+  String get previousMonth => 'ماه قبل';
+
+  @override
+  String get nextMonth => 'ماه بعد';
+
+  @override
+  String get today => 'امروز';
+
+  @override
+  String get ok => 'تأیید';
+
+  @override
+  String get queueTitle => 'سؤال‌ها';
+
+  @override
+  String get queueEmpty =>
+      'چیزی برای تأیید نیست.\nپیامک بانک رو با کاکا به‌اشتراک بذار (یا پیست کن) تا این‌جا به‌شکل پیش‌نویس بیاد.';
+
+  @override
+  String get pasteSms => 'پیست پیامک بانک';
+
+  @override
+  String get pasteSmsHint => 'متن پیامک رو این‌جا بذار';
+
+  @override
+  String get read => 'بخون';
+
+  @override
+  String get ingestAdded => 'به سؤال‌ها اضافه شد؛ بررسی و تأییدش کن';
+
+  @override
+  String get ingestDuplicate => 'قبلاً ثبت شده';
+
+  @override
+  String get ingestUnreadable => 'این پیامک خونده نشد. دستی ثبتش کن یا یه نمونهٔ ماسک‌شده برامون بفرست.';
+
+  @override
+  String get unverifiedParser => 'خوانده‌شده با قالب تأییدنشده';
+
+  @override
+  String get discard => 'رد کن';
+
+  @override
+  String get editAndConfirm => 'بررسی و ثبت';
+
+  @override
+  String get searchHint => 'جست‌وجو در یادداشت، حساب، مبلغ';
+
+  @override
+  String get filterAccount => 'فیلتر حساب';
+
+  @override
+  String get allAccounts => 'همهٔ حساب‌ها';
+
+  @override
+  String get fromDate => 'از تاریخ';
+
+  @override
+  String get toDate => 'تا تاریخ';
+
+  @override
+  String get clearFilters => 'پاک کردن';
+
+  @override
+  String get noResults => 'تراکنشی پیدا نشد';
+
+  @override
+  String get settingsData => 'داده‌ها';
+
+  @override
+  String get shareTip => 'نکته: توی برنامهٔ پیامک، پیام بانک رو با کاکا به‌اشتراک بذار';
+
+  @override
+  String get security => 'امنیت و پشتیبان';
+
+  @override
+  String get appLock => 'قفل برنامه';
+
+  @override
+  String get appLockHint => 'اثر انگشت، چهره یا رمز گوشی';
+
+  @override
+  String get appLockUnavailable => 'اول برای گوشی قفل صفحه تعریف کن';
+
+  @override
+  String get lockReason => 'باز کردن کاکا';
+
+  @override
+  String get lockedTitle => 'کاکا قفله';
+
+  @override
+  String get unlock => 'باز کردن';
+
+  @override
+  String get backupExport => 'خروجی پشتیبان رمزدار';
+
+  @override
+  String get backupExportHint => 'فایل ‎.kaka‎ که با رمز خودت قفل می‌شه';
+
+  @override
+  String get backupRestore => 'بازیابی از پشتیبان';
+
+  @override
+  String get backupWorking => 'در حال رمزنگاری… چند ثانیه طول می‌کشه';
+
+  @override
+  String get backupPasswordTitle => 'رمز پشتیبان';
+
+  @override
+  String get backupPasswordHint => 'این رمز قابل بازیابی نیست؛ جای امن نگهش دار.';
+
+  @override
+  String get backupEnterPassword => 'رمز پشتیبان رو وارد کن';
+
+  @override
+  String get password => 'رمز';
+
+  @override
+  String get passwordRepeat => 'تکرار رمز';
+
+  @override
+  String get passwordTooShort => 'حداقل ۸ نویسه';
+
+  @override
+  String get passwordMismatch => 'رمزها یکی نیستن';
+
+  @override
+  String get backupWrongPassword => 'رمز اشتباهه';
+
+  @override
+  String get backupNotKaka => 'این فایل پشتیبان کاکا نیست';
+
+  @override
+  String get backupCorrupt => 'فایل پشتیبان خرابه یا مال نسخهٔ جدیدتره';
+
+  @override
+  String get restoreTitle => 'همهٔ داده‌ها جایگزین بشه؟';
+
+  @override
+  String get restoreBody => 'همهٔ داده‌های این گوشی با پشتیبان جایگزین می‌شه.';
+
+  @override
+  String get restoreAction => 'جایگزین کن';
+
+  @override
+  String get restoreDone => 'پشتیبان بازیابی شد';
+
+  @override
+  String queueBanner(int count) {
+    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count تراکنش منتظر تأیید توست');
+    return '$_temp0';
+  }
 }

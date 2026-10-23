@@ -61,8 +61,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get obCurrencyTitle => 'Base currency';
 
   @override
-  String get tomanNote =>
-      'Toman is only a display unit: Kaka stores everything in rial.';
+  String get tomanNote => 'Toman is only a display unit: Kaka stores everything in rial.';
 
   @override
   String get decimals => 'Decimals shown';
@@ -71,12 +70,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get obAccountTitle => 'Your first account';
 
   @override
-  String get obAccountHint =>
-      'A bank account, a card or your wallet. You can add more later.';
+  String get obAccountHint => 'A bank account, a card or your wallet. You can add more later.';
 
   @override
-  String get offlineNote =>
-      'Everything stays encrypted on this phone. No sign-up, no server.';
+  String get offlineNote => 'Everything stays encrypted on this phone. No sign-up, no server.';
 
   @override
   String get accountName => 'Account name';
@@ -160,8 +157,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get archived => 'Archived';
 
   @override
-  String get archiveHint =>
-      'Accounts are archived, never deleted, so your history stays correct.';
+  String get archiveHint => 'Accounts are archived, never deleted, so your history stays correct.';
 
   @override
   String get addTransaction => 'New transaction';
@@ -191,8 +187,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get voidTitle => 'Void this transaction?';
 
   @override
-  String get voidBody =>
-      'It stays in history, crossed out, and no longer affects balances.';
+  String get voidBody => 'It stays in history, crossed out, and no longer affects balances.';
 
   @override
   String get voidAction => 'Void';
@@ -237,8 +232,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get about => 'About';
 
   @override
-  String get aboutBody =>
-      'Free and open source (MIT). Offline-first, bring your own AI.';
+  String get aboutBody => 'Free and open source (MIT). Offline-first, bring your own AI.';
 
   @override
   String get baseCurrencyLocked =>
@@ -257,8 +251,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errSameAccount => 'Pick two different accounts';
 
   @override
-  String get errCrossCurrency =>
-      'Transfers between currencies come in a later version';
+  String get errCrossCurrency => 'Transfers between currencies come in a later version';
 
   @override
   String get errNoAccount => 'Add an account first';
@@ -301,4 +294,181 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get saved => 'Saved';
+
+  @override
+  String get categories => 'Categories';
+
+  @override
+  String get addCategory => 'New category';
+
+  @override
+  String get renameCategory => 'Rename category';
+
+  @override
+  String get categoryName => 'Category name';
+
+  @override
+  String get noCategories => 'No categories yet';
+
+  @override
+  String get errCategoryExists => 'A category with this name already exists';
+
+  @override
+  String get previousMonth => 'Previous month';
+
+  @override
+  String get nextMonth => 'Next month';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get queueTitle => 'Questions';
+
+  @override
+  String get queueEmpty =>
+      'Nothing to confirm.\nShare a bank SMS to Kaka (or paste it) and it shows up here as a draft.';
+
+  @override
+  String get pasteSms => 'Paste a bank SMS';
+
+  @override
+  String get pasteSmsHint => 'Paste the SMS text here';
+
+  @override
+  String get read => 'Read';
+
+  @override
+  String get ingestAdded => 'Added to questions — check and confirm it';
+
+  @override
+  String get ingestDuplicate => 'Already in Kaka';
+
+  @override
+  String get ingestUnreadable => 'Couldn\'t read this SMS. Add it manually or send us a masked sample.';
+
+  @override
+  String get unverifiedParser => 'Read by an unverified template';
+
+  @override
+  String get discard => 'Discard';
+
+  @override
+  String get editAndConfirm => 'Review & save';
+
+  @override
+  String get searchHint => 'Search notes, accounts, amounts';
+
+  @override
+  String get filterAccount => 'Filter by account';
+
+  @override
+  String get allAccounts => 'All accounts';
+
+  @override
+  String get fromDate => 'From';
+
+  @override
+  String get toDate => 'To';
+
+  @override
+  String get clearFilters => 'Clear';
+
+  @override
+  String get noResults => 'No matching transactions';
+
+  @override
+  String get settingsData => 'Data';
+
+  @override
+  String get shareTip => 'Tip: in your SMS app, share a bank message to Kaka';
+
+  @override
+  String get security => 'Security & backup';
+
+  @override
+  String get appLock => 'App lock';
+
+  @override
+  String get appLockHint => 'Fingerprint, face or your phone\'s PIN';
+
+  @override
+  String get appLockUnavailable => 'Set a screen lock on your phone first';
+
+  @override
+  String get lockReason => 'Unlock Kaka';
+
+  @override
+  String get lockedTitle => 'Kaka is locked';
+
+  @override
+  String get unlock => 'Unlock';
+
+  @override
+  String get backupExport => 'Export encrypted backup';
+
+  @override
+  String get backupExportHint => 'A .kaka file protected by your password';
+
+  @override
+  String get backupRestore => 'Restore from backup';
+
+  @override
+  String get backupWorking => 'Encrypting… this takes a few seconds';
+
+  @override
+  String get backupPasswordTitle => 'Backup password';
+
+  @override
+  String get backupPasswordHint => 'There is no way to recover this password. Keep it safe.';
+
+  @override
+  String get backupEnterPassword => 'Enter backup password';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get passwordRepeat => 'Repeat password';
+
+  @override
+  String get passwordTooShort => 'At least 8 characters';
+
+  @override
+  String get passwordMismatch => 'Passwords don\'t match';
+
+  @override
+  String get backupWrongPassword => 'Wrong password';
+
+  @override
+  String get backupNotKaka => 'This is not a Kaka backup';
+
+  @override
+  String get backupCorrupt => 'The backup is damaged or from a newer version';
+
+  @override
+  String get restoreTitle => 'Replace all data?';
+
+  @override
+  String get restoreBody => 'Everything on this phone will be replaced by the backup.';
+
+  @override
+  String get restoreAction => 'Replace';
+
+  @override
+  String get restoreDone => 'Backup restored';
+
+  @override
+  String queueBanner(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count transactions waiting for your confirmation',
+      one: '1 transaction waiting for your confirmation',
+    );
+    return '$_temp0';
+  }
 }

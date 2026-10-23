@@ -15,6 +15,7 @@ extension L10nX on BuildContext {
       'account.name_required' => l10n.errName,
       'ledger.same_account' => l10n.errSameAccount,
       'ledger.cross_currency_transfer' => l10n.errCrossCurrency,
+      'category.exists' => l10n.errCategoryExists,
       _ => l10n.errGeneric,
     };
   }
