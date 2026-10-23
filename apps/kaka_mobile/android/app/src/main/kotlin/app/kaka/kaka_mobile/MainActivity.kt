@@ -1,6 +1,7 @@
 package app.kaka.kaka_mobile
 
 import android.content.Intent
+import android.view.WindowManager
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -18,6 +19,19 @@ class MainActivity : FlutterFragmentActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         sms = SmsBridge(this, flutterEngine.dartExecutor.binaryMessenger)
+        // FLAG_SECURE toggle: hides Kaka from screenshots, recordings and the recent-apps preview.
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "app.kaka/window").setMethodCallHandler { call, result ->
+            if (call.method == "setSecure") {
+                if (call.arguments == true) {
+                    window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+                } else {
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+                }
+                result.success(null)
+            } else {
+                result.notImplemented()
+            }
+        }
         pending = extractText(intent)
         channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "app.kaka/share").apply {
             setMethodCallHandler { call, result ->

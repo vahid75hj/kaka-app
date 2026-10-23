@@ -535,4 +535,218 @@ class AppLocalizationsFa extends AppLocalizations {
   String balanceMismatch(String bank, String kaka) {
     return 'ماندهٔ بانک $bank، کاکا $kaka نشون می‌ده؛ شاید تراکنشی جا افتاده';
   }
+
+  @override
+  String get editTransaction => 'ویرایش تراکنش';
+
+  @override
+  String get amountReceived => 'مبلغ دریافتی';
+
+  @override
+  String get exchangeHint => 'ارزها فرق دارن: به‌صورت تبدیل ارز از طریق حساب‌های FX ثبت می‌شه.';
+
+  @override
+  String get exchangeRates => 'نرخ ارز';
+
+  @override
+  String get addRate => 'افزودن نرخ';
+
+  @override
+  String get noRates => 'هنوز نرخی نیست. یه نرخ اضافه کن تا حساب‌های ارزی هم توی دارایی خالص حساب بشن.';
+
+  @override
+  String get delete => 'حذف';
+
+  @override
+  String get assets => 'طلا و سکه';
+
+  @override
+  String get buySell => 'خرید / فروش';
+
+  @override
+  String get buy => 'خرید';
+
+  @override
+  String get sell => 'فروش';
+
+  @override
+  String get assetsValue => 'ارزش کل';
+
+  @override
+  String get holdings => 'دارایی‌ها';
+
+  @override
+  String get noHoldings => 'هنوز چیزی نیست؛ «خرید / فروش» رو بزن.';
+
+  @override
+  String get unitPrices => 'قیمت واحد';
+
+  @override
+  String get noPrice => 'بدون قیمت';
+
+  @override
+  String get setPrice => 'ثبت قیمت';
+
+  @override
+  String get pricePerUnit => 'قیمت هر واحد';
+
+  @override
+  String get quantity => 'مقدار';
+
+  @override
+  String get totalOptional => 'مبلغ کل پرداخت/دریافت (اختیاری)';
+
+  @override
+  String get unitGram => 'گرم';
+
+  @override
+  String get unitCoin => 'عدد';
+
+  @override
+  String get monthlyReport => 'گزارش ماهانه';
+
+  @override
+  String get exportCsv => 'خروجی CSV';
+
+  @override
+  String get net => 'خالص';
+
+  @override
+  String get reportSkipped => 'بعضی تراکنش‌ها ارزی هستن که نرخ ندارن و حساب نشدن.';
+
+  @override
+  String get noRateFor => 'بدون نرخ ارز:';
+
+  @override
+  String get learnBank => 'یاد دادن بانک جدید';
+
+  @override
+  String get learnBankHint => '۳ تا ۵ پیامک از یک بانک رو بذار';
+
+  @override
+  String get learnHint =>
+      '۳ تا ۵ پیامک از یک بانک با یک قالب بذار (بهتره مبلغ‌ها فرق کنن). کاکا مقایسه‌شون می‌کنه و قالب می‌سازه؛ همه‌چیز روی همین گوشی می‌مونه.';
+
+  @override
+  String get bankName => 'نام بانک';
+
+  @override
+  String get customBank => 'بانک من';
+
+  @override
+  String get learnDirection => 'اگه پیامک برداشت/واریز رو نگفت';
+
+  @override
+  String get learnDirectionAuto => 'تشخیص خودکار';
+
+  @override
+  String get learn => 'یاد بگیر';
+
+  @override
+  String get learnConfirm => 'درسته؛ ذخیره کن';
+
+  @override
+  String get learnSaved => 'ذخیره شد. پیامک‌های بعدی این بانک با این قالب خونده می‌شن.';
+
+  @override
+  String get learnedBanks => 'بانک‌های یادگرفته';
+
+  @override
+  String get learnNeedThree => 'حداقل ۳ نمونه';
+
+  @override
+  String get learnLayoutMismatch => 'این پیامک‌ها قالب یکسانی ندارن. از یک نوع پیام استفاده کن (مثلاً فقط برداشت).';
+
+  @override
+  String get learnNoAmount => 'مبلغی که بین نمونه‌ها فرق کنه پیدا نشد.';
+
+  @override
+  String get learnNoDirection => 'برداشت یا واریز بودن معلوم نشد؛ از بالا انتخابش کن.';
+
+  @override
+  String get learnFailed => 'قالب همهٔ نمونه‌ها رو نخوند.';
+
+  @override
+  String get balance => 'مانده';
+
+  @override
+  String get aiSettings => 'دستیار هوش مصنوعی';
+
+  @override
+  String get aiSettingsHint => 'کلید خودت، Ollama یا هیچ';
+
+  @override
+  String get aiHint =>
+      'کاکا سرور و هوش مصنوعی داخلی نداره. مال خودت رو وصل کن: هر API سازگار با OpenAI با کلید خودت، یا Ollama روی کامپیوترت. پیش‌فرض خاموشه.';
+
+  @override
+  String get aiNone => 'هیچ';
+
+  @override
+  String get aiBaseUrl => 'آدرس سرور';
+
+  @override
+  String get aiModel => 'مدل';
+
+  @override
+  String get aiKey => 'کلید API';
+
+  @override
+  String get aiKeyHint => 'فقط در حافظهٔ امن گوشی؛ هیچ‌وقت توی پشتیبان نمی‌ره';
+
+  @override
+  String get aiKeySaved => 'کلید ذخیره شده (خالی بذاری همون می‌مونه)';
+
+  @override
+  String get aiKeyRemove => 'حذف کلید';
+
+  @override
+  String get aiPrivacy =>
+      'فقط چیزهایی که دستیار با ابزارها می‌خواد فرستاده می‌شه و شماره کارت/حساب ماسک می‌شه. تراکنش‌های چت فقط پیش‌نویس می‌شن.';
+
+  @override
+  String get aiNotConfigured => 'اول یه سرویس هوش مصنوعی انتخاب کن.';
+
+  @override
+  String get aiError => 'درخواست ناموفق بود. آدرس، مدل و کلید رو چک کن.';
+
+  @override
+  String get chat => 'گفت‌وگو';
+
+  @override
+  String get chatHint => 'مثلاً این ماه چقدر خرج غذا کردم؟';
+
+  @override
+  String get send => 'ارسال';
+
+  @override
+  String get secureScreen => 'جلوگیری از اسکرین‌شات';
+
+  @override
+  String get secureScreenHint => 'اسکرین‌شات رو می‌بنده و کاکا رو در برنامه‌های اخیر پنهان می‌کنه';
+
+  @override
+  String rateLabel(String currency) {
+    return '۱ $currency =';
+  }
+
+  @override
+  String sampleN(int n) {
+    return 'نمونهٔ $n';
+  }
+
+  @override
+  String sampleNotRead(int n) {
+    return 'نمونهٔ $n خونده نشد';
+  }
+
+  @override
+  String ratesAsOf(String date) {
+    return 'نرخ‌ها تا $date';
+  }
+
+  @override
+  String ratesStale(String date) {
+    return 'نرخ‌ها قدیمی‌ان ($date)';
+  }
 }

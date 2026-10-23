@@ -12,7 +12,7 @@ abstract final class Masking {
   /// Deep-masks every string in a JSON-like value.
   static Object? json(Object? v) => switch (v) {
     String s => text(s),
-    Map m => {for (final e in m.entries) e.key: json(e.value)},
+    Map m => <String, Object?>{for (final e in m.entries) '${e.key}': json(e.value)},
     List l => [for (final x in l) json(x)],
     _ => v,
   };

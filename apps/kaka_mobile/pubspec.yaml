@@ -1,7 +1,7 @@
 name: kaka_mobile
 description: "A new Flutter project."
 publish_to: 'none'
-version: 0.3.0+3
+version: 0.4.0+4
 
 resolution: workspace
 
@@ -18,12 +18,16 @@ dependencies:
   flutter_secure_storage: ^11.2.0
   go_router: ^18.1.1
   intl: ^0.20.3
+  kaka_ai:
+    path: ../../packages/kaka_ai
   kaka_data:
     path: ../../packages/kaka_data
   kaka_domain:
     path: ../../packages/kaka_domain
   kaka_sms:
     path: ../../packages/kaka_sms
+  kaka_tools:
+    path: ../../packages/kaka_tools
   local_auth: ^3.0.2
   path_provider: ^2.1.6
   shamsi_date: ^1.1.1

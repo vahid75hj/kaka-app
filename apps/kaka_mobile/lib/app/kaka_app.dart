@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kaka_domain/kaka_domain.dart';
 
+import '../core/secure_window.dart';
 import '../features/lock/app_lock.dart';
 import '../features/queue/queue_screen.dart';
 import '../features/queue/share_ingest.dart';
@@ -23,6 +24,7 @@ class _KakaAppState extends ConsumerState<KakaApp> {
   @override
   void initState() {
     super.initState();
+    SecureWindow.set(ref.read(settingsProvider).secureScreen);
     ShareInbox.listen(_onShared);
     ShareInbox.takeInitial().then((t) {
       if (t != null) _onShared(t);
@@ -42,6 +44,7 @@ class _KakaAppState extends ConsumerState<KakaApp> {
   @override
   Widget build(BuildContext context) {
     final s = ref.watch(settingsProvider);
+    ref.listen(settingsProvider.select((s) => s.secureScreen), (_, on) => SecureWindow.set(on));
     return MaterialApp.router(
       builder: (context, child) => AppLockGate(child: SmsLifecycle(child: child ?? const SizedBox.shrink())),
       onGenerateTitle: (c) => AppLocalizations.of(c).appName,

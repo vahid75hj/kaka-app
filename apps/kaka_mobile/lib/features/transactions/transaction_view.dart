@@ -38,6 +38,14 @@ class TransactionView {
         subtitle: '$c → $d',
         amount: debit.amount,
       ),
+      TransactionKind.exchange => () {
+        // postings: [to +, FX:to −, FX:from +, from −]
+        final user = t.postings.where((p) => !(acc(p)?.isSystem ?? true)).toList();
+        final into = user.where((p) => p.amount.isPositive).firstOrNull ?? debit;
+        final out = user.where((p) => p.amount.isNegative).firstOrNull ?? credit;
+        final route = '${acc(out)?.name ?? '?'} → ${acc(into)?.name ?? '?'}';
+        return TransactionView(txn: t, title: withNote(route), subtitle: route, amount: into.amount);
+      }(),
       TransactionKind.opening => TransactionView(
         txn: t,
         title: openingLabel,

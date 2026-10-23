@@ -212,5 +212,107 @@
         "type": "String"
       }
     }
+  },
+  "editTransaction": "Edit transaction",
+  "amountReceived": "Amount received",
+  "exchangeHint": "Different currencies: recorded as an exchange through FX accounts. The original stays in history (voided) when you edit.",
+  "exchangeRates": "Exchange rates",
+  "addRate": "Add rate",
+  "noRates": "No rates yet. Add one so balances in other currencies count toward your net worth.",
+  "delete": "Delete",
+  "assets": "Gold & coins",
+  "buySell": "Buy / sell",
+  "buy": "Buy",
+  "sell": "Sell",
+  "assetsValue": "Total value",
+  "holdings": "Holdings",
+  "noHoldings": "Nothing yet — tap Buy / sell.",
+  "unitPrices": "Unit prices",
+  "noPrice": "no price",
+  "setPrice": "Set price",
+  "pricePerUnit": "Price per unit",
+  "quantity": "Quantity",
+  "totalOptional": "Total paid / received (optional)",
+  "unitGram": "g",
+  "unitCoin": "pcs",
+  "monthlyReport": "Monthly report",
+  "exportCsv": "Export CSV",
+  "net": "Net",
+  "reportSkipped": "Some transactions are in a currency without a rate and are not included.",
+  "noRateFor": "No exchange rate yet:",
+  "learnBank": "Teach Kaka a new bank",
+  "learnBankHint": "Paste 3–5 SMS from the same bank",
+  "learnHint": "Paste 3 to 5 SMS of the same bank and layout (different amounts are best). Kaka compares them and builds a template — everything stays on this phone.",
+  "bankName": "Bank name",
+  "customBank": "My bank",
+  "learnDirection": "If the SMS doesn't say debit/credit",
+  "learnDirectionAuto": "Detect",
+  "learn": "Learn",
+  "learnConfirm": "Looks right — save",
+  "learnSaved": "Saved. New SMS from this bank will be read with it.",
+  "learnedBanks": "Learned banks",
+  "learnNeedThree": "At least 3 samples",
+  "learnLayoutMismatch": "These SMS don't share one layout. Use messages of the same type (e.g. only withdrawals).",
+  "learnNoAmount": "Couldn't find an amount that changes between samples.",
+  "learnNoDirection": "Couldn't tell debit from credit — choose it above.",
+  "learnFailed": "The template didn't read every sample.",
+  "balance": "Balance",
+  "aiSettings": "AI assistant",
+  "aiSettingsHint": "Your own key, Ollama, or none",
+  "aiHint": "Kaka has no server and no built-in AI. Bring your own: any OpenAI-compatible API with your key, or Ollama on your computer. Off by default.",
+  "aiNone": "None",
+  "aiBaseUrl": "Base URL",
+  "aiModel": "Model",
+  "aiKey": "API key",
+  "aiKeyHint": "Stored only in this phone's secure storage, never in backups",
+  "aiKeySaved": "A key is saved (leave empty to keep it)",
+  "aiKeyRemove": "Remove saved key",
+  "aiPrivacy": "Only what the assistant asks for via tools is sent, with card and account numbers masked. New transactions from chat only become drafts in Questions.",
+  "aiNotConfigured": "Choose an AI provider first.",
+  "aiError": "The AI request failed. Check the URL, model and key.",
+  "chat": "Chat",
+  "chatHint": "e.g. How much did I spend on food this month?",
+  "send": "Send",
+  "secureScreen": "Hide from screenshots",
+  "secureScreenHint": "Blocks screenshots and hides Kaka in recent apps",
+  "rateLabel": "1 {currency} =",
+  "@rateLabel": {
+    "placeholders": {
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "sampleN": "Sample {n}",
+  "@sampleN": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "sampleNotRead": "Sample {n} was not read",
+  "@sampleNotRead": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "ratesAsOf": "Rates as of {date}",
+  "@ratesAsOf": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "ratesStale": "Rates are old ({date})",
+  "@ratesStale": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
   }
 }

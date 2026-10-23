@@ -1099,6 +1099,408 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Bank balance {bank}, Kaka would show {kaka} — a transaction may be missing'**
   String balanceMismatch(String bank, String kaka);
+
+  /// No description provided for @editTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit transaction'**
+  String get editTransaction;
+
+  /// No description provided for @amountReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount received'**
+  String get amountReceived;
+
+  /// No description provided for @exchangeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Different currencies: recorded as an exchange through FX accounts. The original stays in history (voided) when you edit.'**
+  String get exchangeHint;
+
+  /// No description provided for @exchangeRates.
+  ///
+  /// In en, this message translates to:
+  /// **'Exchange rates'**
+  String get exchangeRates;
+
+  /// No description provided for @addRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Add rate'**
+  String get addRate;
+
+  /// No description provided for @noRates.
+  ///
+  /// In en, this message translates to:
+  /// **'No rates yet. Add one so balances in other currencies count toward your net worth.'**
+  String get noRates;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @assets.
+  ///
+  /// In en, this message translates to:
+  /// **'Gold & coins'**
+  String get assets;
+
+  /// No description provided for @buySell.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy / sell'**
+  String get buySell;
+
+  /// No description provided for @buy.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy'**
+  String get buy;
+
+  /// No description provided for @sell.
+  ///
+  /// In en, this message translates to:
+  /// **'Sell'**
+  String get sell;
+
+  /// No description provided for @assetsValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Total value'**
+  String get assetsValue;
+
+  /// No description provided for @holdings.
+  ///
+  /// In en, this message translates to:
+  /// **'Holdings'**
+  String get holdings;
+
+  /// No description provided for @noHoldings.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing yet — tap Buy / sell.'**
+  String get noHoldings;
+
+  /// No description provided for @unitPrices.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit prices'**
+  String get unitPrices;
+
+  /// No description provided for @noPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'no price'**
+  String get noPrice;
+
+  /// No description provided for @setPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Set price'**
+  String get setPrice;
+
+  /// No description provided for @pricePerUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'Price per unit'**
+  String get pricePerUnit;
+
+  /// No description provided for @quantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get quantity;
+
+  /// No description provided for @totalOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Total paid / received (optional)'**
+  String get totalOptional;
+
+  /// No description provided for @unitGram.
+  ///
+  /// In en, this message translates to:
+  /// **'g'**
+  String get unitGram;
+
+  /// No description provided for @unitCoin.
+  ///
+  /// In en, this message translates to:
+  /// **'pcs'**
+  String get unitCoin;
+
+  /// No description provided for @monthlyReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly report'**
+  String get monthlyReport;
+
+  /// No description provided for @exportCsv.
+  ///
+  /// In en, this message translates to:
+  /// **'Export CSV'**
+  String get exportCsv;
+
+  /// No description provided for @net.
+  ///
+  /// In en, this message translates to:
+  /// **'Net'**
+  String get net;
+
+  /// No description provided for @reportSkipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Some transactions are in a currency without a rate and are not included.'**
+  String get reportSkipped;
+
+  /// No description provided for @noRateFor.
+  ///
+  /// In en, this message translates to:
+  /// **'No exchange rate yet:'**
+  String get noRateFor;
+
+  /// No description provided for @learnBank.
+  ///
+  /// In en, this message translates to:
+  /// **'Teach Kaka a new bank'**
+  String get learnBank;
+
+  /// No description provided for @learnBankHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste 3–5 SMS from the same bank'**
+  String get learnBankHint;
+
+  /// No description provided for @learnHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste 3 to 5 SMS of the same bank and layout (different amounts are best). Kaka compares them and builds a template — everything stays on this phone.'**
+  String get learnHint;
+
+  /// No description provided for @bankName.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank name'**
+  String get bankName;
+
+  /// No description provided for @customBank.
+  ///
+  /// In en, this message translates to:
+  /// **'My bank'**
+  String get customBank;
+
+  /// No description provided for @learnDirection.
+  ///
+  /// In en, this message translates to:
+  /// **'If the SMS doesn\'t say debit/credit'**
+  String get learnDirection;
+
+  /// No description provided for @learnDirectionAuto.
+  ///
+  /// In en, this message translates to:
+  /// **'Detect'**
+  String get learnDirectionAuto;
+
+  /// No description provided for @learn.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn'**
+  String get learn;
+
+  /// No description provided for @learnConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Looks right — save'**
+  String get learnConfirm;
+
+  /// No description provided for @learnSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved. New SMS from this bank will be read with it.'**
+  String get learnSaved;
+
+  /// No description provided for @learnedBanks.
+  ///
+  /// In en, this message translates to:
+  /// **'Learned banks'**
+  String get learnedBanks;
+
+  /// No description provided for @learnNeedThree.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 3 samples'**
+  String get learnNeedThree;
+
+  /// No description provided for @learnLayoutMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'These SMS don\'t share one layout. Use messages of the same type (e.g. only withdrawals).'**
+  String get learnLayoutMismatch;
+
+  /// No description provided for @learnNoAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t find an amount that changes between samples.'**
+  String get learnNoAmount;
+
+  /// No description provided for @learnNoDirection.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t tell debit from credit — choose it above.'**
+  String get learnNoDirection;
+
+  /// No description provided for @learnFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The template didn\'t read every sample.'**
+  String get learnFailed;
+
+  /// No description provided for @balance.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get balance;
+
+  /// No description provided for @aiSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'AI assistant'**
+  String get aiSettings;
+
+  /// No description provided for @aiSettingsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your own key, Ollama, or none'**
+  String get aiSettingsHint;
+
+  /// No description provided for @aiHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Kaka has no server and no built-in AI. Bring your own: any OpenAI-compatible API with your key, or Ollama on your computer. Off by default.'**
+  String get aiHint;
+
+  /// No description provided for @aiNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get aiNone;
+
+  /// No description provided for @aiBaseUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Base URL'**
+  String get aiBaseUrl;
+
+  /// No description provided for @aiModel.
+  ///
+  /// In en, this message translates to:
+  /// **'Model'**
+  String get aiModel;
+
+  /// No description provided for @aiKey.
+  ///
+  /// In en, this message translates to:
+  /// **'API key'**
+  String get aiKey;
+
+  /// No description provided for @aiKeyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Stored only in this phone\'s secure storage, never in backups'**
+  String get aiKeyHint;
+
+  /// No description provided for @aiKeySaved.
+  ///
+  /// In en, this message translates to:
+  /// **'A key is saved (leave empty to keep it)'**
+  String get aiKeySaved;
+
+  /// No description provided for @aiKeyRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove saved key'**
+  String get aiKeyRemove;
+
+  /// No description provided for @aiPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Only what the assistant asks for via tools is sent, with card and account numbers masked. New transactions from chat only become drafts in Questions.'**
+  String get aiPrivacy;
+
+  /// No description provided for @aiNotConfigured.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an AI provider first.'**
+  String get aiNotConfigured;
+
+  /// No description provided for @aiError.
+  ///
+  /// In en, this message translates to:
+  /// **'The AI request failed. Check the URL, model and key.'**
+  String get aiError;
+
+  /// No description provided for @chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat'**
+  String get chat;
+
+  /// No description provided for @chatHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. How much did I spend on food this month?'**
+  String get chatHint;
+
+  /// No description provided for @send.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get send;
+
+  /// No description provided for @secureScreen.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide from screenshots'**
+  String get secureScreen;
+
+  /// No description provided for @secureScreenHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocks screenshots and hides Kaka in recent apps'**
+  String get secureScreenHint;
+
+  /// No description provided for @rateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'1 {currency} ='**
+  String rateLabel(String currency);
+
+  /// No description provided for @sampleN.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample {n}'**
+  String sampleN(int n);
+
+  /// No description provided for @sampleNotRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample {n} was not read'**
+  String sampleNotRead(int n);
+
+  /// No description provided for @ratesAsOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Rates as of {date}'**
+  String ratesAsOf(String date);
+
+  /// No description provided for @ratesStale.
+  ///
+  /// In en, this message translates to:
+  /// **'Rates are old ({date})'**
+  String ratesStale(String date);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -109,6 +109,33 @@ class HomeScreen extends ConsumerWidget {
               padding: const EdgeInsets.only(top: 6),
               child: Text('${l.thisMonth} · ${f.monthTitle(now)}', style: TextStyle(color: c.textFaint, fontSize: 12)),
             ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                ActionChip(
+                  avatar: const Icon(Icons.bar_chart_rounded, size: 18),
+                  label: Text(l.monthlyReport),
+                  onPressed: () => context.push(Routes.report),
+                ),
+                ActionChip(
+                  avatar: const Icon(Icons.diamond_outlined, size: 18),
+                  label: Text(l.assets),
+                  onPressed: () => context.push(Routes.assets),
+                ),
+                ActionChip(
+                  avatar: const Icon(Icons.currency_exchange_rounded, size: 18),
+                  label: Text(l.exchangeRates),
+                  onPressed: () => context.push(Routes.rates),
+                ),
+                ActionChip(
+                  avatar: const Icon(Icons.auto_awesome_outlined, size: 18),
+                  label: Text(l.chat),
+                  onPressed: () => context.push(Routes.chat),
+                ),
+              ],
+            ),
             SectionHeader(l.accounts, action: l.seeAll, onAction: () => context.go(Routes.accounts)),
             SizedBox(
               height: 112,
@@ -221,8 +248,22 @@ class _Hero extends ConsumerWidget {
               ],
             ),
           ),
+          if (summary.ratesFrom != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 6),
+              child: Text(
+                f.digits(
+                  DateTime.now().difference(summary.ratesFrom!).inDays > 7
+                      ? context.l10n.ratesStale(f.date(summary.ratesFrom!))
+                      : context.l10n.ratesAsOf(f.date(summary.ratesFrom!)),
+                ),
+                style: const TextStyle(color: Color(0xFF9A9A9A), fontSize: 12),
+              ),
+            ),
           if (summary.otherCurrencies.isNotEmpty) ...[
             const SizedBox(height: 12),
+            Text(context.l10n.noRateFor, style: const TextStyle(color: Color(0xFF9A9A9A), fontSize: 12)),
+            const SizedBox(height: 4),
             const Divider(color: Color(0x14FFFFFF)),
             const SizedBox(height: 10),
             Wrap(

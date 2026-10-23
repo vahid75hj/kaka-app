@@ -165,4 +165,21 @@ void main() {
     expect(r.totalIncome.minor, 1000);
     expect(r.expense.single.name, 'Food');
   });
+
+  test('CSV export: exact decimals, quoting and formula neutralization', () {
+    final w = _acc('Wallet, main', AccountType.asset, Currency.usd);
+    final food = _acc('=cmd', AccountType.expense, Currency.usd);
+    final t = TransactionFactory.expense(
+      from: w,
+      category: food,
+      amount: const Money(1250, Currency.usd),
+      at: DateTime(2026, 10, 1),
+      note: 'say "hi"',
+    );
+    final csv = TransactionCsv.build([t], {w.id: w, food.id: food});
+    final lines = csv.substring(1).trim().split('\r\n');
+    expect(lines.first, TransactionCsv.header.join(','));
+    expect(lines[1], contains('"Wallet, main"'));
+    expect(lines[1], contains(',-12.50,USD,"say ""hi""",'));
+  });
 }

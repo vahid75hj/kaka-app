@@ -24,6 +24,10 @@ class AppSettings {
     this.appLock = false,
     this.smsAutoRead = false,
     this.smsLastScan,
+    this.secureScreen = false,
+    this.aiProvider = 'none',
+    this.aiBaseUrl = '',
+    this.aiModel = '',
   });
 
   factory AppSettings.defaultsFor(String localeCode) {
@@ -57,6 +61,14 @@ class AppSettings {
   /// Newest SMS already scanned from the inbox.
   final DateTime? smsLastScan;
 
+  /// Android FLAG_SECURE: hide content from screenshots and the app switcher.
+  final bool secureScreen;
+
+  /// `none`, `openai` (any OpenAI-compatible server) or `ollama`. The key lives in secure storage.
+  final String aiProvider;
+  final String aiBaseUrl;
+  final String aiModel;
+
   bool get isPersian => localeCode == 'fa';
 
   AppSettings copyWith({
@@ -71,6 +83,10 @@ class AppSettings {
     bool? appLock,
     bool? smsAutoRead,
     DateTime? Function()? smsLastScan,
+    bool? secureScreen,
+    String? aiProvider,
+    String? aiBaseUrl,
+    String? aiModel,
   }) => AppSettings(
     localeCode: localeCode ?? this.localeCode,
     calendar: calendar ?? this.calendar,
@@ -83,6 +99,10 @@ class AppSettings {
     appLock: appLock ?? this.appLock,
     smsAutoRead: smsAutoRead ?? this.smsAutoRead,
     smsLastScan: smsLastScan != null ? smsLastScan() : this.smsLastScan,
+    secureScreen: secureScreen ?? this.secureScreen,
+    aiProvider: aiProvider ?? this.aiProvider,
+    aiBaseUrl: aiBaseUrl ?? this.aiBaseUrl,
+    aiModel: aiModel ?? this.aiModel,
   );
 
   Map<String, Object?> toJson() => {
@@ -97,6 +117,10 @@ class AppSettings {
     'app_lock': appLock,
     'sms_auto_read': smsAutoRead,
     'sms_last_scan': smsLastScan?.toUtc().toIso8601String(),
+    'secure_screen': secureScreen,
+    'ai_provider': aiProvider,
+    'ai_base_url': aiBaseUrl,
+    'ai_model': aiModel,
   };
 
   factory AppSettings.fromJson(Map<String, Object?> j) => AppSettings(
@@ -111,5 +135,9 @@ class AppSettings {
     appLock: j['app_lock'] as bool? ?? false,
     smsAutoRead: j['sms_auto_read'] as bool? ?? false,
     smsLastScan: j['sms_last_scan'] == null ? null : DateTime.parse(j['sms_last_scan'] as String).toLocal(),
+    secureScreen: j['secure_screen'] as bool? ?? false,
+    aiProvider: j['ai_provider'] as String? ?? 'none',
+    aiBaseUrl: j['ai_base_url'] as String? ?? '',
+    aiModel: j['ai_model'] as String? ?? '',
   );
 }

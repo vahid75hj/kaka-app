@@ -22,6 +22,11 @@ class Decimal {
     return Decimal._(n, BigInt.from(10).pow(frac.length));
   }
 
+  /// This value × 10^[pow10] (e.g. a toman rate → rial rate with pow10 = 1).
+  Decimal scaled(int pow10) => pow10 >= 0
+      ? Decimal._(numerator * BigInt.from(10).pow(pow10), denominator)
+      : Decimal._(numerator, denominator * BigInt.from(10).pow(-pow10));
+
   /// `value × num / den`, rounded half away from zero.
   static int mulDivRound(int value, BigInt num, BigInt den) {
     final v = BigInt.from(value) * num;

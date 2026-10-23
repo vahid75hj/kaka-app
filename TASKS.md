@@ -45,14 +45,16 @@ Phases: **MVP-1** = first usable APK · **MVP-2** = v0.1 feature-complete · **L
 - [x] Sender ↔ account linking (sender default account + account-number links, suffix and dashed-form matching); only linked senders are read
 - [x] Bank balance vs ledger mismatch hint on drafts
 - [ ] Background receiver when the app is closed (WorkManager / manifest receiver) — today missed SMS are picked up on next open
-- [ ] "Learn a new bank" flow (diff 3–5 samples into a template)
+- [x] "Learn a new bank" flow (diff 3–5 samples into a template)
 - [ ] CI step that runs every catalog entry's `tests`
 - [x] Encrypted `.kaka` backup (Argon2id m=19 MiB t=2 + XChaCha20-Poly1305, header as AAD) via share sheet; restore via file picker — reminder still open
-- [ ] Exchange rates (manual first, one public source after spike) and cross-currency transfers via `FX:<cur>` accounts
-- [ ] Net worth converted to base currency with rate date / "stale" label
-- [ ] Gold & coins as assets (`asset_holdings`), valued by manual / latest price
-- [ ] Monthly report by category; Share-out CSV / summary + ready-made prompt
-- [ ] BYO-AI settings screen (OpenAI-compatible key in secure storage, Ollama URL, none) + chat tab using `ToolLoop` + card/IBAN masking
+- [x] Exchange rates (manual, per date) and cross-currency exchange via `FX:<cur>` accounts — public rate source still open
+- [x] Net worth converted to base currency with rate date / "stale" label
+- [x] Gold & coins as assets (`asset_holdings`), valued by manual / latest price
+- [x] Monthly report by category; Share-out CSV / summary + ready-made prompt
+- [x] BYO-AI settings screen (OpenAI-compatible key in secure storage, Ollama URL, none) + chat tab using `ToolLoop` + card/IBAN masking
+- [x] Edit transaction (void-and-replace), FLAG_SECURE toggle — v0.4.0
+- [ ] Asset buy/sell linked to cash accounts; AI transfer drafts (today saved as generic draft)
 - [x] Transaction search & filters (text, kind, account, date range) — edit-by-void-and-replace still open
 - [~] Release signing (dedicated release key via `android/key.properties`, falls back to debug) + split-per-ABI APKs on GitHub Releases — CI signing on tags and F-Droid metadata still open
 - [ ] `CONTRIBUTING.md` (add a bank / model / language), `SECURITY.md`, issue templates

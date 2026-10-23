@@ -10,8 +10,12 @@ import '../../core/l10n_x.dart';
 import '../../theme/kaka_colors.dart';
 
 class AddTransactionScreen extends ConsumerStatefulWidget {
-  const AddTransactionScreen({super.key, this.initialAccountId, this.draftId});
+  const AddTransactionScreen({super.key, this.initialAccountId, this.draftId, this.editTxnId});
   final String? initialAccountId;
+
+  /// Edit = void-and-replace: the form is pre-filled from this transaction and
+  /// saving records a corrected copy, then voids the original.
+  final String? editTxnId;
 
   /// When set, the form is pre-filled from this question-queue draft and the
   /// draft is marked confirmed once saved.
@@ -24,6 +28,8 @@ class AddTransactionScreen extends ConsumerStatefulWidget {
 class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
   final _amount = TextEditingController();
   final _note = TextEditingController();
+  final _toAmount = TextEditingController();
+  LedgerTransaction? _original;
   var _kind = TransactionKind.expense;
   String? _accountId;
   String? _toAccountId;
@@ -38,6 +44,42 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
   void initState() {
     super.initState();
     if (widget.draftId != null) _loadDraft(widget.draftId!);
+    if (widget.editTxnId != null) _loadOriginal(widget.editTxnId!);
+  }
+
+  Future<void> _loadOriginal(String id) async {
+    final txns = await ref.read(transactionRepositoryProvider).watchRecent(limit: 100000).first;
+    final t = txns.where((t) => t.id == id).firstOrNull;
+    if (t == null || !mounted) return;
+    final accounts = {for (final a in await ref.read(accountRepositoryProvider).getAll()) a.id: a};
+    final f = ref.read(formatProvider);
+    final user = t.postings.where((p) => !(accounts[p.accountId]?.isSystem ?? true)).toList();
+    final debit = user.where((p) => p.amount.isPositive).firstOrNull;
+    final credit = user.where((p) => p.amount.isNegative).firstOrNull;
+    if (debit == null || credit == null) return;
+    setState(() {
+      _original = t;
+      _kind = t.kind == TransactionKind.exchange ? TransactionKind.transfer : t.kind;
+      _date = t.occurredAt;
+      _note.text = t.note;
+      switch (t.kind) {
+        case TransactionKind.expense:
+          _accountId = credit.accountId;
+          _category = accounts[debit.accountId]?.name;
+          _amount.text = exactAmountText(debit.amount, f.unitFor(debit.amount.currency));
+        case TransactionKind.income:
+          _accountId = debit.accountId;
+          _category = accounts[credit.accountId]?.name;
+          _amount.text = exactAmountText(debit.amount, f.unitFor(debit.amount.currency));
+        case TransactionKind.transfer || TransactionKind.exchange:
+          _accountId = credit.accountId;
+          _toAccountId = debit.accountId;
+          _amount.text = exactAmountText(-credit.amount, f.unitFor(credit.amount.currency));
+          _toAmount.text = exactAmountText(debit.amount, f.unitFor(debit.amount.currency));
+        case TransactionKind.opening:
+          break;
+      }
+    });
   }
 
   Future<void> _loadDraft(String id) async {
@@ -58,6 +100,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
   void dispose() {
     _amount.dispose();
     _note.dispose();
+    _toAmount.dispose();
     super.dispose();
   }
 
@@ -81,21 +124,41 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     });
     try {
       final amount = AmountParser.parse(_amount.text, f.unitFor(from.currency));
-      switch (_kind) {
-        case TransactionKind.expense || TransactionKind.income:
-          final type = _kind == TransactionKind.expense ? AccountType.expense : AccountType.income;
-          final category = await ledger.ensureCategory(_category ?? l.catOther, type, from.currency);
-          if (type == AccountType.expense) {
-            await ledger.recordExpense(from: from, category: category, amount: amount, at: _date, note: _note.text);
-          } else {
-            await ledger.recordIncome(to: from, category: category, amount: amount, at: _date, note: _note.text);
-          }
-        case TransactionKind.transfer:
-          final to = wallets.where((a) => a.id == _toAccountId).firstOrNull;
-          if (to == null) throw const DomainException('ledger.same_account');
-          await ledger.recordTransfer(from: from, to: to, amount: amount, at: _date, note: _note.text);
-        case TransactionKind.opening:
-          break;
+      Future<void> record() async {
+        switch (_kind) {
+          case TransactionKind.expense || TransactionKind.income:
+            final type = _kind == TransactionKind.expense ? AccountType.expense : AccountType.income;
+            final category = await ledger.ensureCategory(_category ?? l.catOther, type, from.currency);
+            if (type == AccountType.expense) {
+              await ledger.recordExpense(from: from, category: category, amount: amount, at: _date, note: _note.text);
+            } else {
+              await ledger.recordIncome(to: from, category: category, amount: amount, at: _date, note: _note.text);
+            }
+          case TransactionKind.transfer:
+            final to = wallets.where((a) => a.id == _toAccountId).firstOrNull;
+            if (to == null) throw const DomainException('ledger.same_account');
+            if (to.currency == from.currency) {
+              await ledger.recordTransfer(from: from, to: to, amount: amount, at: _date, note: _note.text);
+            } else {
+              final received = AmountParser.parse(_toAmount.text, f.unitFor(to.currency));
+              await ledger.recordExchange(
+                from: from,
+                to: to,
+                fromAmount: amount,
+                toAmount: received,
+                at: _date,
+                note: _note.text,
+              );
+            }
+          case TransactionKind.opening || TransactionKind.exchange:
+            break;
+        }
+      }
+
+      if (_original != null) {
+        await ledger.replace(_original!, record);
+      } else {
+        await record();
       }
       if (_draft != null) await ref.read(draftServiceProvider).confirm(_draft!.id);
       if (mounted) context.pop();
@@ -116,13 +179,14 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     final wallets = accounts.where((a) => a.type.isBalanceSheet && !a.archived).toList();
     _accountId ??= widget.initialAccountId ?? wallets.firstOrNull?.id;
     final from = wallets.where((a) => a.id == _accountId).firstOrNull;
+    final to = wallets.where((a) => a.id == _toAccountId).firstOrNull;
     final wantedType = _kind == TransactionKind.income ? AccountType.income : AccountType.expense;
     // Category names are shared across currencies; one account per currency is created on demand.
     final categories = {for (final a in accounts.where((a) => a.type == wantedType && !a.archived)) a.name}.toList();
     if (!categories.contains(_category)) _category = categories.firstOrNull;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l.addTransaction)),
+      appBar: AppBar(title: Text(_original != null ? l.editTransaction : l.addTransaction)),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
@@ -163,14 +227,26 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
             onChanged: (id) => setState(() => _accountId = id),
           ),
           const SizedBox(height: 16),
-          if (_kind == TransactionKind.transfer)
+          if (_kind == TransactionKind.transfer) ...[
             _AccountPicker(
               label: l.toAccount,
-              accounts: wallets.where((a) => a.id != _accountId && a.currency == from?.currency).toList(),
+              accounts: wallets.where((a) => a.id != _accountId).toList(),
               value: _toAccountId,
               onChanged: (id) => setState(() => _toAccountId = id),
-            )
-          else ...[
+            ),
+            if (to != null && from != null && to.currency != from.currency) ...[
+              const SizedBox(height: 16),
+              TextField(
+                controller: _toAmount,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                decoration: InputDecoration(labelText: l.amountReceived, suffixText: f.symbol(to.currency)),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Text(l.exchangeHint, style: TextStyle(color: c.textFaint, fontSize: 12)),
+              ),
+            ],
+          ] else ...[
             Text(l.category, style: TextStyle(color: c.textMuted, fontSize: 13)),
             const SizedBox(height: 8),
             Wrap(

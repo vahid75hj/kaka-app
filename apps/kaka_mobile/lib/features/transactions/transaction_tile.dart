@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:kaka_domain/kaka_domain.dart';
 
 import '../../app/providers.dart';
+import '../../app/router.dart';
 import '../../core/l10n_x.dart';
 import '../../core/widgets.dart';
 import '../../theme/kaka_colors.dart';
@@ -16,6 +18,7 @@ class TransactionTile extends ConsumerWidget {
     TransactionKind.expense => Icons.north_east_rounded,
     TransactionKind.income => Icons.south_west_rounded,
     TransactionKind.transfer => Icons.swap_horiz_rounded,
+    TransactionKind.exchange => Icons.currency_exchange_rounded,
     TransactionKind.opening => Icons.flag_outlined,
   };
 
@@ -51,6 +54,9 @@ class TransactionTile extends ConsumerWidget {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 4),
       onLongPress: voided ? null : () => _confirmVoid(context, ref),
+      onTap: voided || view.txn.kind == TransactionKind.opening
+          ? null
+          : () => context.push(Routes.editTransaction(view.txn.id)),
       leading: Container(
         width: 42,
         height: 42,

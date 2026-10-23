@@ -23,4 +23,5 @@ export 'src/fx/rational.dart';
 export 'src/fx/exchange_rate.dart';
 export 'src/assets/assets.dart';
 export 'src/report/net_worth.dart';
+export 'src/report/csv_export.dart';
 export 'src/ledger/transaction_query.dart';

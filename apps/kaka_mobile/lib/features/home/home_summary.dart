@@ -3,8 +3,8 @@ import 'package:kaka_domain/kaka_domain.dart';
 
 import '../../app/providers.dart';
 
-/// Totals for the home screen. No exchange rates yet (MVP-2), so other
-/// currencies are totalled separately instead of converted.
+/// Totals for the home screen. Net worth converts every account and asset
+/// with the latest manual rate; currencies without a rate are listed apart.
 class HomeSummary {
   const HomeSummary({
     required this.netWorth,
@@ -12,7 +12,11 @@ class HomeSummary {
     required this.monthIncome,
     required this.monthExpense,
     required this.accounts,
+    this.ratesFrom,
   });
+
+  /// Oldest exchange rate used in [netWorth] (for a "rates as of" label).
+  final DateTime? ratesFrom;
 
   final Money netWorth;
   final List<Money> otherCurrencies;
@@ -48,9 +52,11 @@ final homeSummaryProvider = Provider<HomeSummary>((ref) {
     }
   }
 
+  final nw = ref.watch(netWorthProvider);
   return HomeSummary(
-    netWorth: Money(totals.remove(base) ?? 0, base),
-    otherCurrencies: [for (final e in totals.entries) Money(e.value, e.key)],
+    netWorth: nw.total,
+    otherCurrencies: nw.unconverted,
+    ratesFrom: nw.oldestRate,
     monthIncome: Money(income, base),
     monthExpense: Money(expense, base),
     accounts: visible,

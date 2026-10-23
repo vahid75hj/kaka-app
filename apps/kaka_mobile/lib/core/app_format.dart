@@ -57,6 +57,24 @@ class AppFormat {
     return DateTime(now.year, now.month);
   }
 
+  /// First instant of the month [delta] months after the one containing [d].
+  DateTime addMonths(DateTime d, int delta) {
+    if (settings.calendar == CalendarSystem.jalali) {
+      final j = Jalali.fromDateTime(d);
+      var y = j.year, m = j.month + delta;
+      while (m > 12) {
+        m -= 12;
+        y++;
+      }
+      while (m < 1) {
+        m += 12;
+        y--;
+      }
+      return Jalali(y, m, 1).toDateTime();
+    }
+    return DateTime(d.year, d.month + delta);
+  }
+
   String monthTitle(DateTime now) {
     if (settings.calendar == CalendarSystem.jalali) {
       final j = Jalali.fromDateTime(now);

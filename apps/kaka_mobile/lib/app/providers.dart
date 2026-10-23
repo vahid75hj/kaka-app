@@ -1,5 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kaka_data/kaka_data.dart';
+
+import 'dart:convert';
+
 import 'package:flutter/services.dart';
 import 'package:kaka_domain/kaka_domain.dart';
 import 'package:kaka_sms/kaka_sms.dart';
@@ -55,9 +58,22 @@ final draftServiceProvider = Provider<DraftService>(
 final pendingDraftsProvider = StreamProvider<List<Draft>>((ref) => ref.watch(draftServiceProvider).watchPending());
 
 /// Bundled bank SMS templates + heuristic fallback. Every result is only a draft.
+final customParserStoreProvider = Provider<DriftCustomParserStore>(
+  (ref) => DriftCustomParserStore(ref.watch(databaseProvider)),
+);
+
+/// Banks the user taught Kaka ("learn a new bank"); they run before bundled templates.
+final localBanksProvider = StreamProvider<List<BankParser>>(
+  (ref) => ref
+      .watch(customParserStoreProvider)
+      .watchAll()
+      .map((rows) => [for (final (_, json) in rows) BankParser.fromJson(jsonDecode(json) as Map<String, Object?>)]),
+);
+
 final smsParserProvider = FutureProvider<SmsParser>((ref) async {
   final json = await rootBundle.loadString('packages/kaka_sms/assets/sms-parsers.v1.json');
-  return SmsParser(ParserCatalog.parse(json));
+  final local = await ref.watch(localBanksProvider.future);
+  return SmsParser(ParserCatalog.parse(json).withLocal(local));
 });
 
 final smsLinkRepositoryProvider = Provider<SmsLinkRepository>(
@@ -74,3 +90,43 @@ final smsIngestServiceProvider = FutureProvider<SmsIngestService>((ref) async {
     bankName: (b) => ref.read(settingsProvider).isPersian ? b.nameFa : b.nameEn,
   );
 });
+
+// ---- exchange rates, assets, net worth ----
+
+final exchangeRateRepositoryProvider = Provider<ExchangeRateRepository>(
+  (ref) => DriftExchangeRateRepository(ref.watch(databaseProvider)),
+);
+final exchangeRatesProvider = StreamProvider<List<ExchangeRate>>(
+  (ref) => ref.watch(exchangeRateRepositoryProvider).watchAll(),
+);
+final converterProvider = Provider<CurrencyConverter>(
+  (ref) => CurrencyConverter(
+    ref.watch(settingsProvider.select((s) => s.baseUnit.currency)),
+    ref.watch(exchangeRatesProvider).value ?? const [],
+  ),
+);
+
+final assetRepositoryProvider = Provider<DriftAssetRepository>((ref) {
+  final repo = DriftAssetRepository(ref.watch(databaseProvider));
+  repo.ensureBuiltIns().ignore();
+  return repo;
+});
+final assetTypesProvider = StreamProvider<List<AssetType>>((ref) => ref.watch(assetRepositoryProvider).watchTypes());
+final assetMovementsProvider = StreamProvider<List<AssetMovement>>(
+  (ref) => ref.watch(assetRepositoryProvider).watchMovements(),
+);
+final assetPricesProvider = StreamProvider<List<AssetPrice>>((ref) => ref.watch(assetRepositoryProvider).watchPrices());
+final holdingsProvider = Provider<List<AssetHolding>>(
+  (ref) => AssetMath.holdings(
+    ref.watch(assetTypesProvider).value ?? const [],
+    ref.watch(assetMovementsProvider).value ?? const [],
+    ref.watch(assetPricesProvider).value ?? const [],
+  ),
+);
+final netWorthProvider = Provider<NetWorth>(
+  (ref) => NetWorth.of(
+    ref.watch(balancesProvider).value ?? const [],
+    ref.watch(holdingsProvider),
+    ref.watch(converterProvider),
+  ),
+);
