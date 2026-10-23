@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 
 import 'posting.dart';
 
-enum TransactionKind { opening, income, expense, transfer }
+enum TransactionKind { opening, income, expense, transfer, exchange }
 
 /// A balanced set of postings written atomically. Never edited in place:
 /// mistakes are fixed by voiding.

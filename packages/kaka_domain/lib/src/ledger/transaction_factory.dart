@@ -45,6 +45,42 @@ abstract final class TransactionFactory {
     return _pair(TransactionKind.transfer, debit: to, credit: from, amount: amount, at: at, note: note);
   }
 
+  /// Cross-currency move: [fromAmount] leaves [from], [toAmount] arrives in [to].
+  /// Each currency balances through its own `FX:<cur>` account.
+  static LedgerTransaction exchange({
+    required Account from,
+    required Account to,
+    required Money fromAmount,
+    required Money toAmount,
+    required Account fxFrom,
+    required Account fxTo,
+    required DateTime at,
+    String note = '',
+  }) {
+    _require(from.id != to.id, 'ledger.same_account');
+    _require(from.currency != to.currency, 'ledger.same_currency_exchange');
+    _require(fromAmount.isPositive && toAmount.isPositive, 'amount.not_positive');
+    _require(
+      fromAmount.currency == from.currency &&
+          fxFrom.currency == from.currency &&
+          toAmount.currency == to.currency &&
+          fxTo.currency == to.currency,
+      'ledger.currency_mismatch',
+    );
+    return LedgerTransaction(
+      id: Ids.next(),
+      kind: TransactionKind.exchange,
+      occurredAt: at,
+      note: note.trim(),
+      postings: [
+        Posting(id: Ids.next(), accountId: to.id, amount: toAmount),
+        Posting(id: Ids.next(), accountId: fxTo.id, amount: -toAmount),
+        Posting(id: Ids.next(), accountId: fxFrom.id, amount: fromAmount),
+        Posting(id: Ids.next(), accountId: from.id, amount: -fromAmount),
+      ],
+    );
+  }
+
   /// Opening balance of [account] against the per-currency equity account.
   static LedgerTransaction opening({
     required Account account,

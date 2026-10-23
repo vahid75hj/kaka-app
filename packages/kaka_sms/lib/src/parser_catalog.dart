@@ -11,7 +11,11 @@ class SmsTemplate {
     this.debitWords = const [],
     this.creditWords = const [],
     this.unit = 'IRR',
+    this.defaultDirection,
   });
+
+  /// `debit`/`credit` when the layout itself says nothing about direction.
+  final String? defaultDirection;
 
   final String id;
   final String pattern;
@@ -30,7 +34,17 @@ class SmsTemplate {
     debitWords: [...?(j['debit_words'] as List?)?.cast<String>()],
     creditWords: [...?(j['credit_words'] as List?)?.cast<String>()],
     unit: (j['unit'] as String?) ?? 'IRR',
+    defaultDirection: j['default_direction'] as String?,
   );
+
+  Map<String, Object?> toJson() => {
+    'id': id,
+    'regex': pattern,
+    'debit_words': debitWords,
+    'credit_words': creditWords,
+    'unit': unit,
+    'default_direction': ?defaultDirection,
+  };
 }
 
 class SmsTest {
@@ -65,6 +79,23 @@ class BankParser {
 
   /// Only verified/local parsers run by default; others wait for real samples.
   bool get enabledByDefault => status == ParserStatus.verified || status == ParserStatus.local;
+
+  Map<String, Object?> toJson() => {
+    'bank_id': bankId,
+    'name': {'en': nameEn, 'fa': nameFa},
+    'senders': senders,
+    'keywords': keywords,
+    'status': switch (status) {
+      ParserStatus.verified => 'verified',
+      ParserStatus.community => 'community',
+      ParserStatus.local => 'local',
+      ParserStatus.needsSamples => 'needs_samples',
+    },
+    'templates': [for (final t in templates) t.toJson()],
+    'tests': [
+      for (final t in tests) {'input': t.input, 'expect': t.expect},
+    ],
+  };
 
   factory BankParser.fromJson(Map<String, Object?> j) {
     final name = j['name'] as Map<String, Object?>;
@@ -103,6 +134,10 @@ class ParserCatalog {
   final int schemaVersion;
   final String catalogVersion;
   final List<BankParser> banks;
+
+  /// Local (user-taught) banks run before the bundled ones.
+  ParserCatalog withLocal(List<BankParser> local) =>
+      ParserCatalog(schemaVersion: schemaVersion, catalogVersion: catalogVersion, banks: [...local, ...banks]);
 
   factory ParserCatalog.parse(String source) {
     final j = jsonDecode(source) as Map<String, Object?>;

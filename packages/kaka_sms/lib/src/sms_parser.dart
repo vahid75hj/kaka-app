@@ -109,6 +109,8 @@ class SmsParser {
       direction = SmsDirection.credit;
     } else if (t.debitWords.any(dirText.contains)) {
       direction = SmsDirection.debit;
+    } else if (t.defaultDirection != null) {
+      direction = t.defaultDirection == 'credit' ? SmsDirection.credit : SmsDirection.debit;
     } else {
       return null;
     }

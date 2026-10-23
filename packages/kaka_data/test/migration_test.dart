@@ -49,4 +49,52 @@ void main() {
     await DriftSmsLinkRepository(db).upsert(const SmsLink(id: 'l', sender: '700717'));
     expect(await DriftSmsLinkRepository(db).getAll(), hasLength(1));
   });
+
+  test('v3 database (Kaka 0.3.0) upgrades to v4: rates, assets, custom parsers', () async {
+    final dir = Directory.systemTemp.createTempSync('kaka_mig4');
+    addTearDown(() => dir.deleteSync(recursive: true));
+    final file = File('${dir.path}/l.db');
+    var db = KakaDatabase.open(file, key: 'k');
+    await DriftSmsLinkRepository(db).upsert(const SmsLink(id: 'keep', sender: '700717'));
+    for (final t in ['fx_rates', 'asset_movements', 'asset_prices', 'asset_types', 'custom_parsers']) {
+      await db.customStatement('DROP TABLE $t');
+    }
+    await db.customStatement('PRAGMA user_version = 3');
+    await db.close();
+
+    db = KakaDatabase.open(file, key: 'k');
+    addTearDown(db.close);
+    expect(await DriftSmsLinkRepository(db).getAll(), hasLength(1));
+    final fx = DriftExchangeRateRepository(db);
+    await fx.upsert(
+      ExchangeRate(
+        id: 'r',
+        currency: Currency.usd,
+        base: Currency.irr,
+        date: DateTime(2026, 10),
+        rate: Decimal.parse('1050000.5'),
+      ),
+    );
+    expect((await fx.getAll()).single.rate.toString(), '1050000.5');
+    final assets = DriftAssetRepository(db);
+    await assets.ensureBuiltIns();
+    await assets.insertMovement(
+      AssetMovement(id: 'm', assetTypeId: 'coin_emami', quantityMilli: 2000, date: DateTime(2026)),
+    );
+    await assets.upsertPrice(
+      AssetPrice(id: 'p', assetTypeId: 'coin_emami', date: DateTime(2026), price: const Money(900000000, Currency.irr)),
+    );
+    final h = AssetMath.holdings(
+      await assets.watchTypes().first,
+      await assets.watchMovements().first,
+      await assets.watchPrices().first,
+    );
+    expect(h.single.value, const Money(1800000000, Currency.irr));
+    await DriftCustomParserStore(db).save('local.x', '{}');
+    expect(await DriftCustomParserStore(db).getAll(), hasLength(1));
+
+    // Backups include the new tables.
+    final snap = await LedgerSnapshot(db).export();
+    expect((snap['tables'] as Map).keys, containsAll(['fx_rates', 'asset_movements', 'custom_parsers']));
+  });
 }

@@ -8,7 +8,21 @@ import 'tables.dart';
 
 part 'database.g.dart';
 
-@DriftDatabase(tables: [Accounts, Transactions, Postings, Settings, Drafts, SmsLinks])
+@DriftDatabase(
+  tables: [
+    Accounts,
+    Transactions,
+    Postings,
+    Settings,
+    Drafts,
+    SmsLinks,
+    FxRates,
+    AssetTypes,
+    AssetMovements,
+    AssetPrices,
+    CustomParsers,
+  ],
+)
 class KakaDatabase extends _$KakaDatabase {
   KakaDatabase(super.executor);
 
@@ -28,7 +42,7 @@ class KakaDatabase extends _$KakaDatabase {
   }
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -46,6 +60,11 @@ class KakaDatabase extends _$KakaDatabase {
         await m.addColumn(drafts, drafts.confidence);
       }
       if (from < 3) await m.createTable(smsLinks);
+      if (from < 4) {
+        for (final TableInfo<Table, dynamic> t in [fxRates, assetTypes, assetMovements, assetPrices, customParsers]) {
+          await m.createTable(t);
+        }
+      }
     },
   );
 }

@@ -75,6 +75,52 @@ class LedgerService {
     String note = '',
   }) => _record(TransactionFactory.transfer(from: from, to: to, amount: amount, at: at ?? _now(), note: note));
 
+  /// Exchange between accounts in different currencies via `FX:<cur>` accounts.
+  Future<void> recordExchange({
+    required Account from,
+    required Account to,
+    required Money fromAmount,
+    required Money toAmount,
+    DateTime? at,
+    String note = '',
+  }) async => _record(
+    TransactionFactory.exchange(
+      from: from,
+      to: to,
+      fromAmount: fromAmount,
+      toAmount: toAmount,
+      fxFrom: await fxAccount(from.currency),
+      fxTo: await fxAccount(to.currency),
+      at: at ?? _now(),
+      note: note,
+    ),
+  );
+
+  /// The system `FX:<cur>` equity account for [currency].
+  Future<Account> fxAccount(Currency currency) async {
+    final name = 'FX:${currency.code}';
+    final all = await _accounts.getAll();
+    final found = all.where((a) => a.isSystem && a.name == name && a.currency == currency);
+    if (found.isNotEmpty) return found.first;
+    final fx = Account(
+      id: Ids.next(),
+      name: name,
+      type: AccountType.equity,
+      currency: currency,
+      createdAt: _now(),
+      isSystem: true,
+    );
+    await _accounts.upsert(fx);
+    return fx;
+  }
+
+  /// Edit = record the corrected transaction, then void the original. History keeps both.
+  Future<void> replace(LedgerTransaction original, Future<void> Function() recordReplacement) async {
+    if (original.isVoided) throw const DomainException('ledger.already_voided');
+    await recordReplacement();
+    await voidTransaction(original);
+  }
+
   Future<void> voidTransaction(LedgerTransaction txn) => _transactions.markVoided(txn.id, _now());
 
   /// Balances of every account, human-signed.

@@ -87,3 +87,69 @@ class SmsLinks extends Table {
   @override
   Set<Column> get primaryKey => {id};
 }
+
+// ---- v4 ----
+
+@DataClassName('FxRateRow')
+class FxRates extends Table {
+  TextColumn get id => text()();
+  TextColumn get currency => text()();
+  TextColumn get base => text()();
+  DateTimeColumn get rateDate => dateTime()();
+
+  /// Exact decimal string ("1050000", "0.00095").
+  TextColumn get rate => text()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+@DataClassName('AssetTypeRow')
+class AssetTypes extends Table {
+  TextColumn get id => text()();
+  TextColumn get nameFa => text()();
+  TextColumn get nameEn => text()();
+  TextColumn get unit => text()();
+  BoolColumn get archived => boolean().withDefault(const Constant(false))();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+@DataClassName('AssetMovementRow')
+class AssetMovements extends Table {
+  TextColumn get id => text()();
+  TextColumn get assetTypeId => text().references(AssetTypes, #id)();
+  IntColumn get quantityMilli => integer()();
+  DateTimeColumn get movedAt => dateTime()();
+  IntColumn get totalMinor => integer().nullable()();
+  TextColumn get totalCurrency => text().nullable()();
+  TextColumn get note => text().withDefault(const Constant(''))();
+  DateTimeColumn get voidedAt => dateTime().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+@DataClassName('AssetPriceRow')
+class AssetPrices extends Table {
+  TextColumn get id => text()();
+  TextColumn get assetTypeId => text().references(AssetTypes, #id)();
+  DateTimeColumn get priceDate => dateTime()();
+  IntColumn get priceMinor => integer()();
+  TextColumn get currency => text()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+/// SMS templates the user taught Kaka ("learn a new bank"), as catalog JSON.
+@DataClassName('CustomParserRow')
+class CustomParsers extends Table {
+  TextColumn get id => text()();
+  TextColumn get json => text()();
+  DateTimeColumn get createdAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}

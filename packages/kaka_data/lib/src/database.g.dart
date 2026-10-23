@@ -2245,6 +2245,1592 @@ class SmsLinksCompanion extends UpdateCompanion<SmsLinkRow> {
   }
 }
 
+class $FxRatesTable extends FxRates with TableInfo<$FxRatesTable, FxRateRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $FxRatesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _currencyMeta = const VerificationMeta('currency');
+  @override
+  late final GeneratedColumn<String> currency = GeneratedColumn<String>(
+    'currency',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _baseMeta = const VerificationMeta('base');
+  @override
+  late final GeneratedColumn<String> base = GeneratedColumn<String>(
+    'base',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _rateDateMeta = const VerificationMeta('rateDate');
+  @override
+  late final GeneratedColumn<DateTime> rateDate = GeneratedColumn<DateTime>(
+    'rate_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _rateMeta = const VerificationMeta('rate');
+  @override
+  late final GeneratedColumn<String> rate = GeneratedColumn<String>(
+    'rate',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, currency, base, rateDate, rate];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'fx_rates';
+  @override
+  VerificationContext validateIntegrity(Insertable<FxRateRow> instance, {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('currency')) {
+      context.handle(_currencyMeta, currency.isAcceptableOrUnknown(data['currency']!, _currencyMeta));
+    } else if (isInserting) {
+      context.missing(_currencyMeta);
+    }
+    if (data.containsKey('base')) {
+      context.handle(_baseMeta, base.isAcceptableOrUnknown(data['base']!, _baseMeta));
+    } else if (isInserting) {
+      context.missing(_baseMeta);
+    }
+    if (data.containsKey('rate_date')) {
+      context.handle(_rateDateMeta, rateDate.isAcceptableOrUnknown(data['rate_date']!, _rateDateMeta));
+    } else if (isInserting) {
+      context.missing(_rateDateMeta);
+    }
+    if (data.containsKey('rate')) {
+      context.handle(_rateMeta, rate.isAcceptableOrUnknown(data['rate']!, _rateMeta));
+    } else if (isInserting) {
+      context.missing(_rateMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  FxRateRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return FxRateRow(
+      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      currency: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}currency'])!,
+      base: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}base'])!,
+      rateDate: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}rate_date'])!,
+      rate: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}rate'])!,
+    );
+  }
+
+  @override
+  $FxRatesTable createAlias(String alias) {
+    return $FxRatesTable(attachedDatabase, alias);
+  }
+}
+
+class FxRateRow extends DataClass implements Insertable<FxRateRow> {
+  final String id;
+  final String currency;
+  final String base;
+  final DateTime rateDate;
+
+  /// Exact decimal string ("1050000", "0.00095").
+  final String rate;
+  const FxRateRow({
+    required this.id,
+    required this.currency,
+    required this.base,
+    required this.rateDate,
+    required this.rate,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['currency'] = Variable<String>(currency);
+    map['base'] = Variable<String>(base);
+    map['rate_date'] = Variable<DateTime>(rateDate);
+    map['rate'] = Variable<String>(rate);
+    return map;
+  }
+
+  FxRatesCompanion toCompanion(bool nullToAbsent) {
+    return FxRatesCompanion(
+      id: Value(id),
+      currency: Value(currency),
+      base: Value(base),
+      rateDate: Value(rateDate),
+      rate: Value(rate),
+    );
+  }
+
+  factory FxRateRow.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return FxRateRow(
+      id: serializer.fromJson<String>(json['id']),
+      currency: serializer.fromJson<String>(json['currency']),
+      base: serializer.fromJson<String>(json['base']),
+      rateDate: serializer.fromJson<DateTime>(json['rateDate']),
+      rate: serializer.fromJson<String>(json['rate']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'currency': serializer.toJson<String>(currency),
+      'base': serializer.toJson<String>(base),
+      'rateDate': serializer.toJson<DateTime>(rateDate),
+      'rate': serializer.toJson<String>(rate),
+    };
+  }
+
+  FxRateRow copyWith({String? id, String? currency, String? base, DateTime? rateDate, String? rate}) => FxRateRow(
+    id: id ?? this.id,
+    currency: currency ?? this.currency,
+    base: base ?? this.base,
+    rateDate: rateDate ?? this.rateDate,
+    rate: rate ?? this.rate,
+  );
+  FxRateRow copyWithCompanion(FxRatesCompanion data) {
+    return FxRateRow(
+      id: data.id.present ? data.id.value : this.id,
+      currency: data.currency.present ? data.currency.value : this.currency,
+      base: data.base.present ? data.base.value : this.base,
+      rateDate: data.rateDate.present ? data.rateDate.value : this.rateDate,
+      rate: data.rate.present ? data.rate.value : this.rate,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FxRateRow(')
+          ..write('id: $id, ')
+          ..write('currency: $currency, ')
+          ..write('base: $base, ')
+          ..write('rateDate: $rateDate, ')
+          ..write('rate: $rate')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, currency, base, rateDate, rate);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is FxRateRow &&
+          other.id == this.id &&
+          other.currency == this.currency &&
+          other.base == this.base &&
+          other.rateDate == this.rateDate &&
+          other.rate == this.rate);
+}
+
+class FxRatesCompanion extends UpdateCompanion<FxRateRow> {
+  final Value<String> id;
+  final Value<String> currency;
+  final Value<String> base;
+  final Value<DateTime> rateDate;
+  final Value<String> rate;
+  final Value<int> rowid;
+  const FxRatesCompanion({
+    this.id = const Value.absent(),
+    this.currency = const Value.absent(),
+    this.base = const Value.absent(),
+    this.rateDate = const Value.absent(),
+    this.rate = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  FxRatesCompanion.insert({
+    required String id,
+    required String currency,
+    required String base,
+    required DateTime rateDate,
+    required String rate,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       currency = Value(currency),
+       base = Value(base),
+       rateDate = Value(rateDate),
+       rate = Value(rate);
+  static Insertable<FxRateRow> custom({
+    Expression<String>? id,
+    Expression<String>? currency,
+    Expression<String>? base,
+    Expression<DateTime>? rateDate,
+    Expression<String>? rate,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (currency != null) 'currency': currency,
+      if (base != null) 'base': base,
+      if (rateDate != null) 'rate_date': rateDate,
+      if (rate != null) 'rate': rate,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  FxRatesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? currency,
+    Value<String>? base,
+    Value<DateTime>? rateDate,
+    Value<String>? rate,
+    Value<int>? rowid,
+  }) {
+    return FxRatesCompanion(
+      id: id ?? this.id,
+      currency: currency ?? this.currency,
+      base: base ?? this.base,
+      rateDate: rateDate ?? this.rateDate,
+      rate: rate ?? this.rate,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (currency.present) {
+      map['currency'] = Variable<String>(currency.value);
+    }
+    if (base.present) {
+      map['base'] = Variable<String>(base.value);
+    }
+    if (rateDate.present) {
+      map['rate_date'] = Variable<DateTime>(rateDate.value);
+    }
+    if (rate.present) {
+      map['rate'] = Variable<String>(rate.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FxRatesCompanion(')
+          ..write('id: $id, ')
+          ..write('currency: $currency, ')
+          ..write('base: $base, ')
+          ..write('rateDate: $rateDate, ')
+          ..write('rate: $rate, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $AssetTypesTable extends AssetTypes with TableInfo<$AssetTypesTable, AssetTypeRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AssetTypesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameFaMeta = const VerificationMeta('nameFa');
+  @override
+  late final GeneratedColumn<String> nameFa = GeneratedColumn<String>(
+    'name_fa',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameEnMeta = const VerificationMeta('nameEn');
+  @override
+  late final GeneratedColumn<String> nameEn = GeneratedColumn<String>(
+    'name_en',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _unitMeta = const VerificationMeta('unit');
+  @override
+  late final GeneratedColumn<String> unit = GeneratedColumn<String>(
+    'unit',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _archivedMeta = const VerificationMeta('archived');
+  @override
+  late final GeneratedColumn<bool> archived = GeneratedColumn<bool>(
+    'archived',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("archived" IN (0, 1))'),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, nameFa, nameEn, unit, archived];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'asset_types';
+  @override
+  VerificationContext validateIntegrity(Insertable<AssetTypeRow> instance, {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name_fa')) {
+      context.handle(_nameFaMeta, nameFa.isAcceptableOrUnknown(data['name_fa']!, _nameFaMeta));
+    } else if (isInserting) {
+      context.missing(_nameFaMeta);
+    }
+    if (data.containsKey('name_en')) {
+      context.handle(_nameEnMeta, nameEn.isAcceptableOrUnknown(data['name_en']!, _nameEnMeta));
+    } else if (isInserting) {
+      context.missing(_nameEnMeta);
+    }
+    if (data.containsKey('unit')) {
+      context.handle(_unitMeta, unit.isAcceptableOrUnknown(data['unit']!, _unitMeta));
+    } else if (isInserting) {
+      context.missing(_unitMeta);
+    }
+    if (data.containsKey('archived')) {
+      context.handle(_archivedMeta, archived.isAcceptableOrUnknown(data['archived']!, _archivedMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  AssetTypeRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AssetTypeRow(
+      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      nameFa: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}name_fa'])!,
+      nameEn: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}name_en'])!,
+      unit: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}unit'])!,
+      archived: attachedDatabase.typeMapping.read(DriftSqlType.bool, data['${effectivePrefix}archived'])!,
+    );
+  }
+
+  @override
+  $AssetTypesTable createAlias(String alias) {
+    return $AssetTypesTable(attachedDatabase, alias);
+  }
+}
+
+class AssetTypeRow extends DataClass implements Insertable<AssetTypeRow> {
+  final String id;
+  final String nameFa;
+  final String nameEn;
+  final String unit;
+  final bool archived;
+  const AssetTypeRow({
+    required this.id,
+    required this.nameFa,
+    required this.nameEn,
+    required this.unit,
+    required this.archived,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name_fa'] = Variable<String>(nameFa);
+    map['name_en'] = Variable<String>(nameEn);
+    map['unit'] = Variable<String>(unit);
+    map['archived'] = Variable<bool>(archived);
+    return map;
+  }
+
+  AssetTypesCompanion toCompanion(bool nullToAbsent) {
+    return AssetTypesCompanion(
+      id: Value(id),
+      nameFa: Value(nameFa),
+      nameEn: Value(nameEn),
+      unit: Value(unit),
+      archived: Value(archived),
+    );
+  }
+
+  factory AssetTypeRow.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AssetTypeRow(
+      id: serializer.fromJson<String>(json['id']),
+      nameFa: serializer.fromJson<String>(json['nameFa']),
+      nameEn: serializer.fromJson<String>(json['nameEn']),
+      unit: serializer.fromJson<String>(json['unit']),
+      archived: serializer.fromJson<bool>(json['archived']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'nameFa': serializer.toJson<String>(nameFa),
+      'nameEn': serializer.toJson<String>(nameEn),
+      'unit': serializer.toJson<String>(unit),
+      'archived': serializer.toJson<bool>(archived),
+    };
+  }
+
+  AssetTypeRow copyWith({String? id, String? nameFa, String? nameEn, String? unit, bool? archived}) => AssetTypeRow(
+    id: id ?? this.id,
+    nameFa: nameFa ?? this.nameFa,
+    nameEn: nameEn ?? this.nameEn,
+    unit: unit ?? this.unit,
+    archived: archived ?? this.archived,
+  );
+  AssetTypeRow copyWithCompanion(AssetTypesCompanion data) {
+    return AssetTypeRow(
+      id: data.id.present ? data.id.value : this.id,
+      nameFa: data.nameFa.present ? data.nameFa.value : this.nameFa,
+      nameEn: data.nameEn.present ? data.nameEn.value : this.nameEn,
+      unit: data.unit.present ? data.unit.value : this.unit,
+      archived: data.archived.present ? data.archived.value : this.archived,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AssetTypeRow(')
+          ..write('id: $id, ')
+          ..write('nameFa: $nameFa, ')
+          ..write('nameEn: $nameEn, ')
+          ..write('unit: $unit, ')
+          ..write('archived: $archived')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, nameFa, nameEn, unit, archived);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AssetTypeRow &&
+          other.id == this.id &&
+          other.nameFa == this.nameFa &&
+          other.nameEn == this.nameEn &&
+          other.unit == this.unit &&
+          other.archived == this.archived);
+}
+
+class AssetTypesCompanion extends UpdateCompanion<AssetTypeRow> {
+  final Value<String> id;
+  final Value<String> nameFa;
+  final Value<String> nameEn;
+  final Value<String> unit;
+  final Value<bool> archived;
+  final Value<int> rowid;
+  const AssetTypesCompanion({
+    this.id = const Value.absent(),
+    this.nameFa = const Value.absent(),
+    this.nameEn = const Value.absent(),
+    this.unit = const Value.absent(),
+    this.archived = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AssetTypesCompanion.insert({
+    required String id,
+    required String nameFa,
+    required String nameEn,
+    required String unit,
+    this.archived = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       nameFa = Value(nameFa),
+       nameEn = Value(nameEn),
+       unit = Value(unit);
+  static Insertable<AssetTypeRow> custom({
+    Expression<String>? id,
+    Expression<String>? nameFa,
+    Expression<String>? nameEn,
+    Expression<String>? unit,
+    Expression<bool>? archived,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (nameFa != null) 'name_fa': nameFa,
+      if (nameEn != null) 'name_en': nameEn,
+      if (unit != null) 'unit': unit,
+      if (archived != null) 'archived': archived,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AssetTypesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? nameFa,
+    Value<String>? nameEn,
+    Value<String>? unit,
+    Value<bool>? archived,
+    Value<int>? rowid,
+  }) {
+    return AssetTypesCompanion(
+      id: id ?? this.id,
+      nameFa: nameFa ?? this.nameFa,
+      nameEn: nameEn ?? this.nameEn,
+      unit: unit ?? this.unit,
+      archived: archived ?? this.archived,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (nameFa.present) {
+      map['name_fa'] = Variable<String>(nameFa.value);
+    }
+    if (nameEn.present) {
+      map['name_en'] = Variable<String>(nameEn.value);
+    }
+    if (unit.present) {
+      map['unit'] = Variable<String>(unit.value);
+    }
+    if (archived.present) {
+      map['archived'] = Variable<bool>(archived.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AssetTypesCompanion(')
+          ..write('id: $id, ')
+          ..write('nameFa: $nameFa, ')
+          ..write('nameEn: $nameEn, ')
+          ..write('unit: $unit, ')
+          ..write('archived: $archived, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $AssetMovementsTable extends AssetMovements with TableInfo<$AssetMovementsTable, AssetMovementRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AssetMovementsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _assetTypeIdMeta = const VerificationMeta('assetTypeId');
+  @override
+  late final GeneratedColumn<String> assetTypeId = GeneratedColumn<String>(
+    'asset_type_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('REFERENCES asset_types (id)'),
+  );
+  static const VerificationMeta _quantityMilliMeta = const VerificationMeta('quantityMilli');
+  @override
+  late final GeneratedColumn<int> quantityMilli = GeneratedColumn<int>(
+    'quantity_milli',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _movedAtMeta = const VerificationMeta('movedAt');
+  @override
+  late final GeneratedColumn<DateTime> movedAt = GeneratedColumn<DateTime>(
+    'moved_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _totalMinorMeta = const VerificationMeta('totalMinor');
+  @override
+  late final GeneratedColumn<int> totalMinor = GeneratedColumn<int>(
+    'total_minor',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _totalCurrencyMeta = const VerificationMeta('totalCurrency');
+  @override
+  late final GeneratedColumn<String> totalCurrency = GeneratedColumn<String>(
+    'total_currency',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _noteMeta = const VerificationMeta('note');
+  @override
+  late final GeneratedColumn<String> note = GeneratedColumn<String>(
+    'note',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _voidedAtMeta = const VerificationMeta('voidedAt');
+  @override
+  late final GeneratedColumn<DateTime> voidedAt = GeneratedColumn<DateTime>(
+    'voided_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    assetTypeId,
+    quantityMilli,
+    movedAt,
+    totalMinor,
+    totalCurrency,
+    note,
+    voidedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'asset_movements';
+  @override
+  VerificationContext validateIntegrity(Insertable<AssetMovementRow> instance, {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('asset_type_id')) {
+      context.handle(_assetTypeIdMeta, assetTypeId.isAcceptableOrUnknown(data['asset_type_id']!, _assetTypeIdMeta));
+    } else if (isInserting) {
+      context.missing(_assetTypeIdMeta);
+    }
+    if (data.containsKey('quantity_milli')) {
+      context.handle(
+        _quantityMilliMeta,
+        quantityMilli.isAcceptableOrUnknown(data['quantity_milli']!, _quantityMilliMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_quantityMilliMeta);
+    }
+    if (data.containsKey('moved_at')) {
+      context.handle(_movedAtMeta, movedAt.isAcceptableOrUnknown(data['moved_at']!, _movedAtMeta));
+    } else if (isInserting) {
+      context.missing(_movedAtMeta);
+    }
+    if (data.containsKey('total_minor')) {
+      context.handle(_totalMinorMeta, totalMinor.isAcceptableOrUnknown(data['total_minor']!, _totalMinorMeta));
+    }
+    if (data.containsKey('total_currency')) {
+      context.handle(
+        _totalCurrencyMeta,
+        totalCurrency.isAcceptableOrUnknown(data['total_currency']!, _totalCurrencyMeta),
+      );
+    }
+    if (data.containsKey('note')) {
+      context.handle(_noteMeta, note.isAcceptableOrUnknown(data['note']!, _noteMeta));
+    }
+    if (data.containsKey('voided_at')) {
+      context.handle(_voidedAtMeta, voidedAt.isAcceptableOrUnknown(data['voided_at']!, _voidedAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  AssetMovementRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AssetMovementRow(
+      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      assetTypeId: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}asset_type_id'])!,
+      quantityMilli: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}quantity_milli'])!,
+      movedAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}moved_at'])!,
+      totalMinor: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}total_minor']),
+      totalCurrency: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}total_currency']),
+      note: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}note'])!,
+      voidedAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}voided_at']),
+    );
+  }
+
+  @override
+  $AssetMovementsTable createAlias(String alias) {
+    return $AssetMovementsTable(attachedDatabase, alias);
+  }
+}
+
+class AssetMovementRow extends DataClass implements Insertable<AssetMovementRow> {
+  final String id;
+  final String assetTypeId;
+  final int quantityMilli;
+  final DateTime movedAt;
+  final int? totalMinor;
+  final String? totalCurrency;
+  final String note;
+  final DateTime? voidedAt;
+  const AssetMovementRow({
+    required this.id,
+    required this.assetTypeId,
+    required this.quantityMilli,
+    required this.movedAt,
+    this.totalMinor,
+    this.totalCurrency,
+    required this.note,
+    this.voidedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['asset_type_id'] = Variable<String>(assetTypeId);
+    map['quantity_milli'] = Variable<int>(quantityMilli);
+    map['moved_at'] = Variable<DateTime>(movedAt);
+    if (!nullToAbsent || totalMinor != null) {
+      map['total_minor'] = Variable<int>(totalMinor);
+    }
+    if (!nullToAbsent || totalCurrency != null) {
+      map['total_currency'] = Variable<String>(totalCurrency);
+    }
+    map['note'] = Variable<String>(note);
+    if (!nullToAbsent || voidedAt != null) {
+      map['voided_at'] = Variable<DateTime>(voidedAt);
+    }
+    return map;
+  }
+
+  AssetMovementsCompanion toCompanion(bool nullToAbsent) {
+    return AssetMovementsCompanion(
+      id: Value(id),
+      assetTypeId: Value(assetTypeId),
+      quantityMilli: Value(quantityMilli),
+      movedAt: Value(movedAt),
+      totalMinor: totalMinor == null && nullToAbsent ? const Value.absent() : Value(totalMinor),
+      totalCurrency: totalCurrency == null && nullToAbsent ? const Value.absent() : Value(totalCurrency),
+      note: Value(note),
+      voidedAt: voidedAt == null && nullToAbsent ? const Value.absent() : Value(voidedAt),
+    );
+  }
+
+  factory AssetMovementRow.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AssetMovementRow(
+      id: serializer.fromJson<String>(json['id']),
+      assetTypeId: serializer.fromJson<String>(json['assetTypeId']),
+      quantityMilli: serializer.fromJson<int>(json['quantityMilli']),
+      movedAt: serializer.fromJson<DateTime>(json['movedAt']),
+      totalMinor: serializer.fromJson<int?>(json['totalMinor']),
+      totalCurrency: serializer.fromJson<String?>(json['totalCurrency']),
+      note: serializer.fromJson<String>(json['note']),
+      voidedAt: serializer.fromJson<DateTime?>(json['voidedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'assetTypeId': serializer.toJson<String>(assetTypeId),
+      'quantityMilli': serializer.toJson<int>(quantityMilli),
+      'movedAt': serializer.toJson<DateTime>(movedAt),
+      'totalMinor': serializer.toJson<int?>(totalMinor),
+      'totalCurrency': serializer.toJson<String?>(totalCurrency),
+      'note': serializer.toJson<String>(note),
+      'voidedAt': serializer.toJson<DateTime?>(voidedAt),
+    };
+  }
+
+  AssetMovementRow copyWith({
+    String? id,
+    String? assetTypeId,
+    int? quantityMilli,
+    DateTime? movedAt,
+    Value<int?> totalMinor = const Value.absent(),
+    Value<String?> totalCurrency = const Value.absent(),
+    String? note,
+    Value<DateTime?> voidedAt = const Value.absent(),
+  }) => AssetMovementRow(
+    id: id ?? this.id,
+    assetTypeId: assetTypeId ?? this.assetTypeId,
+    quantityMilli: quantityMilli ?? this.quantityMilli,
+    movedAt: movedAt ?? this.movedAt,
+    totalMinor: totalMinor.present ? totalMinor.value : this.totalMinor,
+    totalCurrency: totalCurrency.present ? totalCurrency.value : this.totalCurrency,
+    note: note ?? this.note,
+    voidedAt: voidedAt.present ? voidedAt.value : this.voidedAt,
+  );
+  AssetMovementRow copyWithCompanion(AssetMovementsCompanion data) {
+    return AssetMovementRow(
+      id: data.id.present ? data.id.value : this.id,
+      assetTypeId: data.assetTypeId.present ? data.assetTypeId.value : this.assetTypeId,
+      quantityMilli: data.quantityMilli.present ? data.quantityMilli.value : this.quantityMilli,
+      movedAt: data.movedAt.present ? data.movedAt.value : this.movedAt,
+      totalMinor: data.totalMinor.present ? data.totalMinor.value : this.totalMinor,
+      totalCurrency: data.totalCurrency.present ? data.totalCurrency.value : this.totalCurrency,
+      note: data.note.present ? data.note.value : this.note,
+      voidedAt: data.voidedAt.present ? data.voidedAt.value : this.voidedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AssetMovementRow(')
+          ..write('id: $id, ')
+          ..write('assetTypeId: $assetTypeId, ')
+          ..write('quantityMilli: $quantityMilli, ')
+          ..write('movedAt: $movedAt, ')
+          ..write('totalMinor: $totalMinor, ')
+          ..write('totalCurrency: $totalCurrency, ')
+          ..write('note: $note, ')
+          ..write('voidedAt: $voidedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, assetTypeId, quantityMilli, movedAt, totalMinor, totalCurrency, note, voidedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AssetMovementRow &&
+          other.id == this.id &&
+          other.assetTypeId == this.assetTypeId &&
+          other.quantityMilli == this.quantityMilli &&
+          other.movedAt == this.movedAt &&
+          other.totalMinor == this.totalMinor &&
+          other.totalCurrency == this.totalCurrency &&
+          other.note == this.note &&
+          other.voidedAt == this.voidedAt);
+}
+
+class AssetMovementsCompanion extends UpdateCompanion<AssetMovementRow> {
+  final Value<String> id;
+  final Value<String> assetTypeId;
+  final Value<int> quantityMilli;
+  final Value<DateTime> movedAt;
+  final Value<int?> totalMinor;
+  final Value<String?> totalCurrency;
+  final Value<String> note;
+  final Value<DateTime?> voidedAt;
+  final Value<int> rowid;
+  const AssetMovementsCompanion({
+    this.id = const Value.absent(),
+    this.assetTypeId = const Value.absent(),
+    this.quantityMilli = const Value.absent(),
+    this.movedAt = const Value.absent(),
+    this.totalMinor = const Value.absent(),
+    this.totalCurrency = const Value.absent(),
+    this.note = const Value.absent(),
+    this.voidedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AssetMovementsCompanion.insert({
+    required String id,
+    required String assetTypeId,
+    required int quantityMilli,
+    required DateTime movedAt,
+    this.totalMinor = const Value.absent(),
+    this.totalCurrency = const Value.absent(),
+    this.note = const Value.absent(),
+    this.voidedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       assetTypeId = Value(assetTypeId),
+       quantityMilli = Value(quantityMilli),
+       movedAt = Value(movedAt);
+  static Insertable<AssetMovementRow> custom({
+    Expression<String>? id,
+    Expression<String>? assetTypeId,
+    Expression<int>? quantityMilli,
+    Expression<DateTime>? movedAt,
+    Expression<int>? totalMinor,
+    Expression<String>? totalCurrency,
+    Expression<String>? note,
+    Expression<DateTime>? voidedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (assetTypeId != null) 'asset_type_id': assetTypeId,
+      if (quantityMilli != null) 'quantity_milli': quantityMilli,
+      if (movedAt != null) 'moved_at': movedAt,
+      if (totalMinor != null) 'total_minor': totalMinor,
+      if (totalCurrency != null) 'total_currency': totalCurrency,
+      if (note != null) 'note': note,
+      if (voidedAt != null) 'voided_at': voidedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AssetMovementsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? assetTypeId,
+    Value<int>? quantityMilli,
+    Value<DateTime>? movedAt,
+    Value<int?>? totalMinor,
+    Value<String?>? totalCurrency,
+    Value<String>? note,
+    Value<DateTime?>? voidedAt,
+    Value<int>? rowid,
+  }) {
+    return AssetMovementsCompanion(
+      id: id ?? this.id,
+      assetTypeId: assetTypeId ?? this.assetTypeId,
+      quantityMilli: quantityMilli ?? this.quantityMilli,
+      movedAt: movedAt ?? this.movedAt,
+      totalMinor: totalMinor ?? this.totalMinor,
+      totalCurrency: totalCurrency ?? this.totalCurrency,
+      note: note ?? this.note,
+      voidedAt: voidedAt ?? this.voidedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (assetTypeId.present) {
+      map['asset_type_id'] = Variable<String>(assetTypeId.value);
+    }
+    if (quantityMilli.present) {
+      map['quantity_milli'] = Variable<int>(quantityMilli.value);
+    }
+    if (movedAt.present) {
+      map['moved_at'] = Variable<DateTime>(movedAt.value);
+    }
+    if (totalMinor.present) {
+      map['total_minor'] = Variable<int>(totalMinor.value);
+    }
+    if (totalCurrency.present) {
+      map['total_currency'] = Variable<String>(totalCurrency.value);
+    }
+    if (note.present) {
+      map['note'] = Variable<String>(note.value);
+    }
+    if (voidedAt.present) {
+      map['voided_at'] = Variable<DateTime>(voidedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AssetMovementsCompanion(')
+          ..write('id: $id, ')
+          ..write('assetTypeId: $assetTypeId, ')
+          ..write('quantityMilli: $quantityMilli, ')
+          ..write('movedAt: $movedAt, ')
+          ..write('totalMinor: $totalMinor, ')
+          ..write('totalCurrency: $totalCurrency, ')
+          ..write('note: $note, ')
+          ..write('voidedAt: $voidedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $AssetPricesTable extends AssetPrices with TableInfo<$AssetPricesTable, AssetPriceRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AssetPricesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _assetTypeIdMeta = const VerificationMeta('assetTypeId');
+  @override
+  late final GeneratedColumn<String> assetTypeId = GeneratedColumn<String>(
+    'asset_type_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('REFERENCES asset_types (id)'),
+  );
+  static const VerificationMeta _priceDateMeta = const VerificationMeta('priceDate');
+  @override
+  late final GeneratedColumn<DateTime> priceDate = GeneratedColumn<DateTime>(
+    'price_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _priceMinorMeta = const VerificationMeta('priceMinor');
+  @override
+  late final GeneratedColumn<int> priceMinor = GeneratedColumn<int>(
+    'price_minor',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _currencyMeta = const VerificationMeta('currency');
+  @override
+  late final GeneratedColumn<String> currency = GeneratedColumn<String>(
+    'currency',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, assetTypeId, priceDate, priceMinor, currency];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'asset_prices';
+  @override
+  VerificationContext validateIntegrity(Insertable<AssetPriceRow> instance, {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('asset_type_id')) {
+      context.handle(_assetTypeIdMeta, assetTypeId.isAcceptableOrUnknown(data['asset_type_id']!, _assetTypeIdMeta));
+    } else if (isInserting) {
+      context.missing(_assetTypeIdMeta);
+    }
+    if (data.containsKey('price_date')) {
+      context.handle(_priceDateMeta, priceDate.isAcceptableOrUnknown(data['price_date']!, _priceDateMeta));
+    } else if (isInserting) {
+      context.missing(_priceDateMeta);
+    }
+    if (data.containsKey('price_minor')) {
+      context.handle(_priceMinorMeta, priceMinor.isAcceptableOrUnknown(data['price_minor']!, _priceMinorMeta));
+    } else if (isInserting) {
+      context.missing(_priceMinorMeta);
+    }
+    if (data.containsKey('currency')) {
+      context.handle(_currencyMeta, currency.isAcceptableOrUnknown(data['currency']!, _currencyMeta));
+    } else if (isInserting) {
+      context.missing(_currencyMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  AssetPriceRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AssetPriceRow(
+      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      assetTypeId: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}asset_type_id'])!,
+      priceDate: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}price_date'])!,
+      priceMinor: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}price_minor'])!,
+      currency: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}currency'])!,
+    );
+  }
+
+  @override
+  $AssetPricesTable createAlias(String alias) {
+    return $AssetPricesTable(attachedDatabase, alias);
+  }
+}
+
+class AssetPriceRow extends DataClass implements Insertable<AssetPriceRow> {
+  final String id;
+  final String assetTypeId;
+  final DateTime priceDate;
+  final int priceMinor;
+  final String currency;
+  const AssetPriceRow({
+    required this.id,
+    required this.assetTypeId,
+    required this.priceDate,
+    required this.priceMinor,
+    required this.currency,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['asset_type_id'] = Variable<String>(assetTypeId);
+    map['price_date'] = Variable<DateTime>(priceDate);
+    map['price_minor'] = Variable<int>(priceMinor);
+    map['currency'] = Variable<String>(currency);
+    return map;
+  }
+
+  AssetPricesCompanion toCompanion(bool nullToAbsent) {
+    return AssetPricesCompanion(
+      id: Value(id),
+      assetTypeId: Value(assetTypeId),
+      priceDate: Value(priceDate),
+      priceMinor: Value(priceMinor),
+      currency: Value(currency),
+    );
+  }
+
+  factory AssetPriceRow.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AssetPriceRow(
+      id: serializer.fromJson<String>(json['id']),
+      assetTypeId: serializer.fromJson<String>(json['assetTypeId']),
+      priceDate: serializer.fromJson<DateTime>(json['priceDate']),
+      priceMinor: serializer.fromJson<int>(json['priceMinor']),
+      currency: serializer.fromJson<String>(json['currency']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'assetTypeId': serializer.toJson<String>(assetTypeId),
+      'priceDate': serializer.toJson<DateTime>(priceDate),
+      'priceMinor': serializer.toJson<int>(priceMinor),
+      'currency': serializer.toJson<String>(currency),
+    };
+  }
+
+  AssetPriceRow copyWith({String? id, String? assetTypeId, DateTime? priceDate, int? priceMinor, String? currency}) =>
+      AssetPriceRow(
+        id: id ?? this.id,
+        assetTypeId: assetTypeId ?? this.assetTypeId,
+        priceDate: priceDate ?? this.priceDate,
+        priceMinor: priceMinor ?? this.priceMinor,
+        currency: currency ?? this.currency,
+      );
+  AssetPriceRow copyWithCompanion(AssetPricesCompanion data) {
+    return AssetPriceRow(
+      id: data.id.present ? data.id.value : this.id,
+      assetTypeId: data.assetTypeId.present ? data.assetTypeId.value : this.assetTypeId,
+      priceDate: data.priceDate.present ? data.priceDate.value : this.priceDate,
+      priceMinor: data.priceMinor.present ? data.priceMinor.value : this.priceMinor,
+      currency: data.currency.present ? data.currency.value : this.currency,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AssetPriceRow(')
+          ..write('id: $id, ')
+          ..write('assetTypeId: $assetTypeId, ')
+          ..write('priceDate: $priceDate, ')
+          ..write('priceMinor: $priceMinor, ')
+          ..write('currency: $currency')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, assetTypeId, priceDate, priceMinor, currency);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AssetPriceRow &&
+          other.id == this.id &&
+          other.assetTypeId == this.assetTypeId &&
+          other.priceDate == this.priceDate &&
+          other.priceMinor == this.priceMinor &&
+          other.currency == this.currency);
+}
+
+class AssetPricesCompanion extends UpdateCompanion<AssetPriceRow> {
+  final Value<String> id;
+  final Value<String> assetTypeId;
+  final Value<DateTime> priceDate;
+  final Value<int> priceMinor;
+  final Value<String> currency;
+  final Value<int> rowid;
+  const AssetPricesCompanion({
+    this.id = const Value.absent(),
+    this.assetTypeId = const Value.absent(),
+    this.priceDate = const Value.absent(),
+    this.priceMinor = const Value.absent(),
+    this.currency = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AssetPricesCompanion.insert({
+    required String id,
+    required String assetTypeId,
+    required DateTime priceDate,
+    required int priceMinor,
+    required String currency,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       assetTypeId = Value(assetTypeId),
+       priceDate = Value(priceDate),
+       priceMinor = Value(priceMinor),
+       currency = Value(currency);
+  static Insertable<AssetPriceRow> custom({
+    Expression<String>? id,
+    Expression<String>? assetTypeId,
+    Expression<DateTime>? priceDate,
+    Expression<int>? priceMinor,
+    Expression<String>? currency,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (assetTypeId != null) 'asset_type_id': assetTypeId,
+      if (priceDate != null) 'price_date': priceDate,
+      if (priceMinor != null) 'price_minor': priceMinor,
+      if (currency != null) 'currency': currency,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AssetPricesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? assetTypeId,
+    Value<DateTime>? priceDate,
+    Value<int>? priceMinor,
+    Value<String>? currency,
+    Value<int>? rowid,
+  }) {
+    return AssetPricesCompanion(
+      id: id ?? this.id,
+      assetTypeId: assetTypeId ?? this.assetTypeId,
+      priceDate: priceDate ?? this.priceDate,
+      priceMinor: priceMinor ?? this.priceMinor,
+      currency: currency ?? this.currency,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (assetTypeId.present) {
+      map['asset_type_id'] = Variable<String>(assetTypeId.value);
+    }
+    if (priceDate.present) {
+      map['price_date'] = Variable<DateTime>(priceDate.value);
+    }
+    if (priceMinor.present) {
+      map['price_minor'] = Variable<int>(priceMinor.value);
+    }
+    if (currency.present) {
+      map['currency'] = Variable<String>(currency.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AssetPricesCompanion(')
+          ..write('id: $id, ')
+          ..write('assetTypeId: $assetTypeId, ')
+          ..write('priceDate: $priceDate, ')
+          ..write('priceMinor: $priceMinor, ')
+          ..write('currency: $currency, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CustomParsersTable extends CustomParsers with TableInfo<$CustomParsersTable, CustomParserRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CustomParsersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _jsonMeta = const VerificationMeta('json');
+  @override
+  late final GeneratedColumn<String> json = GeneratedColumn<String>(
+    'json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, json, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'custom_parsers';
+  @override
+  VerificationContext validateIntegrity(Insertable<CustomParserRow> instance, {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('json')) {
+      context.handle(_jsonMeta, json.isAcceptableOrUnknown(data['json']!, _jsonMeta));
+    } else if (isInserting) {
+      context.missing(_jsonMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta, createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CustomParserRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CustomParserRow(
+      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      json: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}json'])!,
+      createdAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+    );
+  }
+
+  @override
+  $CustomParsersTable createAlias(String alias) {
+    return $CustomParsersTable(attachedDatabase, alias);
+  }
+}
+
+class CustomParserRow extends DataClass implements Insertable<CustomParserRow> {
+  final String id;
+  final String json;
+  final DateTime createdAt;
+  const CustomParserRow({required this.id, required this.json, required this.createdAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['json'] = Variable<String>(json);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  CustomParsersCompanion toCompanion(bool nullToAbsent) {
+    return CustomParsersCompanion(id: Value(id), json: Value(json), createdAt: Value(createdAt));
+  }
+
+  factory CustomParserRow.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CustomParserRow(
+      id: serializer.fromJson<String>(json['id']),
+      json: serializer.fromJson<String>(json['json']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'json': serializer.toJson<String>(json),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  CustomParserRow copyWith({String? id, String? json, DateTime? createdAt}) =>
+      CustomParserRow(id: id ?? this.id, json: json ?? this.json, createdAt: createdAt ?? this.createdAt);
+  CustomParserRow copyWithCompanion(CustomParsersCompanion data) {
+    return CustomParserRow(
+      id: data.id.present ? data.id.value : this.id,
+      json: data.json.present ? data.json.value : this.json,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CustomParserRow(')
+          ..write('id: $id, ')
+          ..write('json: $json, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, json, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CustomParserRow && other.id == this.id && other.json == this.json && other.createdAt == this.createdAt);
+}
+
+class CustomParsersCompanion extends UpdateCompanion<CustomParserRow> {
+  final Value<String> id;
+  final Value<String> json;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const CustomParsersCompanion({
+    this.id = const Value.absent(),
+    this.json = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CustomParsersCompanion.insert({
+    required String id,
+    required String json,
+    required DateTime createdAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       json = Value(json),
+       createdAt = Value(createdAt);
+  static Insertable<CustomParserRow> custom({
+    Expression<String>? id,
+    Expression<String>? json,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (json != null) 'json': json,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CustomParsersCompanion copyWith({
+    Value<String>? id,
+    Value<String>? json,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return CustomParsersCompanion(
+      id: id ?? this.id,
+      json: json ?? this.json,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (json.present) {
+      map['json'] = Variable<String>(json.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CustomParsersCompanion(')
+          ..write('id: $id, ')
+          ..write('json: $json, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$KakaDatabase extends GeneratedDatabase {
   _$KakaDatabase(QueryExecutor e) : super(e);
   $KakaDatabaseManager get managers => $KakaDatabaseManager(this);
@@ -2254,10 +3840,27 @@ abstract class _$KakaDatabase extends GeneratedDatabase {
   late final $SettingsTable settings = $SettingsTable(this);
   late final $DraftsTable drafts = $DraftsTable(this);
   late final $SmsLinksTable smsLinks = $SmsLinksTable(this);
+  late final $FxRatesTable fxRates = $FxRatesTable(this);
+  late final $AssetTypesTable assetTypes = $AssetTypesTable(this);
+  late final $AssetMovementsTable assetMovements = $AssetMovementsTable(this);
+  late final $AssetPricesTable assetPrices = $AssetPricesTable(this);
+  late final $CustomParsersTable customParsers = $CustomParsersTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables => allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [accounts, transactions, postings, settings, drafts, smsLinks];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    accounts,
+    transactions,
+    postings,
+    settings,
+    drafts,
+    smsLinks,
+    fxRates,
+    assetTypes,
+    assetMovements,
+    assetPrices,
+    customParsers,
+  ];
 }
 
 typedef $$AccountsTableCreateCompanionBuilder =
@@ -3677,6 +5280,1164 @@ typedef $$SmsLinksTableProcessedTableManager =
       SmsLinkRow,
       PrefetchHooks Function()
     >;
+typedef $$FxRatesTableCreateCompanionBuilder =
+    FxRatesCompanion Function({
+      required String id,
+      required String currency,
+      required String base,
+      required DateTime rateDate,
+      required String rate,
+      Value<int> rowid,
+    });
+typedef $$FxRatesTableUpdateCompanionBuilder =
+    FxRatesCompanion Function({
+      Value<String> id,
+      Value<String> currency,
+      Value<String> base,
+      Value<DateTime> rateDate,
+      Value<String> rate,
+      Value<int> rowid,
+    });
+
+class $$FxRatesTableFilterComposer extends Composer<_$KakaDatabase, $FxRatesTable> {
+  $$FxRatesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get currency =>
+      $composableBuilder(column: $table.currency, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get base => $composableBuilder(column: $table.base, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get rateDate =>
+      $composableBuilder(column: $table.rateDate, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get rate => $composableBuilder(column: $table.rate, builder: (column) => ColumnFilters(column));
+}
+
+class $$FxRatesTableOrderingComposer extends Composer<_$KakaDatabase, $FxRatesTable> {
+  $$FxRatesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get currency =>
+      $composableBuilder(column: $table.currency, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get base =>
+      $composableBuilder(column: $table.base, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get rateDate =>
+      $composableBuilder(column: $table.rateDate, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get rate =>
+      $composableBuilder(column: $table.rate, builder: (column) => ColumnOrderings(column));
+}
+
+class $$FxRatesTableAnnotationComposer extends Composer<_$KakaDatabase, $FxRatesTable> {
+  $$FxRatesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id => $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get currency => $composableBuilder(column: $table.currency, builder: (column) => column);
+
+  GeneratedColumn<String> get base => $composableBuilder(column: $table.base, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get rateDate => $composableBuilder(column: $table.rateDate, builder: (column) => column);
+
+  GeneratedColumn<String> get rate => $composableBuilder(column: $table.rate, builder: (column) => column);
+}
+
+class $$FxRatesTableTableManager
+    extends
+        RootTableManager<
+          _$KakaDatabase,
+          $FxRatesTable,
+          FxRateRow,
+          $$FxRatesTableFilterComposer,
+          $$FxRatesTableOrderingComposer,
+          $$FxRatesTableAnnotationComposer,
+          $$FxRatesTableCreateCompanionBuilder,
+          $$FxRatesTableUpdateCompanionBuilder,
+          (FxRateRow, BaseReferences<_$KakaDatabase, $FxRatesTable, FxRateRow>),
+          FxRateRow,
+          PrefetchHooks Function()
+        > {
+  $$FxRatesTableTableManager(_$KakaDatabase db, $FxRatesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () => $$FxRatesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () => $$FxRatesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () => $$FxRatesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> currency = const Value.absent(),
+                Value<String> base = const Value.absent(),
+                Value<DateTime> rateDate = const Value.absent(),
+                Value<String> rate = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => FxRatesCompanion(
+                id: id,
+                currency: currency,
+                base: base,
+                rateDate: rateDate,
+                rate: rate,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String currency,
+                required String base,
+                required DateTime rateDate,
+                required String rate,
+                Value<int> rowid = const Value.absent(),
+              }) => FxRatesCompanion.insert(
+                id: id,
+                currency: currency,
+                base: base,
+                rateDate: rateDate,
+                rate: rate,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$FxRatesTable, FxRateRow>(table),
+                  BaseReferences<_$KakaDatabase, $FxRatesTable, FxRateRow>(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$FxRatesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$KakaDatabase,
+      $FxRatesTable,
+      FxRateRow,
+      $$FxRatesTableFilterComposer,
+      $$FxRatesTableOrderingComposer,
+      $$FxRatesTableAnnotationComposer,
+      $$FxRatesTableCreateCompanionBuilder,
+      $$FxRatesTableUpdateCompanionBuilder,
+      (FxRateRow, BaseReferences<_$KakaDatabase, $FxRatesTable, FxRateRow>),
+      FxRateRow,
+      PrefetchHooks Function()
+    >;
+typedef $$AssetTypesTableCreateCompanionBuilder =
+    AssetTypesCompanion Function({
+      required String id,
+      required String nameFa,
+      required String nameEn,
+      required String unit,
+      Value<bool> archived,
+      Value<int> rowid,
+    });
+typedef $$AssetTypesTableUpdateCompanionBuilder =
+    AssetTypesCompanion Function({
+      Value<String> id,
+      Value<String> nameFa,
+      Value<String> nameEn,
+      Value<String> unit,
+      Value<bool> archived,
+      Value<int> rowid,
+    });
+
+final class $$AssetTypesTableReferences extends BaseReferences<_$KakaDatabase, $AssetTypesTable, AssetTypeRow> {
+  $$AssetTypesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$AssetMovementsTable, List<AssetMovementRow>> _assetMovementsRefsTable(
+    _$KakaDatabase db,
+  ) => MultiTypedResultKey.fromTable(db.assetMovements, aliasName: 'asset_types__id__asset_movements__asset_type_id');
+
+  $$AssetMovementsTableProcessedTableManager get assetMovementsRefs {
+    final manager = $$AssetMovementsTableTableManager(
+      $_db,
+      $_db.assetMovements,
+    ).filter((f) => f.assetTypeId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_assetMovementsRefsTable($_db));
+    return ProcessedTableManager(manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$AssetPricesTable, List<AssetPriceRow>> _assetPricesRefsTable(_$KakaDatabase db) =>
+      MultiTypedResultKey.fromTable(db.assetPrices, aliasName: 'asset_types__id__asset_prices__asset_type_id');
+
+  $$AssetPricesTableProcessedTableManager get assetPricesRefs {
+    final manager = $$AssetPricesTableTableManager(
+      $_db,
+      $_db.assetPrices,
+    ).filter((f) => f.assetTypeId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_assetPricesRefsTable($_db));
+    return ProcessedTableManager(manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
+class $$AssetTypesTableFilterComposer extends Composer<_$KakaDatabase, $AssetTypesTable> {
+  $$AssetTypesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get nameFa =>
+      $composableBuilder(column: $table.nameFa, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get nameEn =>
+      $composableBuilder(column: $table.nameEn, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get unit => $composableBuilder(column: $table.unit, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get archived =>
+      $composableBuilder(column: $table.archived, builder: (column) => ColumnFilters(column));
+
+  Expression<bool> assetMovementsRefs(Expression<bool> Function($$AssetMovementsTableFilterComposer f) f) {
+    final $$AssetMovementsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.assetMovements,
+      getReferencedColumn: (t) => t.assetTypeId,
+      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
+          $$AssetMovementsTableFilterComposer(
+            $db: $db,
+            $table: $db.assetMovements,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> assetPricesRefs(Expression<bool> Function($$AssetPricesTableFilterComposer f) f) {
+    final $$AssetPricesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.assetPrices,
+      getReferencedColumn: (t) => t.assetTypeId,
+      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
+          $$AssetPricesTableFilterComposer(
+            $db: $db,
+            $table: $db.assetPrices,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$AssetTypesTableOrderingComposer extends Composer<_$KakaDatabase, $AssetTypesTable> {
+  $$AssetTypesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get nameFa =>
+      $composableBuilder(column: $table.nameFa, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get nameEn =>
+      $composableBuilder(column: $table.nameEn, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get unit =>
+      $composableBuilder(column: $table.unit, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get archived =>
+      $composableBuilder(column: $table.archived, builder: (column) => ColumnOrderings(column));
+}
+
+class $$AssetTypesTableAnnotationComposer extends Composer<_$KakaDatabase, $AssetTypesTable> {
+  $$AssetTypesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id => $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get nameFa => $composableBuilder(column: $table.nameFa, builder: (column) => column);
+
+  GeneratedColumn<String> get nameEn => $composableBuilder(column: $table.nameEn, builder: (column) => column);
+
+  GeneratedColumn<String> get unit => $composableBuilder(column: $table.unit, builder: (column) => column);
+
+  GeneratedColumn<bool> get archived => $composableBuilder(column: $table.archived, builder: (column) => column);
+
+  Expression<T> assetMovementsRefs<T extends Object>(
+    Expression<T> Function($$AssetMovementsTableAnnotationComposer a) f,
+  ) {
+    final $$AssetMovementsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.assetMovements,
+      getReferencedColumn: (t) => t.assetTypeId,
+      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
+          $$AssetMovementsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.assetMovements,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> assetPricesRefs<T extends Object>(Expression<T> Function($$AssetPricesTableAnnotationComposer a) f) {
+    final $$AssetPricesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.assetPrices,
+      getReferencedColumn: (t) => t.assetTypeId,
+      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
+          $$AssetPricesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.assetPrices,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$AssetTypesTableTableManager
+    extends
+        RootTableManager<
+          _$KakaDatabase,
+          $AssetTypesTable,
+          AssetTypeRow,
+          $$AssetTypesTableFilterComposer,
+          $$AssetTypesTableOrderingComposer,
+          $$AssetTypesTableAnnotationComposer,
+          $$AssetTypesTableCreateCompanionBuilder,
+          $$AssetTypesTableUpdateCompanionBuilder,
+          (AssetTypeRow, $$AssetTypesTableReferences),
+          AssetTypeRow,
+          PrefetchHooks Function({bool assetMovementsRefs, bool assetPricesRefs})
+        > {
+  $$AssetTypesTableTableManager(_$KakaDatabase db, $AssetTypesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () => $$AssetTypesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () => $$AssetTypesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () => $$AssetTypesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> nameFa = const Value.absent(),
+                Value<String> nameEn = const Value.absent(),
+                Value<String> unit = const Value.absent(),
+                Value<bool> archived = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AssetTypesCompanion(
+                id: id,
+                nameFa: nameFa,
+                nameEn: nameEn,
+                unit: unit,
+                archived: archived,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String nameFa,
+                required String nameEn,
+                required String unit,
+                Value<bool> archived = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AssetTypesCompanion.insert(
+                id: id,
+                nameFa: nameFa,
+                nameEn: nameEn,
+                unit: unit,
+                archived: archived,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (e.readTable<$AssetTypesTable, AssetTypeRow>(table), $$AssetTypesTableReferences(db, table, e)),
+              )
+              .toList(),
+          prefetchHooksCallback: ({assetMovementsRefs = false, assetPricesRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (assetMovementsRefs) db.assetMovements, if (assetPricesRefs) db.assetPrices],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (assetMovementsRefs)
+                    await $_getPrefetchedData<AssetTypeRow, $AssetTypesTable, AssetMovementRow>(
+                      currentTable: table,
+                      referencedTable: $$AssetTypesTableReferences._assetMovementsRefsTable(db),
+                      managerFromTypedResult: (p0) => $$AssetTypesTableReferences(db, table, p0).assetMovementsRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.assetTypeId == item.id),
+                      typedResults: items,
+                    ),
+                  if (assetPricesRefs)
+                    await $_getPrefetchedData<AssetTypeRow, $AssetTypesTable, AssetPriceRow>(
+                      currentTable: table,
+                      referencedTable: $$AssetTypesTableReferences._assetPricesRefsTable(db),
+                      managerFromTypedResult: (p0) => $$AssetTypesTableReferences(db, table, p0).assetPricesRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.assetTypeId == item.id),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$AssetTypesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$KakaDatabase,
+      $AssetTypesTable,
+      AssetTypeRow,
+      $$AssetTypesTableFilterComposer,
+      $$AssetTypesTableOrderingComposer,
+      $$AssetTypesTableAnnotationComposer,
+      $$AssetTypesTableCreateCompanionBuilder,
+      $$AssetTypesTableUpdateCompanionBuilder,
+      (AssetTypeRow, $$AssetTypesTableReferences),
+      AssetTypeRow,
+      PrefetchHooks Function({bool assetMovementsRefs, bool assetPricesRefs})
+    >;
+typedef $$AssetMovementsTableCreateCompanionBuilder =
+    AssetMovementsCompanion Function({
+      required String id,
+      required String assetTypeId,
+      required int quantityMilli,
+      required DateTime movedAt,
+      Value<int?> totalMinor,
+      Value<String?> totalCurrency,
+      Value<String> note,
+      Value<DateTime?> voidedAt,
+      Value<int> rowid,
+    });
+typedef $$AssetMovementsTableUpdateCompanionBuilder =
+    AssetMovementsCompanion Function({
+      Value<String> id,
+      Value<String> assetTypeId,
+      Value<int> quantityMilli,
+      Value<DateTime> movedAt,
+      Value<int?> totalMinor,
+      Value<String?> totalCurrency,
+      Value<String> note,
+      Value<DateTime?> voidedAt,
+      Value<int> rowid,
+    });
+
+final class $$AssetMovementsTableReferences
+    extends BaseReferences<_$KakaDatabase, $AssetMovementsTable, AssetMovementRow> {
+  $$AssetMovementsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $AssetTypesTable _assetTypeIdTable(_$KakaDatabase db) =>
+      db.assetTypes.createAlias('asset_movements__asset_type_id__asset_types__id');
+
+  $$AssetTypesTableProcessedTableManager get assetTypeId {
+    final $_column = $_itemColumn<String>('asset_type_id')!;
+
+    final manager = $$AssetTypesTableTableManager($_db, $_db.assetTypes).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_assetTypeIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$AssetMovementsTableFilterComposer extends Composer<_$KakaDatabase, $AssetMovementsTable> {
+  $$AssetMovementsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get quantityMilli =>
+      $composableBuilder(column: $table.quantityMilli, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get movedAt =>
+      $composableBuilder(column: $table.movedAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get totalMinor =>
+      $composableBuilder(column: $table.totalMinor, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get totalCurrency =>
+      $composableBuilder(column: $table.totalCurrency, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get note => $composableBuilder(column: $table.note, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get voidedAt =>
+      $composableBuilder(column: $table.voidedAt, builder: (column) => ColumnFilters(column));
+
+  $$AssetTypesTableFilterComposer get assetTypeId {
+    final $$AssetTypesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.assetTypeId,
+      referencedTable: $db.assetTypes,
+      getReferencedColumn: (t) => t.id,
+      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
+          $$AssetTypesTableFilterComposer(
+            $db: $db,
+            $table: $db.assetTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AssetMovementsTableOrderingComposer extends Composer<_$KakaDatabase, $AssetMovementsTable> {
+  $$AssetMovementsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get quantityMilli =>
+      $composableBuilder(column: $table.quantityMilli, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get movedAt =>
+      $composableBuilder(column: $table.movedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get totalMinor =>
+      $composableBuilder(column: $table.totalMinor, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get totalCurrency =>
+      $composableBuilder(column: $table.totalCurrency, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get note =>
+      $composableBuilder(column: $table.note, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get voidedAt =>
+      $composableBuilder(column: $table.voidedAt, builder: (column) => ColumnOrderings(column));
+
+  $$AssetTypesTableOrderingComposer get assetTypeId {
+    final $$AssetTypesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.assetTypeId,
+      referencedTable: $db.assetTypes,
+      getReferencedColumn: (t) => t.id,
+      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
+          $$AssetTypesTableOrderingComposer(
+            $db: $db,
+            $table: $db.assetTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AssetMovementsTableAnnotationComposer extends Composer<_$KakaDatabase, $AssetMovementsTable> {
+  $$AssetMovementsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id => $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get quantityMilli =>
+      $composableBuilder(column: $table.quantityMilli, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get movedAt => $composableBuilder(column: $table.movedAt, builder: (column) => column);
+
+  GeneratedColumn<int> get totalMinor => $composableBuilder(column: $table.totalMinor, builder: (column) => column);
+
+  GeneratedColumn<String> get totalCurrency =>
+      $composableBuilder(column: $table.totalCurrency, builder: (column) => column);
+
+  GeneratedColumn<String> get note => $composableBuilder(column: $table.note, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get voidedAt => $composableBuilder(column: $table.voidedAt, builder: (column) => column);
+
+  $$AssetTypesTableAnnotationComposer get assetTypeId {
+    final $$AssetTypesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.assetTypeId,
+      referencedTable: $db.assetTypes,
+      getReferencedColumn: (t) => t.id,
+      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
+          $$AssetTypesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.assetTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AssetMovementsTableTableManager
+    extends
+        RootTableManager<
+          _$KakaDatabase,
+          $AssetMovementsTable,
+          AssetMovementRow,
+          $$AssetMovementsTableFilterComposer,
+          $$AssetMovementsTableOrderingComposer,
+          $$AssetMovementsTableAnnotationComposer,
+          $$AssetMovementsTableCreateCompanionBuilder,
+          $$AssetMovementsTableUpdateCompanionBuilder,
+          (AssetMovementRow, $$AssetMovementsTableReferences),
+          AssetMovementRow,
+          PrefetchHooks Function({bool assetTypeId})
+        > {
+  $$AssetMovementsTableTableManager(_$KakaDatabase db, $AssetMovementsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () => $$AssetMovementsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () => $$AssetMovementsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () => $$AssetMovementsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> assetTypeId = const Value.absent(),
+                Value<int> quantityMilli = const Value.absent(),
+                Value<DateTime> movedAt = const Value.absent(),
+                Value<int?> totalMinor = const Value.absent(),
+                Value<String?> totalCurrency = const Value.absent(),
+                Value<String> note = const Value.absent(),
+                Value<DateTime?> voidedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AssetMovementsCompanion(
+                id: id,
+                assetTypeId: assetTypeId,
+                quantityMilli: quantityMilli,
+                movedAt: movedAt,
+                totalMinor: totalMinor,
+                totalCurrency: totalCurrency,
+                note: note,
+                voidedAt: voidedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String assetTypeId,
+                required int quantityMilli,
+                required DateTime movedAt,
+                Value<int?> totalMinor = const Value.absent(),
+                Value<String?> totalCurrency = const Value.absent(),
+                Value<String> note = const Value.absent(),
+                Value<DateTime?> voidedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AssetMovementsCompanion.insert(
+                id: id,
+                assetTypeId: assetTypeId,
+                quantityMilli: quantityMilli,
+                movedAt: movedAt,
+                totalMinor: totalMinor,
+                totalCurrency: totalCurrency,
+                note: note,
+                voidedAt: voidedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$AssetMovementsTable, AssetMovementRow>(table),
+                  $$AssetMovementsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({assetTypeId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (assetTypeId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.assetTypeId,
+                                referencedTable: $$AssetMovementsTableReferences._assetTypeIdTable(db),
+                                referencedColumn: $$AssetMovementsTableReferences._assetTypeIdTable(db).id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$AssetMovementsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$KakaDatabase,
+      $AssetMovementsTable,
+      AssetMovementRow,
+      $$AssetMovementsTableFilterComposer,
+      $$AssetMovementsTableOrderingComposer,
+      $$AssetMovementsTableAnnotationComposer,
+      $$AssetMovementsTableCreateCompanionBuilder,
+      $$AssetMovementsTableUpdateCompanionBuilder,
+      (AssetMovementRow, $$AssetMovementsTableReferences),
+      AssetMovementRow,
+      PrefetchHooks Function({bool assetTypeId})
+    >;
+typedef $$AssetPricesTableCreateCompanionBuilder =
+    AssetPricesCompanion Function({
+      required String id,
+      required String assetTypeId,
+      required DateTime priceDate,
+      required int priceMinor,
+      required String currency,
+      Value<int> rowid,
+    });
+typedef $$AssetPricesTableUpdateCompanionBuilder =
+    AssetPricesCompanion Function({
+      Value<String> id,
+      Value<String> assetTypeId,
+      Value<DateTime> priceDate,
+      Value<int> priceMinor,
+      Value<String> currency,
+      Value<int> rowid,
+    });
+
+final class $$AssetPricesTableReferences extends BaseReferences<_$KakaDatabase, $AssetPricesTable, AssetPriceRow> {
+  $$AssetPricesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $AssetTypesTable _assetTypeIdTable(_$KakaDatabase db) =>
+      db.assetTypes.createAlias('asset_prices__asset_type_id__asset_types__id');
+
+  $$AssetTypesTableProcessedTableManager get assetTypeId {
+    final $_column = $_itemColumn<String>('asset_type_id')!;
+
+    final manager = $$AssetTypesTableTableManager($_db, $_db.assetTypes).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_assetTypeIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$AssetPricesTableFilterComposer extends Composer<_$KakaDatabase, $AssetPricesTable> {
+  $$AssetPricesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get priceDate =>
+      $composableBuilder(column: $table.priceDate, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get priceMinor =>
+      $composableBuilder(column: $table.priceMinor, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get currency =>
+      $composableBuilder(column: $table.currency, builder: (column) => ColumnFilters(column));
+
+  $$AssetTypesTableFilterComposer get assetTypeId {
+    final $$AssetTypesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.assetTypeId,
+      referencedTable: $db.assetTypes,
+      getReferencedColumn: (t) => t.id,
+      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
+          $$AssetTypesTableFilterComposer(
+            $db: $db,
+            $table: $db.assetTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AssetPricesTableOrderingComposer extends Composer<_$KakaDatabase, $AssetPricesTable> {
+  $$AssetPricesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get priceDate =>
+      $composableBuilder(column: $table.priceDate, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get priceMinor =>
+      $composableBuilder(column: $table.priceMinor, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get currency =>
+      $composableBuilder(column: $table.currency, builder: (column) => ColumnOrderings(column));
+
+  $$AssetTypesTableOrderingComposer get assetTypeId {
+    final $$AssetTypesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.assetTypeId,
+      referencedTable: $db.assetTypes,
+      getReferencedColumn: (t) => t.id,
+      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
+          $$AssetTypesTableOrderingComposer(
+            $db: $db,
+            $table: $db.assetTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AssetPricesTableAnnotationComposer extends Composer<_$KakaDatabase, $AssetPricesTable> {
+  $$AssetPricesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id => $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get priceDate => $composableBuilder(column: $table.priceDate, builder: (column) => column);
+
+  GeneratedColumn<int> get priceMinor => $composableBuilder(column: $table.priceMinor, builder: (column) => column);
+
+  GeneratedColumn<String> get currency => $composableBuilder(column: $table.currency, builder: (column) => column);
+
+  $$AssetTypesTableAnnotationComposer get assetTypeId {
+    final $$AssetTypesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.assetTypeId,
+      referencedTable: $db.assetTypes,
+      getReferencedColumn: (t) => t.id,
+      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
+          $$AssetTypesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.assetTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AssetPricesTableTableManager
+    extends
+        RootTableManager<
+          _$KakaDatabase,
+          $AssetPricesTable,
+          AssetPriceRow,
+          $$AssetPricesTableFilterComposer,
+          $$AssetPricesTableOrderingComposer,
+          $$AssetPricesTableAnnotationComposer,
+          $$AssetPricesTableCreateCompanionBuilder,
+          $$AssetPricesTableUpdateCompanionBuilder,
+          (AssetPriceRow, $$AssetPricesTableReferences),
+          AssetPriceRow,
+          PrefetchHooks Function({bool assetTypeId})
+        > {
+  $$AssetPricesTableTableManager(_$KakaDatabase db, $AssetPricesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () => $$AssetPricesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () => $$AssetPricesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () => $$AssetPricesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> assetTypeId = const Value.absent(),
+                Value<DateTime> priceDate = const Value.absent(),
+                Value<int> priceMinor = const Value.absent(),
+                Value<String> currency = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AssetPricesCompanion(
+                id: id,
+                assetTypeId: assetTypeId,
+                priceDate: priceDate,
+                priceMinor: priceMinor,
+                currency: currency,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String assetTypeId,
+                required DateTime priceDate,
+                required int priceMinor,
+                required String currency,
+                Value<int> rowid = const Value.absent(),
+              }) => AssetPricesCompanion.insert(
+                id: id,
+                assetTypeId: assetTypeId,
+                priceDate: priceDate,
+                priceMinor: priceMinor,
+                currency: currency,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) =>
+                    (e.readTable<$AssetPricesTable, AssetPriceRow>(table), $$AssetPricesTableReferences(db, table, e)),
+              )
+              .toList(),
+          prefetchHooksCallback: ({assetTypeId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (assetTypeId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.assetTypeId,
+                                referencedTable: $$AssetPricesTableReferences._assetTypeIdTable(db),
+                                referencedColumn: $$AssetPricesTableReferences._assetTypeIdTable(db).id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$AssetPricesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$KakaDatabase,
+      $AssetPricesTable,
+      AssetPriceRow,
+      $$AssetPricesTableFilterComposer,
+      $$AssetPricesTableOrderingComposer,
+      $$AssetPricesTableAnnotationComposer,
+      $$AssetPricesTableCreateCompanionBuilder,
+      $$AssetPricesTableUpdateCompanionBuilder,
+      (AssetPriceRow, $$AssetPricesTableReferences),
+      AssetPriceRow,
+      PrefetchHooks Function({bool assetTypeId})
+    >;
+typedef $$CustomParsersTableCreateCompanionBuilder =
+    CustomParsersCompanion Function({
+      required String id,
+      required String json,
+      required DateTime createdAt,
+      Value<int> rowid,
+    });
+typedef $$CustomParsersTableUpdateCompanionBuilder =
+    CustomParsersCompanion Function({
+      Value<String> id,
+      Value<String> json,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+class $$CustomParsersTableFilterComposer extends Composer<_$KakaDatabase, $CustomParsersTable> {
+  $$CustomParsersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get json => $composableBuilder(column: $table.json, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => ColumnFilters(column));
+}
+
+class $$CustomParsersTableOrderingComposer extends Composer<_$KakaDatabase, $CustomParsersTable> {
+  $$CustomParsersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get json =>
+      $composableBuilder(column: $table.json, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+}
+
+class $$CustomParsersTableAnnotationComposer extends Composer<_$KakaDatabase, $CustomParsersTable> {
+  $$CustomParsersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id => $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get json => $composableBuilder(column: $table.json, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt => $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$CustomParsersTableTableManager
+    extends
+        RootTableManager<
+          _$KakaDatabase,
+          $CustomParsersTable,
+          CustomParserRow,
+          $$CustomParsersTableFilterComposer,
+          $$CustomParsersTableOrderingComposer,
+          $$CustomParsersTableAnnotationComposer,
+          $$CustomParsersTableCreateCompanionBuilder,
+          $$CustomParsersTableUpdateCompanionBuilder,
+          (CustomParserRow, BaseReferences<_$KakaDatabase, $CustomParsersTable, CustomParserRow>),
+          CustomParserRow,
+          PrefetchHooks Function()
+        > {
+  $$CustomParsersTableTableManager(_$KakaDatabase db, $CustomParsersTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () => $$CustomParsersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () => $$CustomParsersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () => $$CustomParsersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> json = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => CustomParsersCompanion(id: id, json: json, createdAt: createdAt, rowid: rowid),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String json,
+                required DateTime createdAt,
+                Value<int> rowid = const Value.absent(),
+              }) => CustomParsersCompanion.insert(id: id, json: json, createdAt: createdAt, rowid: rowid),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$CustomParsersTable, CustomParserRow>(table),
+                  BaseReferences<_$KakaDatabase, $CustomParsersTable, CustomParserRow>(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$CustomParsersTableProcessedTableManager =
+    ProcessedTableManager<
+      _$KakaDatabase,
+      $CustomParsersTable,
+      CustomParserRow,
+      $$CustomParsersTableFilterComposer,
+      $$CustomParsersTableOrderingComposer,
+      $$CustomParsersTableAnnotationComposer,
+      $$CustomParsersTableCreateCompanionBuilder,
+      $$CustomParsersTableUpdateCompanionBuilder,
+      (CustomParserRow, BaseReferences<_$KakaDatabase, $CustomParsersTable, CustomParserRow>),
+      CustomParserRow,
+      PrefetchHooks Function()
+    >;
 
 class $KakaDatabaseManager {
   final _$KakaDatabase _db;
@@ -3687,4 +6448,9 @@ class $KakaDatabaseManager {
   $$SettingsTableTableManager get settings => $$SettingsTableTableManager(_db, _db.settings);
   $$DraftsTableTableManager get drafts => $$DraftsTableTableManager(_db, _db.drafts);
   $$SmsLinksTableTableManager get smsLinks => $$SmsLinksTableTableManager(_db, _db.smsLinks);
+  $$FxRatesTableTableManager get fxRates => $$FxRatesTableTableManager(_db, _db.fxRates);
+  $$AssetTypesTableTableManager get assetTypes => $$AssetTypesTableTableManager(_db, _db.assetTypes);
+  $$AssetMovementsTableTableManager get assetMovements => $$AssetMovementsTableTableManager(_db, _db.assetMovements);
+  $$AssetPricesTableTableManager get assetPrices => $$AssetPricesTableTableManager(_db, _db.assetPrices);
+  $$CustomParsersTableTableManager get customParsers => $$CustomParsersTableTableManager(_db, _db.customParsers);
 }

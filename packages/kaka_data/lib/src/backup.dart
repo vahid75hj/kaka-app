@@ -114,7 +114,19 @@ class LedgerSnapshot {
   final KakaDatabase _db;
 
   // Parents before children so foreign keys hold while inserting.
-  static const _order = ['accounts', 'transactions', 'postings', 'settings', 'drafts', 'sms_links'];
+  static const _order = [
+    'accounts',
+    'transactions',
+    'postings',
+    'settings',
+    'drafts',
+    'sms_links',
+    'fx_rates',
+    'asset_types',
+    'asset_movements',
+    'asset_prices',
+    'custom_parsers',
+  ];
 
   Future<Map<String, Object?>> export({DateTime? now}) async => {
     'format': 'kaka.snapshot',
