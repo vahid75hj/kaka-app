@@ -8,6 +8,7 @@ environment:
   sdk: ^3.9.0
 
 dependencies:
+  cryptography: ^2.9.0
   drift: ^2.32.0
   kaka_domain:
     path: ../kaka_domain

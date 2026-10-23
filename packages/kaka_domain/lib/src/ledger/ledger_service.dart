@@ -117,6 +117,50 @@ class LedgerService {
     return created;
   }
 
+  /// Adds a category (or restores an archived one with the same name).
+  Future<Account> addCategory(String name, AccountType type, Currency currency) async {
+    _requireCategoryType(type);
+    final trimmed = name.trim();
+    if (trimmed.isEmpty) throw const DomainException('account.name_required');
+    final all = await _accounts.getAll();
+    final same = all.where((a) => a.type == type && a.name == trimmed);
+    if (same.any((a) => !a.archived)) throw const DomainException('category.exists');
+    for (final a in same) {
+      await _accounts.upsert(a.copyWith(archived: false));
+    }
+    return ensureCategory(trimmed, type, currency);
+  }
+
+  /// Categories are shared by name across currencies, so renaming touches every
+  /// per-currency account of that name. History follows automatically.
+  Future<void> renameCategory(AccountType type, String from, String to) async {
+    _requireCategoryType(type);
+    final trimmed = to.trim();
+    if (trimmed.isEmpty) throw const DomainException('account.name_required');
+    if (trimmed == from) return;
+    final all = await _accounts.getAll();
+    if (all.any((a) => a.type == type && a.name == trimmed && !a.archived)) {
+      throw const DomainException('category.exists');
+    }
+    for (final a in all.where((a) => a.type == type && a.name == from)) {
+      await _accounts.upsert(a.copyWith(name: trimmed));
+    }
+  }
+
+  /// Archived categories disappear from pickers but keep their history.
+  Future<void> setCategoryArchived(AccountType type, String name, bool archived) async {
+    _requireCategoryType(type);
+    for (final a in (await _accounts.getAll()).where((a) => a.type == type && a.name == name)) {
+      await _accounts.upsert(a.copyWith(archived: archived));
+    }
+  }
+
+  static void _requireCategoryType(AccountType type) {
+    if (type != AccountType.income && type != AccountType.expense) {
+      throw const DomainException('category.bad_type');
+    }
+  }
+
   Future<void> _record(LedgerTransaction txn) async {
     final all = {for (final a in await _accounts.getAll()) a.id: a};
     LedgerRules.validate(txn, all);

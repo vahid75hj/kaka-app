@@ -1179,6 +1179,645 @@ class SettingsCompanion extends UpdateCompanion<SettingRow> {
   }
 }
 
+class $DraftsTable extends Drafts with TableInfo<$DraftsTable, DraftRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DraftsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sourceMeta = const VerificationMeta('source');
+  @override
+  late final GeneratedColumn<String> source = GeneratedColumn<String>(
+    'source',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isExpenseMeta = const VerificationMeta('isExpense');
+  @override
+  late final GeneratedColumn<bool> isExpense = GeneratedColumn<bool>(
+    'is_expense',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("is_expense" IN (0, 1))'),
+  );
+  static const VerificationMeta _amountMinorMeta = const VerificationMeta('amountMinor');
+  @override
+  late final GeneratedColumn<int> amountMinor = GeneratedColumn<int>(
+    'amount_minor',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _currencyMeta = const VerificationMeta('currency');
+  @override
+  late final GeneratedColumn<String> currency = GeneratedColumn<String>(
+    'currency',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _occurredAtMeta = const VerificationMeta('occurredAt');
+  @override
+  late final GeneratedColumn<DateTime> occurredAt = GeneratedColumn<DateTime>(
+    'occurred_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _rawTextMeta = const VerificationMeta('rawText');
+  @override
+  late final GeneratedColumn<String> rawText = GeneratedColumn<String>(
+    'raw_text',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _noteMeta = const VerificationMeta('note');
+  @override
+  late final GeneratedColumn<String> note = GeneratedColumn<String>(
+    'note',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _bankIdMeta = const VerificationMeta('bankId');
+  @override
+  late final GeneratedColumn<String> bankId = GeneratedColumn<String>(
+    'bank_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _last4Meta = const VerificationMeta('last4');
+  @override
+  late final GeneratedColumn<String> last4 = GeneratedColumn<String>(
+    'last4',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dedupKeyMeta = const VerificationMeta('dedupKey');
+  @override
+  late final GeneratedColumn<String> dedupKey = GeneratedColumn<String>(
+    'dedup_key',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    source,
+    status,
+    isExpense,
+    amountMinor,
+    currency,
+    createdAt,
+    occurredAt,
+    rawText,
+    note,
+    bankId,
+    last4,
+    dedupKey,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'drafts';
+  @override
+  VerificationContext validateIntegrity(Insertable<DraftRow> instance, {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('source')) {
+      context.handle(_sourceMeta, source.isAcceptableOrUnknown(data['source']!, _sourceMeta));
+    } else if (isInserting) {
+      context.missing(_sourceMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta, status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    } else if (isInserting) {
+      context.missing(_statusMeta);
+    }
+    if (data.containsKey('is_expense')) {
+      context.handle(_isExpenseMeta, isExpense.isAcceptableOrUnknown(data['is_expense']!, _isExpenseMeta));
+    } else if (isInserting) {
+      context.missing(_isExpenseMeta);
+    }
+    if (data.containsKey('amount_minor')) {
+      context.handle(_amountMinorMeta, amountMinor.isAcceptableOrUnknown(data['amount_minor']!, _amountMinorMeta));
+    } else if (isInserting) {
+      context.missing(_amountMinorMeta);
+    }
+    if (data.containsKey('currency')) {
+      context.handle(_currencyMeta, currency.isAcceptableOrUnknown(data['currency']!, _currencyMeta));
+    } else if (isInserting) {
+      context.missing(_currencyMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta, createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('occurred_at')) {
+      context.handle(_occurredAtMeta, occurredAt.isAcceptableOrUnknown(data['occurred_at']!, _occurredAtMeta));
+    }
+    if (data.containsKey('raw_text')) {
+      context.handle(_rawTextMeta, rawText.isAcceptableOrUnknown(data['raw_text']!, _rawTextMeta));
+    }
+    if (data.containsKey('note')) {
+      context.handle(_noteMeta, note.isAcceptableOrUnknown(data['note']!, _noteMeta));
+    }
+    if (data.containsKey('bank_id')) {
+      context.handle(_bankIdMeta, bankId.isAcceptableOrUnknown(data['bank_id']!, _bankIdMeta));
+    }
+    if (data.containsKey('last4')) {
+      context.handle(_last4Meta, last4.isAcceptableOrUnknown(data['last4']!, _last4Meta));
+    }
+    if (data.containsKey('dedup_key')) {
+      context.handle(_dedupKeyMeta, dedupKey.isAcceptableOrUnknown(data['dedup_key']!, _dedupKeyMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DraftRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DraftRow(
+      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      source: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}source'])!,
+      status: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}status'])!,
+      isExpense: attachedDatabase.typeMapping.read(DriftSqlType.bool, data['${effectivePrefix}is_expense'])!,
+      amountMinor: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}amount_minor'])!,
+      currency: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}currency'])!,
+      createdAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      occurredAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}occurred_at']),
+      rawText: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}raw_text'])!,
+      note: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}note'])!,
+      bankId: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}bank_id']),
+      last4: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}last4']),
+      dedupKey: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}dedup_key']),
+    );
+  }
+
+  @override
+  $DraftsTable createAlias(String alias) {
+    return $DraftsTable(attachedDatabase, alias);
+  }
+}
+
+class DraftRow extends DataClass implements Insertable<DraftRow> {
+  final String id;
+  final String source;
+  final String status;
+  final bool isExpense;
+  final int amountMinor;
+  final String currency;
+  final DateTime createdAt;
+  final DateTime? occurredAt;
+  final String rawText;
+  final String note;
+  final String? bankId;
+  final String? last4;
+  final String? dedupKey;
+  const DraftRow({
+    required this.id,
+    required this.source,
+    required this.status,
+    required this.isExpense,
+    required this.amountMinor,
+    required this.currency,
+    required this.createdAt,
+    this.occurredAt,
+    required this.rawText,
+    required this.note,
+    this.bankId,
+    this.last4,
+    this.dedupKey,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['source'] = Variable<String>(source);
+    map['status'] = Variable<String>(status);
+    map['is_expense'] = Variable<bool>(isExpense);
+    map['amount_minor'] = Variable<int>(amountMinor);
+    map['currency'] = Variable<String>(currency);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || occurredAt != null) {
+      map['occurred_at'] = Variable<DateTime>(occurredAt);
+    }
+    map['raw_text'] = Variable<String>(rawText);
+    map['note'] = Variable<String>(note);
+    if (!nullToAbsent || bankId != null) {
+      map['bank_id'] = Variable<String>(bankId);
+    }
+    if (!nullToAbsent || last4 != null) {
+      map['last4'] = Variable<String>(last4);
+    }
+    if (!nullToAbsent || dedupKey != null) {
+      map['dedup_key'] = Variable<String>(dedupKey);
+    }
+    return map;
+  }
+
+  DraftsCompanion toCompanion(bool nullToAbsent) {
+    return DraftsCompanion(
+      id: Value(id),
+      source: Value(source),
+      status: Value(status),
+      isExpense: Value(isExpense),
+      amountMinor: Value(amountMinor),
+      currency: Value(currency),
+      createdAt: Value(createdAt),
+      occurredAt: occurredAt == null && nullToAbsent ? const Value.absent() : Value(occurredAt),
+      rawText: Value(rawText),
+      note: Value(note),
+      bankId: bankId == null && nullToAbsent ? const Value.absent() : Value(bankId),
+      last4: last4 == null && nullToAbsent ? const Value.absent() : Value(last4),
+      dedupKey: dedupKey == null && nullToAbsent ? const Value.absent() : Value(dedupKey),
+    );
+  }
+
+  factory DraftRow.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DraftRow(
+      id: serializer.fromJson<String>(json['id']),
+      source: serializer.fromJson<String>(json['source']),
+      status: serializer.fromJson<String>(json['status']),
+      isExpense: serializer.fromJson<bool>(json['isExpense']),
+      amountMinor: serializer.fromJson<int>(json['amountMinor']),
+      currency: serializer.fromJson<String>(json['currency']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      occurredAt: serializer.fromJson<DateTime?>(json['occurredAt']),
+      rawText: serializer.fromJson<String>(json['rawText']),
+      note: serializer.fromJson<String>(json['note']),
+      bankId: serializer.fromJson<String?>(json['bankId']),
+      last4: serializer.fromJson<String?>(json['last4']),
+      dedupKey: serializer.fromJson<String?>(json['dedupKey']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'source': serializer.toJson<String>(source),
+      'status': serializer.toJson<String>(status),
+      'isExpense': serializer.toJson<bool>(isExpense),
+      'amountMinor': serializer.toJson<int>(amountMinor),
+      'currency': serializer.toJson<String>(currency),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'occurredAt': serializer.toJson<DateTime?>(occurredAt),
+      'rawText': serializer.toJson<String>(rawText),
+      'note': serializer.toJson<String>(note),
+      'bankId': serializer.toJson<String?>(bankId),
+      'last4': serializer.toJson<String?>(last4),
+      'dedupKey': serializer.toJson<String?>(dedupKey),
+    };
+  }
+
+  DraftRow copyWith({
+    String? id,
+    String? source,
+    String? status,
+    bool? isExpense,
+    int? amountMinor,
+    String? currency,
+    DateTime? createdAt,
+    Value<DateTime?> occurredAt = const Value.absent(),
+    String? rawText,
+    String? note,
+    Value<String?> bankId = const Value.absent(),
+    Value<String?> last4 = const Value.absent(),
+    Value<String?> dedupKey = const Value.absent(),
+  }) => DraftRow(
+    id: id ?? this.id,
+    source: source ?? this.source,
+    status: status ?? this.status,
+    isExpense: isExpense ?? this.isExpense,
+    amountMinor: amountMinor ?? this.amountMinor,
+    currency: currency ?? this.currency,
+    createdAt: createdAt ?? this.createdAt,
+    occurredAt: occurredAt.present ? occurredAt.value : this.occurredAt,
+    rawText: rawText ?? this.rawText,
+    note: note ?? this.note,
+    bankId: bankId.present ? bankId.value : this.bankId,
+    last4: last4.present ? last4.value : this.last4,
+    dedupKey: dedupKey.present ? dedupKey.value : this.dedupKey,
+  );
+  DraftRow copyWithCompanion(DraftsCompanion data) {
+    return DraftRow(
+      id: data.id.present ? data.id.value : this.id,
+      source: data.source.present ? data.source.value : this.source,
+      status: data.status.present ? data.status.value : this.status,
+      isExpense: data.isExpense.present ? data.isExpense.value : this.isExpense,
+      amountMinor: data.amountMinor.present ? data.amountMinor.value : this.amountMinor,
+      currency: data.currency.present ? data.currency.value : this.currency,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      occurredAt: data.occurredAt.present ? data.occurredAt.value : this.occurredAt,
+      rawText: data.rawText.present ? data.rawText.value : this.rawText,
+      note: data.note.present ? data.note.value : this.note,
+      bankId: data.bankId.present ? data.bankId.value : this.bankId,
+      last4: data.last4.present ? data.last4.value : this.last4,
+      dedupKey: data.dedupKey.present ? data.dedupKey.value : this.dedupKey,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DraftRow(')
+          ..write('id: $id, ')
+          ..write('source: $source, ')
+          ..write('status: $status, ')
+          ..write('isExpense: $isExpense, ')
+          ..write('amountMinor: $amountMinor, ')
+          ..write('currency: $currency, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('occurredAt: $occurredAt, ')
+          ..write('rawText: $rawText, ')
+          ..write('note: $note, ')
+          ..write('bankId: $bankId, ')
+          ..write('last4: $last4, ')
+          ..write('dedupKey: $dedupKey')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    source,
+    status,
+    isExpense,
+    amountMinor,
+    currency,
+    createdAt,
+    occurredAt,
+    rawText,
+    note,
+    bankId,
+    last4,
+    dedupKey,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DraftRow &&
+          other.id == this.id &&
+          other.source == this.source &&
+          other.status == this.status &&
+          other.isExpense == this.isExpense &&
+          other.amountMinor == this.amountMinor &&
+          other.currency == this.currency &&
+          other.createdAt == this.createdAt &&
+          other.occurredAt == this.occurredAt &&
+          other.rawText == this.rawText &&
+          other.note == this.note &&
+          other.bankId == this.bankId &&
+          other.last4 == this.last4 &&
+          other.dedupKey == this.dedupKey);
+}
+
+class DraftsCompanion extends UpdateCompanion<DraftRow> {
+  final Value<String> id;
+  final Value<String> source;
+  final Value<String> status;
+  final Value<bool> isExpense;
+  final Value<int> amountMinor;
+  final Value<String> currency;
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> occurredAt;
+  final Value<String> rawText;
+  final Value<String> note;
+  final Value<String?> bankId;
+  final Value<String?> last4;
+  final Value<String?> dedupKey;
+  final Value<int> rowid;
+  const DraftsCompanion({
+    this.id = const Value.absent(),
+    this.source = const Value.absent(),
+    this.status = const Value.absent(),
+    this.isExpense = const Value.absent(),
+    this.amountMinor = const Value.absent(),
+    this.currency = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.occurredAt = const Value.absent(),
+    this.rawText = const Value.absent(),
+    this.note = const Value.absent(),
+    this.bankId = const Value.absent(),
+    this.last4 = const Value.absent(),
+    this.dedupKey = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  DraftsCompanion.insert({
+    required String id,
+    required String source,
+    required String status,
+    required bool isExpense,
+    required int amountMinor,
+    required String currency,
+    required DateTime createdAt,
+    this.occurredAt = const Value.absent(),
+    this.rawText = const Value.absent(),
+    this.note = const Value.absent(),
+    this.bankId = const Value.absent(),
+    this.last4 = const Value.absent(),
+    this.dedupKey = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       source = Value(source),
+       status = Value(status),
+       isExpense = Value(isExpense),
+       amountMinor = Value(amountMinor),
+       currency = Value(currency),
+       createdAt = Value(createdAt);
+  static Insertable<DraftRow> custom({
+    Expression<String>? id,
+    Expression<String>? source,
+    Expression<String>? status,
+    Expression<bool>? isExpense,
+    Expression<int>? amountMinor,
+    Expression<String>? currency,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? occurredAt,
+    Expression<String>? rawText,
+    Expression<String>? note,
+    Expression<String>? bankId,
+    Expression<String>? last4,
+    Expression<String>? dedupKey,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (source != null) 'source': source,
+      if (status != null) 'status': status,
+      if (isExpense != null) 'is_expense': isExpense,
+      if (amountMinor != null) 'amount_minor': amountMinor,
+      if (currency != null) 'currency': currency,
+      if (createdAt != null) 'created_at': createdAt,
+      if (occurredAt != null) 'occurred_at': occurredAt,
+      if (rawText != null) 'raw_text': rawText,
+      if (note != null) 'note': note,
+      if (bankId != null) 'bank_id': bankId,
+      if (last4 != null) 'last4': last4,
+      if (dedupKey != null) 'dedup_key': dedupKey,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  DraftsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? source,
+    Value<String>? status,
+    Value<bool>? isExpense,
+    Value<int>? amountMinor,
+    Value<String>? currency,
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? occurredAt,
+    Value<String>? rawText,
+    Value<String>? note,
+    Value<String?>? bankId,
+    Value<String?>? last4,
+    Value<String?>? dedupKey,
+    Value<int>? rowid,
+  }) {
+    return DraftsCompanion(
+      id: id ?? this.id,
+      source: source ?? this.source,
+      status: status ?? this.status,
+      isExpense: isExpense ?? this.isExpense,
+      amountMinor: amountMinor ?? this.amountMinor,
+      currency: currency ?? this.currency,
+      createdAt: createdAt ?? this.createdAt,
+      occurredAt: occurredAt ?? this.occurredAt,
+      rawText: rawText ?? this.rawText,
+      note: note ?? this.note,
+      bankId: bankId ?? this.bankId,
+      last4: last4 ?? this.last4,
+      dedupKey: dedupKey ?? this.dedupKey,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (source.present) {
+      map['source'] = Variable<String>(source.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (isExpense.present) {
+      map['is_expense'] = Variable<bool>(isExpense.value);
+    }
+    if (amountMinor.present) {
+      map['amount_minor'] = Variable<int>(amountMinor.value);
+    }
+    if (currency.present) {
+      map['currency'] = Variable<String>(currency.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (occurredAt.present) {
+      map['occurred_at'] = Variable<DateTime>(occurredAt.value);
+    }
+    if (rawText.present) {
+      map['raw_text'] = Variable<String>(rawText.value);
+    }
+    if (note.present) {
+      map['note'] = Variable<String>(note.value);
+    }
+    if (bankId.present) {
+      map['bank_id'] = Variable<String>(bankId.value);
+    }
+    if (last4.present) {
+      map['last4'] = Variable<String>(last4.value);
+    }
+    if (dedupKey.present) {
+      map['dedup_key'] = Variable<String>(dedupKey.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DraftsCompanion(')
+          ..write('id: $id, ')
+          ..write('source: $source, ')
+          ..write('status: $status, ')
+          ..write('isExpense: $isExpense, ')
+          ..write('amountMinor: $amountMinor, ')
+          ..write('currency: $currency, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('occurredAt: $occurredAt, ')
+          ..write('rawText: $rawText, ')
+          ..write('note: $note, ')
+          ..write('bankId: $bankId, ')
+          ..write('last4: $last4, ')
+          ..write('dedupKey: $dedupKey, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$KakaDatabase extends GeneratedDatabase {
   _$KakaDatabase(QueryExecutor e) : super(e);
   $KakaDatabaseManager get managers => $KakaDatabaseManager(this);
@@ -1186,10 +1825,11 @@ abstract class _$KakaDatabase extends GeneratedDatabase {
   late final $TransactionsTable transactions = $TransactionsTable(this);
   late final $PostingsTable postings = $PostingsTable(this);
   late final $SettingsTable settings = $SettingsTable(this);
+  late final $DraftsTable drafts = $DraftsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables => allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [accounts, transactions, postings, settings];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [accounts, transactions, postings, settings, drafts];
 }
 
 typedef $$AccountsTableCreateCompanionBuilder =
@@ -2122,6 +2762,284 @@ typedef $$SettingsTableProcessedTableManager =
       SettingRow,
       PrefetchHooks Function()
     >;
+typedef $$DraftsTableCreateCompanionBuilder =
+    DraftsCompanion Function({
+      required String id,
+      required String source,
+      required String status,
+      required bool isExpense,
+      required int amountMinor,
+      required String currency,
+      required DateTime createdAt,
+      Value<DateTime?> occurredAt,
+      Value<String> rawText,
+      Value<String> note,
+      Value<String?> bankId,
+      Value<String?> last4,
+      Value<String?> dedupKey,
+      Value<int> rowid,
+    });
+typedef $$DraftsTableUpdateCompanionBuilder =
+    DraftsCompanion Function({
+      Value<String> id,
+      Value<String> source,
+      Value<String> status,
+      Value<bool> isExpense,
+      Value<int> amountMinor,
+      Value<String> currency,
+      Value<DateTime> createdAt,
+      Value<DateTime?> occurredAt,
+      Value<String> rawText,
+      Value<String> note,
+      Value<String?> bankId,
+      Value<String?> last4,
+      Value<String?> dedupKey,
+      Value<int> rowid,
+    });
+
+class $$DraftsTableFilterComposer extends Composer<_$KakaDatabase, $DraftsTable> {
+  $$DraftsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get source =>
+      $composableBuilder(column: $table.source, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isExpense =>
+      $composableBuilder(column: $table.isExpense, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get amountMinor =>
+      $composableBuilder(column: $table.amountMinor, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get currency =>
+      $composableBuilder(column: $table.currency, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get occurredAt =>
+      $composableBuilder(column: $table.occurredAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get rawText =>
+      $composableBuilder(column: $table.rawText, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get note => $composableBuilder(column: $table.note, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get bankId =>
+      $composableBuilder(column: $table.bankId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get last4 =>
+      $composableBuilder(column: $table.last4, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get dedupKey =>
+      $composableBuilder(column: $table.dedupKey, builder: (column) => ColumnFilters(column));
+}
+
+class $$DraftsTableOrderingComposer extends Composer<_$KakaDatabase, $DraftsTable> {
+  $$DraftsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get source =>
+      $composableBuilder(column: $table.source, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isExpense =>
+      $composableBuilder(column: $table.isExpense, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get amountMinor =>
+      $composableBuilder(column: $table.amountMinor, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get currency =>
+      $composableBuilder(column: $table.currency, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get occurredAt =>
+      $composableBuilder(column: $table.occurredAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get rawText =>
+      $composableBuilder(column: $table.rawText, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get note =>
+      $composableBuilder(column: $table.note, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get bankId =>
+      $composableBuilder(column: $table.bankId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get last4 =>
+      $composableBuilder(column: $table.last4, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get dedupKey =>
+      $composableBuilder(column: $table.dedupKey, builder: (column) => ColumnOrderings(column));
+}
+
+class $$DraftsTableAnnotationComposer extends Composer<_$KakaDatabase, $DraftsTable> {
+  $$DraftsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id => $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get source => $composableBuilder(column: $table.source, builder: (column) => column);
+
+  GeneratedColumn<String> get status => $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<bool> get isExpense => $composableBuilder(column: $table.isExpense, builder: (column) => column);
+
+  GeneratedColumn<int> get amountMinor => $composableBuilder(column: $table.amountMinor, builder: (column) => column);
+
+  GeneratedColumn<String> get currency => $composableBuilder(column: $table.currency, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt => $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get occurredAt =>
+      $composableBuilder(column: $table.occurredAt, builder: (column) => column);
+
+  GeneratedColumn<String> get rawText => $composableBuilder(column: $table.rawText, builder: (column) => column);
+
+  GeneratedColumn<String> get note => $composableBuilder(column: $table.note, builder: (column) => column);
+
+  GeneratedColumn<String> get bankId => $composableBuilder(column: $table.bankId, builder: (column) => column);
+
+  GeneratedColumn<String> get last4 => $composableBuilder(column: $table.last4, builder: (column) => column);
+
+  GeneratedColumn<String> get dedupKey => $composableBuilder(column: $table.dedupKey, builder: (column) => column);
+}
+
+class $$DraftsTableTableManager
+    extends
+        RootTableManager<
+          _$KakaDatabase,
+          $DraftsTable,
+          DraftRow,
+          $$DraftsTableFilterComposer,
+          $$DraftsTableOrderingComposer,
+          $$DraftsTableAnnotationComposer,
+          $$DraftsTableCreateCompanionBuilder,
+          $$DraftsTableUpdateCompanionBuilder,
+          (DraftRow, BaseReferences<_$KakaDatabase, $DraftsTable, DraftRow>),
+          DraftRow,
+          PrefetchHooks Function()
+        > {
+  $$DraftsTableTableManager(_$KakaDatabase db, $DraftsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () => $$DraftsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () => $$DraftsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () => $$DraftsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> source = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<bool> isExpense = const Value.absent(),
+                Value<int> amountMinor = const Value.absent(),
+                Value<String> currency = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> occurredAt = const Value.absent(),
+                Value<String> rawText = const Value.absent(),
+                Value<String> note = const Value.absent(),
+                Value<String?> bankId = const Value.absent(),
+                Value<String?> last4 = const Value.absent(),
+                Value<String?> dedupKey = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DraftsCompanion(
+                id: id,
+                source: source,
+                status: status,
+                isExpense: isExpense,
+                amountMinor: amountMinor,
+                currency: currency,
+                createdAt: createdAt,
+                occurredAt: occurredAt,
+                rawText: rawText,
+                note: note,
+                bankId: bankId,
+                last4: last4,
+                dedupKey: dedupKey,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String source,
+                required String status,
+                required bool isExpense,
+                required int amountMinor,
+                required String currency,
+                required DateTime createdAt,
+                Value<DateTime?> occurredAt = const Value.absent(),
+                Value<String> rawText = const Value.absent(),
+                Value<String> note = const Value.absent(),
+                Value<String?> bankId = const Value.absent(),
+                Value<String?> last4 = const Value.absent(),
+                Value<String?> dedupKey = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => DraftsCompanion.insert(
+                id: id,
+                source: source,
+                status: status,
+                isExpense: isExpense,
+                amountMinor: amountMinor,
+                currency: currency,
+                createdAt: createdAt,
+                occurredAt: occurredAt,
+                rawText: rawText,
+                note: note,
+                bankId: bankId,
+                last4: last4,
+                dedupKey: dedupKey,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$DraftsTable, DraftRow>(table),
+                  BaseReferences<_$KakaDatabase, $DraftsTable, DraftRow>(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$DraftsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$KakaDatabase,
+      $DraftsTable,
+      DraftRow,
+      $$DraftsTableFilterComposer,
+      $$DraftsTableOrderingComposer,
+      $$DraftsTableAnnotationComposer,
+      $$DraftsTableCreateCompanionBuilder,
+      $$DraftsTableUpdateCompanionBuilder,
+      (DraftRow, BaseReferences<_$KakaDatabase, $DraftsTable, DraftRow>),
+      DraftRow,
+      PrefetchHooks Function()
+    >;
 
 class $KakaDatabaseManager {
   final _$KakaDatabase _db;
@@ -2130,4 +3048,5 @@ class $KakaDatabaseManager {
   $$TransactionsTableTableManager get transactions => $$TransactionsTableTableManager(_db, _db.transactions);
   $$PostingsTableTableManager get postings => $$PostingsTableTableManager(_db, _db.postings);
   $$SettingsTableTableManager get settings => $$SettingsTableTableManager(_db, _db.settings);
+  $$DraftsTableTableManager get drafts => $$DraftsTableTableManager(_db, _db.drafts);
 }

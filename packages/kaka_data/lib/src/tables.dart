@@ -49,3 +49,24 @@ class Settings extends Table {
   @override
   Set<Column> get primaryKey => {key};
 }
+
+/// The question queue: suggested transactions awaiting the user's decision.
+@DataClassName('DraftRow')
+class Drafts extends Table {
+  TextColumn get id => text()();
+  TextColumn get source => text()();
+  TextColumn get status => text()();
+  BoolColumn get isExpense => boolean()();
+  IntColumn get amountMinor => integer()();
+  TextColumn get currency => text()();
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get occurredAt => dateTime().nullable()();
+  TextColumn get rawText => text().withDefault(const Constant(''))();
+  TextColumn get note => text().withDefault(const Constant(''))();
+  TextColumn get bankId => text().nullable()();
+  TextColumn get last4 => text().nullable()();
+  TextColumn get dedupKey => text().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}

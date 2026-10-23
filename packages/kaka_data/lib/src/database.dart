@@ -8,7 +8,7 @@ import 'tables.dart';
 
 part 'database.g.dart';
 
-@DriftDatabase(tables: [Accounts, Transactions, Postings, Settings])
+@DriftDatabase(tables: [Accounts, Transactions, Postings, Settings, Drafts])
 class KakaDatabase extends _$KakaDatabase {
   KakaDatabase(super.executor);
 
@@ -28,7 +28,7 @@ class KakaDatabase extends _$KakaDatabase {
   }
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -36,6 +36,9 @@ class KakaDatabase extends _$KakaDatabase {
       await m.createAll();
       await customStatement('CREATE INDEX postings_account ON postings(account_id)');
       await customStatement('CREATE INDEX transactions_occurred ON transactions(occurred_at DESC)');
+    },
+    onUpgrade: (m, from, to) async {
+      if (from < 2) await m.createTable(drafts);
     },
   );
 }
