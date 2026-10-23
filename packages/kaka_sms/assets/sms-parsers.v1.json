@@ -1,12 +1,220 @@
 {
   "schema_version": 1,
-  "catalog_version": "2026.10.23",
-  "note": "Real formats are never guessed. These five banks ship with status needs_samples and no templates until masked real SMS samples are contributed (see CONTRIBUTING.md).",
+  "catalog_version": "2026.10.23-2",
+  "note": "Bank templates below are best-effort reconstructions of public SMS layouts, marked needs_samples. They run only for text the user explicitly shares (every result is a draft the user confirms). Replace with verified templates once masked real samples arrive.",
   "banks": [
-    {"bank_id": "melli", "name": {"en": "Bank Melli Iran", "fa": "بانک ملی"}, "senders": [], "status": "needs_samples", "templates": [], "tests": []},
-    {"bank_id": "mellat", "name": {"en": "Bank Mellat", "fa": "بانک ملت"}, "senders": [], "status": "needs_samples", "templates": [], "tests": []},
-    {"bank_id": "saderat", "name": {"en": "Bank Saderat Iran", "fa": "بانک صادرات"}, "senders": [], "status": "needs_samples", "templates": [], "tests": []},
-    {"bank_id": "tejarat", "name": {"en": "Tejarat Bank", "fa": "بانک تجارت"}, "senders": [], "status": "needs_samples", "templates": [], "tests": []},
-    {"bank_id": "pasargad", "name": {"en": "Bank Pasargad", "fa": "بانک پاسارگاد"}, "senders": [], "status": "needs_samples", "templates": [], "tests": []}
+    {
+      "bank_id": "melli",
+      "name": {
+        "en": "Bank Melli Iran",
+        "fa": "بانک ملی"
+      },
+      "senders": [],
+      "templates": [
+        {
+          "id": "melli.v1",
+          "regex": "(?:بانک ?ملی|ملی)[\\s\\S]*?(?<direction>برداشت|واریز|خرید|انتقال)[^\\d]*(?<amount>[\\d,٬]+)[\\s\\S]*?(?:حساب|کارت)[^\\d]*(?<last4>\\d{4})\\b[\\s\\S]*?مانده[^\\d]*(?<balance>[\\d,٬]+)(?:[\\s\\S]*?(?<date>\\d{2,4}/\\d{2}/\\d{2})(?:[-\\s]+(?<time>\\d{1,2}:\\d{2}))?)?",
+          "debit_words": [
+            "برداشت",
+            "خرید",
+            "انتقال"
+          ],
+          "credit_words": [
+            "واریز"
+          ]
+        }
+      ],
+      "tests": [
+        {
+          "input": "بانک ملی ایران\nبرداشت: 1,200,000\nحساب: 0123\nمانده: 15,300,000\n1405/08/01-12:30",
+          "expect": {
+            "direction": "debit",
+            "amount_minor": 1200000,
+            "balance_minor": 15300000,
+            "last4": "0123"
+          }
+        },
+        {
+          "input": "بانک ملی\nواریز: ۲۵۰٬۰۰۰\nحساب: ۹۸۷۶\nمانده: ۳٬۱۰۰٬۰۰۰\n۱۴۰۵/۰۸/۰۲-۰۹:۱۵",
+          "expect": {
+            "direction": "credit",
+            "amount_minor": 250000,
+            "balance_minor": 3100000,
+            "last4": "9876"
+          }
+        }
+      ],
+      "status": "needs_samples",
+      "note": "Templates are based on publicly circulated formats and are UNVERIFIED. Please contribute masked real samples."
+    },
+    {
+      "bank_id": "mellat",
+      "name": {
+        "en": "Bank Mellat",
+        "fa": "بانک ملت"
+      },
+      "senders": [],
+      "templates": [
+        {
+          "id": "mellat.v1",
+          "regex": "حساب\\s*(?:\\*+|\\.+)?(?<last4>\\d{4})\\s*\\n\\s*(?<direction>برداشت|واریز)\\s*(?<amount>[\\d,٬]+)\\s*\\n\\s*مانده\\s*(?<balance>[\\d,٬]+)(?:\\s*\\n\\s*(?<date>\\d{4})-(?<time>\\d{1,2}:\\d{2}))?",
+          "debit_words": [
+            "برداشت"
+          ],
+          "credit_words": [
+            "واریز"
+          ]
+        }
+      ],
+      "tests": [
+        {
+          "input": "حساب5463\nبرداشت250,000\nمانده1,234,000\n0801-14:22",
+          "expect": {
+            "direction": "debit",
+            "amount_minor": 250000,
+            "balance_minor": 1234000,
+            "last4": "5463"
+          }
+        },
+        {
+          "input": "حساب ***1122\nواریز 7,000,000\nمانده 9,500,000\n0802-08:01",
+          "expect": {
+            "direction": "credit",
+            "amount_minor": 7000000,
+            "balance_minor": 9500000,
+            "last4": "1122"
+          }
+        }
+      ],
+      "status": "needs_samples",
+      "note": "Templates are based on publicly circulated formats and are UNVERIFIED. Please contribute masked real samples."
+    },
+    {
+      "bank_id": "saderat",
+      "name": {
+        "en": "Bank Saderat Iran",
+        "fa": "بانک صادرات"
+      },
+      "senders": [],
+      "templates": [
+        {
+          "id": "saderat.v1",
+          "regex": "صادرات[\\s\\S]*?(?:حساب|کارت)[:\\s]*[\\d.*]*?(?<last4>\\d{4})\\s*\\n[\\s\\S]*?(?<direction>برداشت|واریز|خرید)[:\\s]*(?<amount>[\\d,٬]+)[\\s\\S]*?مانده[:\\s]*(?<balance>[\\d,٬]+)",
+          "debit_words": [
+            "برداشت",
+            "خرید"
+          ],
+          "credit_words": [
+            "واریز"
+          ]
+        }
+      ],
+      "tests": [
+        {
+          "input": "بانک صادرات\nحساب:...4433\nبرداشت:120,000\nمانده:8,880,000\n1405/08/01 10:20",
+          "expect": {
+            "direction": "debit",
+            "amount_minor": 120000,
+            "balance_minor": 8880000,
+            "last4": "4433"
+          }
+        },
+        {
+          "input": "صادرات\nکارت: 6037****7788\nواریز: 3,000,000\nمانده: 11,880,000",
+          "expect": {
+            "direction": "credit",
+            "amount_minor": 3000000,
+            "balance_minor": 11880000,
+            "last4": "7788"
+          }
+        }
+      ],
+      "status": "needs_samples",
+      "note": "Templates are based on publicly circulated formats and are UNVERIFIED. Please contribute masked real samples."
+    },
+    {
+      "bank_id": "tejarat",
+      "name": {
+        "en": "Tejarat Bank",
+        "fa": "بانک تجارت"
+      },
+      "senders": [],
+      "templates": [
+        {
+          "id": "tejarat.v1",
+          "regex": "تجارت[\\s\\S]*?(?<direction>برداشت|واریز)[^\\d\\n]*?(?<last4>\\d{4})?\\s*\\n[\\s\\S]*?مبلغ[:\\s]*(?<amount>[\\d,٬]+)[\\s\\S]*?مانده[:\\s]*(?<balance>[\\d,٬]+)",
+          "debit_words": [
+            "برداشت"
+          ],
+          "credit_words": [
+            "واریز"
+          ]
+        }
+      ],
+      "tests": [
+        {
+          "input": "بانک تجارت\nبرداشت از حساب 2211\nمبلغ: 450,000 ریال\nمانده: 2,050,000 ریال\n1405/08/01",
+          "expect": {
+            "direction": "debit",
+            "amount_minor": 450000,
+            "balance_minor": 2050000,
+            "last4": "2211"
+          }
+        },
+        {
+          "input": "بانک تجارت\nواریز به حساب 2211\nمبلغ: 1,000,000 ریال\nمانده: 3,050,000 ریال",
+          "expect": {
+            "direction": "credit",
+            "amount_minor": 1000000,
+            "balance_minor": 3050000,
+            "last4": "2211"
+          }
+        }
+      ],
+      "status": "needs_samples",
+      "note": "Templates are based on publicly circulated formats and are UNVERIFIED. Please contribute masked real samples."
+    },
+    {
+      "bank_id": "pasargad",
+      "name": {
+        "en": "Bank Pasargad",
+        "fa": "بانک پاسارگاد"
+      },
+      "senders": [],
+      "templates": [
+        {
+          "id": "pasargad.v1",
+          "regex": "پاسارگاد[\\s\\S]*?(?<direction>[-+])\\s*(?<amount>[\\d,٬]+)[\\s\\S]*?(?:حساب|کارت)[:\\s]*[\\d.*]*?(?<last4>\\d{4})\\s*\\n[\\s\\S]*?مانده[:\\s]*(?<balance>[\\d,٬]+)",
+          "debit_words": [
+            "-"
+          ],
+          "credit_words": [
+            "+"
+          ]
+        }
+      ],
+      "tests": [
+        {
+          "input": "بانک پاسارگاد\n-95,000\nحساب: 207.8000.1234\nمانده: 640,000\n1405/08/01_18:40",
+          "expect": {
+            "direction": "debit",
+            "amount_minor": 95000,
+            "balance_minor": 640000,
+            "last4": "1234"
+          }
+        },
+        {
+          "input": "پاسارگاد\n+5,000,000\nحساب: ...1234\nمانده: 5,640,000",
+          "expect": {
+            "direction": "credit",
+            "amount_minor": 5000000,
+            "balance_minor": 5640000,
+            "last4": "1234"
+          }
+        }
+      ],
+      "status": "needs_samples",
+      "note": "Templates are based on publicly circulated formats and are UNVERIFIED. Please contribute masked real samples."
+    }
   ]
 }

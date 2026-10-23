@@ -10,6 +10,25 @@ void main() {
     expect(catalog.banks.every((b) => !b.enabledByDefault), isTrue);
   });
 
+  group('bundled bank templates (unverified)', () {
+    final bundled = ParserCatalog.parse(File('assets/sms-parsers.v1.json').readAsStringSync());
+    final p = SmsParser(bundled, includeUnverified: true);
+    for (final bank in bundled.banks) {
+      test('${bank.bankId} has samples', () => expect(bank.tests, isNotEmpty));
+      for (final t in bank.tests) {
+        test('${bank.bankId}: ${t.input.split('\n').skip(1).first}', () {
+          final r = p.parse(t.input);
+          expect(r, isNotNull);
+          expect(r!.bankId, bank.bankId);
+          expect(r.direction.name, t.expect['direction']);
+          expect(r.amount.minor, t.expect['amount_minor']);
+          expect(r.balance?.minor, t.expect['balance_minor']);
+          expect(r.last4, t.expect['last4']);
+        });
+      }
+    }
+  });
+
   // The fixture is a fictional bank used to exercise the engine; every catalog
   // entry's own `tests` are run the same way in CI.
   final catalog = ParserCatalog.parse(File('test/fixtures/example_bank.json').readAsStringSync());
