@@ -1,0 +1,160 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:kaka_domain/kaka_domain.dart';
+
+import '../../app/providers.dart';
+import '../../app/router.dart';
+import '../../core/l10n_x.dart';
+import '../../core/widgets.dart';
+import '../../theme/kaka_colors.dart';
+import 'share_ingest.dart';
+
+/// The question queue: drafts from SMS / share / AI waiting for a yes or no.
+class QueueScreen extends ConsumerWidget {
+  const QueueScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
+    final c = KakaColors.of(context);
+    final drafts = ref.watch(pendingDraftsProvider).value ?? const <Draft>[];
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(l.queueTitle),
+        actions: [
+          IconButton(
+            tooltip: l.pasteSms,
+            icon: const Icon(Icons.content_paste_go_rounded),
+            onPressed: () => showPasteSmsDialog(context, ref),
+          ),
+        ],
+      ),
+      body: drafts.isEmpty
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Text(
+                  l.queueEmpty,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: c.textMuted, height: 1.7),
+                ),
+              ),
+            )
+          : ListView.separated(
+              padding: const EdgeInsets.all(16),
+              itemCount: drafts.length,
+              separatorBuilder: (_, _) => const SizedBox(height: 12),
+              itemBuilder: (_, i) => _DraftCard(drafts[i]),
+            ),
+    );
+  }
+}
+
+Future<void> showPasteSmsDialog(BuildContext context, WidgetRef ref) async {
+  final l = context.l10n;
+  final controller = TextEditingController();
+  final clip = await Clipboard.getData(Clipboard.kTextPlain);
+  if (clip?.text != null) controller.text = clip!.text!;
+  if (!context.mounted) return;
+  final text = await showDialog<String>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: Text(l.pasteSms),
+      content: TextField(
+        controller: controller,
+        maxLines: 6,
+        minLines: 3,
+        decoration: InputDecoration(hintText: l.pasteSmsHint),
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(dialogContext), child: Text(l.cancel)),
+        FilledButton(onPressed: () => Navigator.pop(dialogContext, controller.text), child: Text(l.read)),
+      ],
+    ),
+  );
+  controller.dispose();
+  if (text == null || text.trim().isEmpty || !context.mounted) return;
+  final result = await ref.read(shareIngestProvider).ingest(text, source: DraftSource.manual);
+  if (context.mounted) showIngestResult(context, result);
+}
+
+void showIngestResult(BuildContext context, IngestResult r) {
+  final l = context.l10n;
+  ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+    SnackBar(
+      content: Text(switch (r) {
+        IngestResult.added => l.ingestAdded,
+        IngestResult.duplicate => l.ingestDuplicate,
+        IngestResult.unreadable => l.ingestUnreadable,
+      }),
+    ),
+  );
+}
+
+class _DraftCard extends ConsumerWidget {
+  const _DraftCard(this.draft);
+  final Draft draft;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
+    final c = KakaColors.of(context);
+    final f = ref.watch(formatProvider);
+    final signed = draft.isExpense ? -draft.amount : draft.amount;
+    return KCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Icon(
+                draft.isExpense ? Icons.north_east_rounded : Icons.south_west_rounded,
+                color: c.accentText,
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  [
+                    draft.isExpense ? l.expense : l.income,
+                    if (draft.note.isNotEmpty) draft.note,
+                    if (draft.last4 != null) f.digits('••${draft.last4}'),
+                  ].join(' · '),
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+              ),
+              AmountText(f.money(signed, signed: !draft.isExpense), color: draft.isExpense ? c.text : c.positive),
+            ],
+          ),
+          if (draft.rawText.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            Text(
+              draft.rawText,
+              maxLines: 4,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(color: c.textMuted, fontSize: 12.5, height: 1.5),
+            ),
+          ],
+          const SizedBox(height: 6),
+          Text(
+            '${l.unverifiedParser} · ${f.date(draft.createdAt)}',
+            style: TextStyle(color: c.textFaint, fontSize: 11.5),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              TextButton(onPressed: () => ref.read(draftServiceProvider).discard(draft.id), child: Text(l.discard)),
+              const Spacer(),
+              OutlinedButton(
+                onPressed: () => context.push(Routes.confirmDraft(draft.id)),
+                child: Text(l.editAndConfirm),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}

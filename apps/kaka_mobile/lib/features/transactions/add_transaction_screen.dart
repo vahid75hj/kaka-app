@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kaka_data/kaka_data.dart';
 import 'package:kaka_domain/kaka_domain.dart';
 
 import '../../app/providers.dart';
+import '../../core/date_picker.dart';
 import '../../core/l10n_x.dart';
 import '../../theme/kaka_colors.dart';
 
 class AddTransactionScreen extends ConsumerStatefulWidget {
-  const AddTransactionScreen({super.key, this.initialAccountId});
+  const AddTransactionScreen({super.key, this.initialAccountId, this.draftId});
   final String? initialAccountId;
+
+  /// When set, the form is pre-filled from this question-queue draft and the
+  /// draft is marked confirmed once saved.
+  final String? draftId;
 
   @override
   ConsumerState<AddTransactionScreen> createState() => _AddTransactionScreenState();
@@ -26,6 +32,27 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
   var _saving = false;
   String? _error;
 
+  Draft? _draft;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.draftId != null) _loadDraft(widget.draftId!);
+  }
+
+  Future<void> _loadDraft(String id) async {
+    final d = await DriftDraftRepository(ref.read(databaseProvider)).findById(id);
+    if (d == null || !mounted) return;
+    final f = ref.read(formatProvider);
+    setState(() {
+      _draft = d;
+      _kind = d.isExpense ? TransactionKind.expense : TransactionKind.income;
+      _amount.text = exactAmountText(d.amount, f.unitFor(d.amount.currency));
+      _date = d.occurredAt ?? d.createdAt;
+      _note.text = d.note;
+    });
+  }
+
   @override
   void dispose() {
     _amount.dispose();
@@ -34,12 +61,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
   }
 
   Future<void> _pickDate() async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: _date,
-      firstDate: DateTime(2000),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-    );
+    final picked = await pickDate(context, ref.read(formatProvider), initial: _date);
     if (picked != null) {
       final now = DateTime.now();
       setState(() => _date = DateTime(picked.year, picked.month, picked.day, now.hour, now.minute));
@@ -74,6 +96,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
         case TransactionKind.opening:
           break;
       }
+      if (_draft != null) await ref.read(draftServiceProvider).confirm(_draft!.id);
       if (mounted) context.pop();
     } catch (e) {
       setState(() {
@@ -102,6 +125,15 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
+          if (_draft != null && _draft!.rawText.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(color: c.accentSoft, borderRadius: BorderRadius.circular(12)),
+                child: Text(_draft!.rawText, style: TextStyle(color: c.textMuted, fontSize: 12.5, height: 1.5)),
+              ),
+            ),
           SegmentedButton<TransactionKind>(
             showSelectedIcon: false,
             segments: [
@@ -197,3 +229,15 @@ class _AccountPicker extends ConsumerWidget {
     );
   }
 }
+
+/// [m] in [unit] without any display rounding (e.g. 1,234,567 rial → "123456.7" toman).
+String exactAmountText(Money m, DisplayUnit unit) {
+  final p = unit.currency.storageScale + unit.factorPow10;
+  if (p <= 0) return (m.minor.abs() * _pow10(-p)).toString();
+  final div = _pow10(p);
+  final v = m.minor.abs();
+  final frac = (v % div).toString().padLeft(p, '0').replaceFirst(RegExp(r'0+$'), '');
+  return frac.isEmpty ? '${v ~/ div}' : '${v ~/ div}.$frac';
+}
+
+int _pow10(int n) => n == 0 ? 1 : 10 * _pow10(n - 1);

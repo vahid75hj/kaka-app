@@ -22,6 +22,7 @@ class HomeScreen extends ConsumerWidget {
     final summary = ref.watch(homeSummaryProvider);
     final recent = ref.watch(transactionViewsProvider(l.opening)).take(5).toList();
     final now = DateTime.now();
+    final pending = ref.watch(pendingDraftsProvider).value?.length ?? 0;
 
     return Scaffold(
       body: SafeArea(
@@ -48,9 +49,38 @@ class HomeScreen extends ConsumerWidget {
                 Expanded(
                   child: Text(l.appName, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
                 ),
+                IconButton(
+                  tooltip: l.queueTitle,
+                  onPressed: () => context.push(Routes.queue),
+                  icon: Badge(
+                    isLabelVisible: pending > 0,
+                    label: Text(f.digits('$pending')),
+                    child: const Icon(Icons.inbox_outlined),
+                  ),
+                ),
                 _OfflinePill(color: c),
               ],
             ),
+            if (pending > 0)
+              Padding(
+                padding: const EdgeInsets.only(top: 14),
+                child: KCard(
+                  onTap: () => context.push(Routes.queue),
+                  child: Row(
+                    children: [
+                      Icon(Icons.help_outline_rounded, color: c.accentText),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          f.digits(l.queueBanner(pending)),
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                      const Icon(Icons.chevron_right_rounded),
+                    ],
+                  ),
+                ),
+              ),
             const SizedBox(height: 18),
             _Hero(summary: summary),
             const SizedBox(height: 12),
