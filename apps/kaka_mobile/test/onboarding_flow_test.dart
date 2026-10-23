@@ -20,13 +20,15 @@ void main() {
 
   testWidgets('Persian onboarding creates a toman account and lands on home', (tester) async {
     await tester.runAsync(() async {
-      await tester.pumpWidget(ProviderScope(
-        overrides: [
-          databaseProvider.overrideWithValue(db),
-          initialSettingsProvider.overrideWithValue(AppSettings.defaultsFor('fa')),
-        ],
-        child: const KakaApp(),
-      ));
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            databaseProvider.overrideWithValue(db),
+            initialSettingsProvider.overrideWithValue(AppSettings.defaultsFor('fa')),
+          ],
+          child: const KakaApp(),
+        ),
+      );
       await tester.pumpAndSettle();
       expect(Directionality.of(tester.element(find.byType(Scaffold).first)), TextDirection.rtl);
 
