@@ -50,6 +50,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
       _amount.text = exactAmountText(d.amount, f.unitFor(d.amount.currency));
       _date = d.occurredAt ?? d.createdAt;
       _note.text = d.note;
+      if (d.accountId != null) _accountId = d.accountId;
     });
   }
 

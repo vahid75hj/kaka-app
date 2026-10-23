@@ -14,6 +14,7 @@ import '../backup/backup_actions.dart';
 import '../lock/app_lock.dart';
 import '../onboarding/onboarding_screen.dart' show DecimalsPicker;
 import '../queue/queue_screen.dart' show showPasteSmsDialog;
+import '../sms/sms_auto_reader.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -52,6 +53,31 @@ class SettingsScreen extends ConsumerWidget {
             subtitle: Text(l.shareTip, style: TextStyle(color: c.textMuted, fontSize: 12)),
             onTap: () => showPasteSmsDialog(context, ref),
           ),
+          SectionHeader(l.smsSection),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            secondary: const Icon(Icons.mark_chat_read_outlined),
+            title: Text(l.smsAutoRead),
+            subtitle: Text(l.smsAutoReadHint, style: TextStyle(color: c.textMuted, fontSize: 12, height: 1.5)),
+            value: s.smsAutoRead,
+            onChanged: (on) async {
+              final reader = ref.read(smsAutoReaderProvider);
+              if (!on) return reader.disable();
+              if (await reader.enable()) {
+                if (context.mounted) context.push(Routes.smsSetup);
+              } else if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.smsPermissionDenied)));
+              }
+            },
+          ),
+          if (s.smsAutoRead)
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.link_rounded),
+              title: Text(l.smsSetupTitle),
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () => context.push(Routes.smsSetup),
+            ),
           SectionHeader(l.security),
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
@@ -151,7 +177,7 @@ class SettingsScreen extends ConsumerWidget {
             onChanged: (d) => update((s) => s.copyWith(displayDecimals: d)),
           ),
           SectionHeader(l.about),
-          Text('${l.appName} 0.2.0 — ${l.aboutBody}', style: TextStyle(color: c.textMuted, height: 1.6)),
+          Text('${l.appName} 0.3.0 — ${l.aboutBody}', style: TextStyle(color: c.textMuted, height: 1.6)),
         ],
       ),
     );

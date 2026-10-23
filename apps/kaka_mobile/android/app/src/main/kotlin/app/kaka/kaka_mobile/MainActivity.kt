@@ -13,9 +13,11 @@ import io.flutter.plugin.common.MethodChannel
 class MainActivity : FlutterFragmentActivity() {
     private var channel: MethodChannel? = null
     private var pending: String? = null
+    private var sms: SmsBridge? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        sms = SmsBridge(this, flutterEngine.dartExecutor.binaryMessenger)
         pending = extractText(intent)
         channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "app.kaka/share").apply {
             setMethodCallHandler { call, result ->
@@ -27,6 +29,16 @@ class MainActivity : FlutterFragmentActivity() {
                 }
             }
         }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        sms?.onPermissionResult(requestCode)
+    }
+
+    override fun onDestroy() {
+        sms?.stopListening()
+        super.onDestroy()
     }
 
     override fun onNewIntent(intent: Intent) {

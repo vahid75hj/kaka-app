@@ -54,9 +54,23 @@ final draftServiceProvider = Provider<DraftService>(
 );
 final pendingDraftsProvider = StreamProvider<List<Draft>>((ref) => ref.watch(draftServiceProvider).watchPending());
 
-/// Bundled bank SMS templates. Unverified ones run too, because this parser
-/// only sees text the user explicitly shared and every result is a draft.
+/// Bundled bank SMS templates + heuristic fallback. Every result is only a draft.
 final smsParserProvider = FutureProvider<SmsParser>((ref) async {
   final json = await rootBundle.loadString('packages/kaka_sms/assets/sms-parsers.v1.json');
-  return SmsParser(ParserCatalog.parse(json), includeUnverified: true);
+  return SmsParser(ParserCatalog.parse(json));
+});
+
+final smsLinkRepositoryProvider = Provider<SmsLinkRepository>(
+  (ref) => DriftSmsLinkRepository(ref.watch(databaseProvider)),
+);
+final smsLinksProvider = StreamProvider<List<SmsLink>>((ref) => ref.watch(smsLinkRepositoryProvider).watchAll());
+
+final smsIngestServiceProvider = FutureProvider<SmsIngestService>((ref) async {
+  final parser = await ref.watch(smsParserProvider.future);
+  return SmsIngestService(
+    parser: parser,
+    links: ref.watch(smsLinkRepositoryProvider),
+    drafts: ref.watch(draftServiceProvider),
+    bankName: (b) => ref.read(settingsProvider).isPersian ? b.nameFa : b.nameEn,
+  );
 });

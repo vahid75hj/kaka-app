@@ -40,7 +40,12 @@ Phases: **MVP-1** = first usable APK · **MVP-2** = v0.1 feature-complete · **L
 - [x] Category management screen (add / rename / archive across currencies) — custom icons still open
 - [x] Question queue (`drafts` table, schema v2) for drafts from SMS / share / paste; confirm-by-review, discard, dedup key
 - [x] Share-in (`ACTION_SEND`, `ACTION_PROCESS_TEXT`) + paste SMS → SMS parser → question queue
-- [~] SMS templates for the 5 banks: best-effort public-format templates + sample tests shipped as `needs_samples`; **verify with masked real samples**. "Learn a new bank" flow still open
+- [x] SMS parser rework (v0.3.0): normalization (ك/ي, bidi marks, `*`), verified templates from real samples (Melli, Saderat, Tejarat, **Mehr Iran**), heuristic fallback with confidence, MMDD dates with year inferred from receive time — Mellat/Pasargad still `needs_samples`
+- [x] Opt-in automatic SMS reading (READ_SMS/RECEIVE_SMS asked only when enabled): 30-day first scan, incremental scan on resume, live receiver while the app runs; off = no reading, receiver stopped
+- [x] Sender ↔ account linking (sender default account + account-number links, suffix and dashed-form matching); only linked senders are read
+- [x] Bank balance vs ledger mismatch hint on drafts
+- [ ] Background receiver when the app is closed (WorkManager / manifest receiver) — today missed SMS are picked up on next open
+- [ ] "Learn a new bank" flow (diff 3–5 samples into a template)
 - [ ] CI step that runs every catalog entry's `tests`
 - [x] Encrypted `.kaka` backup (Argon2id m=19 MiB t=2 + XChaCha20-Poly1305, header as AAD) via share sheet; restore via file picker — reminder still open
 - [ ] Exchange rates (manual first, one public source after spike) and cross-currency transfers via `FX:<cur>` accounts

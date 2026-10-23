@@ -5,34 +5,19 @@ import 'package:kaka_sms/kaka_sms.dart';
 
 import '../../app/providers.dart';
 
-enum IngestResult { added, duplicate, unreadable }
+export 'package:kaka_sms/kaka_sms.dart' show IngestResult;
 
-/// Turns shared / pasted text into a question-queue draft. Nothing is
-/// written to the ledger here: the user always confirms.
+/// Shared / pasted text → [SmsIngestService] → question queue.
 class ShareIngest {
   ShareIngest(this._ref);
   final Ref _ref;
 
   Future<IngestResult> ingest(String text, {DraftSource source = DraftSource.share}) async {
-    final parser = await _ref.read(smsParserProvider.future);
-    final parsed = parser.parse(text);
-    if (parsed == null) return IngestResult.unreadable;
-    final bank = parser.catalog.banks.where((b) => b.bankId == parsed.bankId).firstOrNull;
-    final fa = _ref.read(settingsProvider).isPersian;
-    final draft = Draft(
-      id: Ids.next(),
+    final service = await _ref.read(smsIngestServiceProvider.future);
+    return service.ingest(
+      IncomingSms(body: text, receivedAt: DateTime.now()),
       source: source,
-      isExpense: parsed.direction == SmsDirection.debit,
-      amount: parsed.amount,
-      createdAt: DateTime.now(),
-      rawText: text.trim(),
-      note: bank == null ? '' : (fa ? bank.nameFa : bank.nameEn),
-      bankId: parsed.bankId,
-      last4: parsed.last4,
-      dedupKey: parsed.dedupKey,
     );
-    final added = await _ref.read(draftServiceProvider).enqueue(draft);
-    return added ? IngestResult.added : IngestResult.duplicate;
   }
 }
 

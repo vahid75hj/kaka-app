@@ -350,9 +350,6 @@ class AppLocalizationsFa extends AppLocalizations {
   String get ingestUnreadable => 'این پیامک خونده نشد. دستی ثبتش کن یا یه نمونهٔ ماسک‌شده برامون بفرست.';
 
   @override
-  String get unverifiedParser => 'خوانده‌شده با قالب تأییدنشده';
-
-  @override
   String get discard => 'رد کن';
 
   @override
@@ -464,5 +461,78 @@ class AppLocalizationsFa extends AppLocalizations {
   String queueBanner(int count) {
     String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count تراکنش منتظر تأیید توست');
     return '$_temp0';
+  }
+
+  @override
+  String get smsSection => 'پیامک بانک';
+
+  @override
+  String get smsAutoRead => 'خواندن خودکار پیامک بانک';
+
+  @override
+  String get smsAutoReadHint =>
+      'پیش‌فرض خاموشه. کاکا فقط پیامک فرستنده‌هایی که خودت انتخاب می‌کنی رو، روی همین گوشی، می‌خونه و پیش‌نویس می‌سازه تا تأیید کنی.';
+
+  @override
+  String get smsPermissionDenied => 'اجازهٔ پیامک داده نشد';
+
+  @override
+  String get smsSetupTitle => 'فرستنده‌ها و حساب‌های بانکی';
+
+  @override
+  String get smsSetupHint =>
+      'فرستنده‌هایی که بانک تو هستن رو روشن کن و بگو هر کدوم (یا هر شماره حساب) مال کدوم حساب کاکاست. پیامک بقیهٔ فرستنده‌ها هیچ‌وقت خونده نمی‌شه.';
+
+  @override
+  String get smsShowAllSenders => 'نمایش همهٔ فرستنده‌ها';
+
+  @override
+  String get smsNoSenders => 'در ۶ ماه اخیر فرستندهٔ بانکی پیدا نشد';
+
+  @override
+  String get smsDefaultAccount => 'حساب پیش‌فرض';
+
+  @override
+  String get smsAskEachTime => 'هر بار بپرس';
+
+  @override
+  String get smsUseDefault => 'همون پیش‌فرض';
+
+  @override
+  String get smsScanNow => 'بررسی ۳۰ روز اخیر';
+
+  @override
+  String get smsNoAccount => 'حساب مشخص نیست';
+
+  @override
+  String smsScanResult(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count پیش‌نویس تازه در سؤال‌ها',
+      zero: 'تراکنش تازه‌ای نبود',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String smsMessageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count پیام');
+    return '$_temp0';
+  }
+
+  @override
+  String smsAccountNumber(String number) {
+    return 'حساب $number';
+  }
+
+  @override
+  String confidence(int percent) {
+    return '$percent٪ مطمئن';
+  }
+
+  @override
+  String balanceMismatch(String bank, String kaka) {
+    return 'ماندهٔ بانک $bank، کاکا $kaka نشون می‌ده؛ شاید تراکنشی جا افتاده';
   }
 }

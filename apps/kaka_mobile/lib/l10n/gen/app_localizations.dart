@@ -770,12 +770,6 @@ abstract class AppLocalizations {
   /// **'Couldn\'t read this SMS. Add it manually or send us a masked sample.'**
   String get ingestUnreadable;
 
-  /// No description provided for @unverifiedParser.
-  ///
-  /// In en, this message translates to:
-  /// **'Read by an unverified template'**
-  String get unverifiedParser;
-
   /// No description provided for @discard.
   ///
   /// In en, this message translates to:
@@ -997,6 +991,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 transaction waiting for your confirmation} other{{count} transactions waiting for your confirmation}}'**
   String queueBanner(int count);
+
+  /// No description provided for @smsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank SMS'**
+  String get smsSection;
+
+  /// No description provided for @smsAutoRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read bank SMS automatically'**
+  String get smsAutoRead;
+
+  /// No description provided for @smsAutoReadHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Off by default. Kaka reads only the senders you pick, on this phone, and turns them into drafts for you to confirm.'**
+  String get smsAutoReadHint;
+
+  /// No description provided for @smsPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'SMS permission was not granted'**
+  String get smsPermissionDenied;
+
+  /// No description provided for @smsSetupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank senders & accounts'**
+  String get smsSetupTitle;
+
+  /// No description provided for @smsSetupHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on the senders that are your banks and pick which Kaka account each one (or each account number) belongs to. Other senders are never read.'**
+  String get smsSetupHint;
+
+  /// No description provided for @smsShowAllSenders.
+  ///
+  /// In en, this message translates to:
+  /// **'Show all senders'**
+  String get smsShowAllSenders;
+
+  /// No description provided for @smsNoSenders.
+  ///
+  /// In en, this message translates to:
+  /// **'No bank-like senders found in the last 6 months'**
+  String get smsNoSenders;
+
+  /// No description provided for @smsDefaultAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Default account'**
+  String get smsDefaultAccount;
+
+  /// No description provided for @smsAskEachTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask me each time'**
+  String get smsAskEachTime;
+
+  /// No description provided for @smsUseDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the default'**
+  String get smsUseDefault;
+
+  /// No description provided for @smsScanNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan last 30 days'**
+  String get smsScanNow;
+
+  /// No description provided for @smsNoAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account not linked'**
+  String get smsNoAccount;
+
+  /// No description provided for @smsScanResult.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No new transactions} =1{1 new draft in Questions} other{{count} new drafts in Questions}}'**
+  String smsScanResult(int count);
+
+  /// No description provided for @smsMessageCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 message} other{{count} messages}}'**
+  String smsMessageCount(int count);
+
+  /// No description provided for @smsAccountNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Account {number}'**
+  String smsAccountNumber(String number);
+
+  /// No description provided for @confidence.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% sure'**
+  String confidence(int percent);
+
+  /// No description provided for @balanceMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank balance {bank}, Kaka would show {kaka} — a transaction may be missing'**
+  String balanceMismatch(String bank, String kaka);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

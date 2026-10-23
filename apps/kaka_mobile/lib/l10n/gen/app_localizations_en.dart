@@ -351,9 +351,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ingestUnreadable => 'Couldn\'t read this SMS. Add it manually or send us a masked sample.';
 
   @override
-  String get unverifiedParser => 'Read by an unverified template';
-
-  @override
   String get discard => 'Discard';
 
   @override
@@ -470,5 +467,79 @@ class AppLocalizationsEn extends AppLocalizations {
       one: '1 transaction waiting for your confirmation',
     );
     return '$_temp0';
+  }
+
+  @override
+  String get smsSection => 'Bank SMS';
+
+  @override
+  String get smsAutoRead => 'Read bank SMS automatically';
+
+  @override
+  String get smsAutoReadHint =>
+      'Off by default. Kaka reads only the senders you pick, on this phone, and turns them into drafts for you to confirm.';
+
+  @override
+  String get smsPermissionDenied => 'SMS permission was not granted';
+
+  @override
+  String get smsSetupTitle => 'Bank senders & accounts';
+
+  @override
+  String get smsSetupHint =>
+      'Turn on the senders that are your banks and pick which Kaka account each one (or each account number) belongs to. Other senders are never read.';
+
+  @override
+  String get smsShowAllSenders => 'Show all senders';
+
+  @override
+  String get smsNoSenders => 'No bank-like senders found in the last 6 months';
+
+  @override
+  String get smsDefaultAccount => 'Default account';
+
+  @override
+  String get smsAskEachTime => 'Ask me each time';
+
+  @override
+  String get smsUseDefault => 'Use the default';
+
+  @override
+  String get smsScanNow => 'Scan last 30 days';
+
+  @override
+  String get smsNoAccount => 'Account not linked';
+
+  @override
+  String smsScanResult(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count new drafts in Questions',
+      one: '1 new draft in Questions',
+      zero: 'No new transactions',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String smsMessageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count messages', one: '1 message');
+    return '$_temp0';
+  }
+
+  @override
+  String smsAccountNumber(String number) {
+    return 'Account $number';
+  }
+
+  @override
+  String confidence(int percent) {
+    return '$percent% sure';
+  }
+
+  @override
+  String balanceMismatch(String bank, String kaka) {
+    return 'Bank balance $bank, Kaka would show $kaka — a transaction may be missing';
   }
 }

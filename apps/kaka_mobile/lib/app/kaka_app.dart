@@ -6,6 +6,7 @@ import 'package:kaka_domain/kaka_domain.dart';
 import '../features/lock/app_lock.dart';
 import '../features/queue/queue_screen.dart';
 import '../features/queue/share_ingest.dart';
+import '../features/sms/sms_auto_reader.dart';
 import '../l10n/gen/app_localizations.dart';
 import '../theme/kaka_theme.dart';
 import 'providers.dart';
@@ -42,7 +43,7 @@ class _KakaAppState extends ConsumerState<KakaApp> {
   Widget build(BuildContext context) {
     final s = ref.watch(settingsProvider);
     return MaterialApp.router(
-      builder: (context, child) => AppLockGate(child: child ?? const SizedBox.shrink()),
+      builder: (context, child) => AppLockGate(child: SmsLifecycle(child: child ?? const SizedBox.shrink())),
       onGenerateTitle: (c) => AppLocalizations.of(c).appName,
       debugShowCheckedModeBanner: false,
       routerConfig: ref.watch(routerProvider),

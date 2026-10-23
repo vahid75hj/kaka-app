@@ -87,7 +87,7 @@ void showIngestResult(BuildContext context, IngestResult r) {
       content: Text(switch (r) {
         IngestResult.added => l.ingestAdded,
         IngestResult.duplicate => l.ingestDuplicate,
-        IngestResult.unreadable => l.ingestUnreadable,
+        IngestResult.unreadable || IngestResult.ignoredSender => l.ingestUnreadable,
       }),
     ),
   );
@@ -103,6 +103,21 @@ class _DraftCard extends ConsumerWidget {
     final c = KakaColors.of(context);
     final f = ref.watch(formatProvider);
     final signed = draft.isExpense ? -draft.amount : draft.amount;
+    final accounts = ref.watch(accountsProvider).value ?? const <Account>[];
+    final account = accounts.where((a) => a.id == draft.accountId).firstOrNull;
+    // Optional sanity check: the bank's reported balance vs. Kaka's balance after this draft.
+    String? mismatch;
+    final bank = draft.balance;
+    if (account != null && bank != null && bank.currency == account.currency) {
+      final current = (ref.watch(balancesProvider).value ?? const <AccountBalance>[])
+          .where((b) => b.account.id == account.id)
+          .firstOrNull
+          ?.balance;
+      if (current != null) {
+        final after = current + signed;
+        if (after != bank) mismatch = l.balanceMismatch(f.money(bank), f.money(after));
+      }
+    }
     return KCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -120,7 +135,7 @@ class _DraftCard extends ConsumerWidget {
                   [
                     draft.isExpense ? l.expense : l.income,
                     if (draft.note.isNotEmpty) draft.note,
-                    if (draft.last4 != null) f.digits('••${draft.last4}'),
+                    if (draft.accountRef != null) f.digits(_shortRef(draft.accountRef!)),
                   ].join(' · '),
                   style: const TextStyle(fontWeight: FontWeight.w700),
                 ),
@@ -137,11 +152,28 @@ class _DraftCard extends ConsumerWidget {
               style: TextStyle(color: c.textMuted, fontSize: 12.5, height: 1.5),
             ),
           ],
-          const SizedBox(height: 6),
-          Text(
-            '${l.unverifiedParser} · ${f.date(draft.createdAt)}',
-            style: TextStyle(color: c.textFaint, fontSize: 11.5),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              if (account != null) _Tag(icon: Icons.account_balance_wallet_outlined, text: account.name),
+              if (account == null && draft.source == DraftSource.sms)
+                _Tag(icon: Icons.help_outline, text: l.smsNoAccount),
+              if (draft.confidence != null)
+                _Tag(
+                  icon: draft.confidence! >= 0.8 ? Icons.verified_outlined : Icons.info_outline,
+                  text: f.digits(l.confidence((draft.confidence! * 100).round())),
+                  warn: draft.confidence! < 0.6,
+                ),
+              _Tag(icon: Icons.schedule, text: f.date(draft.occurredAt ?? draft.createdAt)),
+            ],
           ),
+          if (mismatch != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(mismatch, style: TextStyle(color: c.negative, fontSize: 12, height: 1.5)),
+            ),
           const SizedBox(height: 10),
           Row(
             children: [
@@ -155,6 +187,29 @@ class _DraftCard extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+String _shortRef(String ref) => ref.length > 6 ? '…${ref.substring(ref.length - 5)}' : ref;
+
+class _Tag extends StatelessWidget {
+  const _Tag({required this.icon, required this.text, this.warn = false});
+  final IconData icon;
+  final String text;
+  final bool warn;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = KakaColors.of(context);
+    final color = warn ? c.negative : c.textMuted;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 14, color: color),
+        const SizedBox(width: 4),
+        Text(text, style: TextStyle(color: color, fontSize: 11.5)),
+      ],
     );
   }
 }

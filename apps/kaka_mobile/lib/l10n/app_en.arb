@@ -113,7 +113,6 @@
   "ingestAdded": "Added to questions — check and confirm it",
   "ingestDuplicate": "Already in Kaka",
   "ingestUnreadable": "Couldn't read this SMS. Add it manually or send us a masked sample.",
-  "unverifiedParser": "Read by an unverified template",
   "discard": "Discard",
   "editAndConfirm": "Review & save",
   "searchHint": "Search notes, accounts, amounts",
@@ -155,6 +154,62 @@
     "placeholders": {
       "count": {
         "type": "int"
+      }
+    }
+  },
+  "smsSection": "Bank SMS",
+  "smsAutoRead": "Read bank SMS automatically",
+  "smsAutoReadHint": "Off by default. Kaka reads only the senders you pick, on this phone, and turns them into drafts for you to confirm.",
+  "smsPermissionDenied": "SMS permission was not granted",
+  "smsSetupTitle": "Bank senders & accounts",
+  "smsSetupHint": "Turn on the senders that are your banks and pick which Kaka account each one (or each account number) belongs to. Other senders are never read.",
+  "smsShowAllSenders": "Show all senders",
+  "smsNoSenders": "No bank-like senders found in the last 6 months",
+  "smsDefaultAccount": "Default account",
+  "smsAskEachTime": "Ask me each time",
+  "smsUseDefault": "Use the default",
+  "smsScanNow": "Scan last 30 days",
+  "smsNoAccount": "Account not linked",
+  "smsScanResult": "{count, plural, =0{No new transactions} =1{1 new draft in Questions} other{{count} new drafts in Questions}}",
+  "@smsScanResult": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "smsMessageCount": "{count, plural, =1{1 message} other{{count} messages}}",
+  "@smsMessageCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "smsAccountNumber": "Account {number}",
+  "@smsAccountNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "confidence": "{percent}% sure",
+  "@confidence": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "balanceMismatch": "Bank balance {bank}, Kaka would show {kaka} — a transaction may be missing",
+  "@balanceMismatch": {
+    "placeholders": {
+      "bank": {
+        "type": "String"
+      },
+      "kaka": {
+        "type": "String"
       }
     }
   }
