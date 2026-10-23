@@ -66,6 +66,23 @@ class Drafts extends Table {
   TextColumn get bankId => text().nullable()();
   TextColumn get last4 => text().nullable()();
   TextColumn get dedupKey => text().nullable()();
+  // v3
+  TextColumn get accountId => text().nullable()();
+  IntColumn get balanceMinor => integer().nullable()();
+  TextColumn get sender => text().nullable()();
+  RealColumn get confidence => real().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+/// Which bank SMS senders / account numbers belong to which Kaka account (v3).
+@DataClassName('SmsLinkRow')
+class SmsLinks extends Table {
+  TextColumn get id => text()();
+  TextColumn get sender => text().nullable()();
+  TextColumn get accountId => text().nullable()();
+  TextColumn get accountNumber => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};

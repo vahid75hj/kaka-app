@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "catalog_version": "2026.10.23-2",
-  "note": "Bank templates below are best-effort reconstructions of public SMS layouts, marked needs_samples. They run only for text the user explicitly shares (every result is a draft the user confirms). Replace with verified templates once masked real samples arrive.",
+  "catalog_version": "2026.10.23-3",
+  "note": "verified = built from real (masked) SMS. needs_samples = reconstructed from public layouts. Anything no template reads goes to the heuristic parser; every result is a draft the user confirms.",
   "banks": [
     {
       "bank_id": "melli",
@@ -10,42 +10,52 @@
         "fa": "بانک ملی"
       },
       "senders": [],
+      "keywords": [
+        "بانک ملی"
+      ],
+      "status": "verified",
       "templates": [
         {
-          "id": "melli.v1",
-          "regex": "(?:بانک ?ملی|ملی)[\\s\\S]*?(?<direction>برداشت|واریز|خرید|انتقال)[^\\d]*(?<amount>[\\d,٬]+)[\\s\\S]*?(?:حساب|کارت)[^\\d]*(?<last4>\\d{4})\\b[\\s\\S]*?مانده[^\\d]*(?<balance>[\\d,٬]+)(?:[\\s\\S]*?(?<date>\\d{2,4}/\\d{2}/\\d{2})(?:[-\\s]+(?<time>\\d{1,2}:\\d{2}))?)?",
+          "id": "melli.v2",
+          "regex": "بانک ملی[^\\n]*\\n(?<direction>[^\\n:]+?)\\s*:\\s*(?<amount>[\\d,]+)\\s*(?<sign>[+-])?\\s*\\nحساب\\s*:\\s*(?<account>[\\d-]+)\\s*\\nمانده\\s*:\\s*(?<balance>[\\d,]+)",
           "debit_words": [
             "برداشت",
             "خرید",
-            "انتقال"
+            "پرداخت",
+            "انتقالی",
+            "انتقال",
+            "کسر"
           ],
           "credit_words": [
-            "واریز"
+            "واریز",
+            "سود"
           ]
         }
       ],
       "tests": [
         {
-          "input": "بانک ملی ایران\nبرداشت: 1,200,000\nحساب: 0123\nمانده: 15,300,000\n1405/08/01-12:30",
+          "input": "بانك ملي ايران\nانتقالي:37,416,819-\nحساب:06009\nمانده:2,950,788\n0712-15:10",
+          "received_at": "2026-10-04T15:11:00",
           "expect": {
             "direction": "debit",
-            "amount_minor": 1200000,
-            "balance_minor": 15300000,
-            "last4": "0123"
+            "amount_minor": 37416819,
+            "balance_minor": 2950788,
+            "account": "06009",
+            "occurred_at": "2026-10-04T15:10:00.000"
           }
         },
         {
-          "input": "بانک ملی\nواریز: ۲۵۰٬۰۰۰\nحساب: ۹۸۷۶\nمانده: ۳٬۱۰۰٬۰۰۰\n۱۴۰۵/۰۸/۰۲-۰۹:۱۵",
+          "input": "بانك ملي ايران\nانتقالي:2,000,000-\nحساب:06009\nمانده:950,788\n0713-12:14",
+          "received_at": "2026-10-05T12:15:00",
           "expect": {
-            "direction": "credit",
-            "amount_minor": 250000,
-            "balance_minor": 3100000,
-            "last4": "9876"
+            "direction": "debit",
+            "amount_minor": 2000000,
+            "balance_minor": 950788,
+            "account": "06009",
+            "occurred_at": "2026-10-05T12:14:00.000"
           }
         }
-      ],
-      "status": "needs_samples",
-      "note": "Templates are based on publicly circulated formats and are UNVERIFIED. Please contribute masked real samples."
+      ]
     },
     {
       "bank_id": "mellat",
@@ -87,7 +97,10 @@
         }
       ],
       "status": "needs_samples",
-      "note": "Templates are based on publicly circulated formats and are UNVERIFIED. Please contribute masked real samples."
+      "note": "Templates are based on publicly circulated formats and are UNVERIFIED. Please contribute masked real samples.",
+      "keywords": [
+        "بانک ملت"
+      ]
     },
     {
       "bank_id": "saderat",
@@ -96,41 +109,41 @@
         "fa": "بانک صادرات"
       },
       "senders": [],
+      "keywords": [
+        "بانک صادرات"
+      ],
+      "status": "verified",
       "templates": [
         {
-          "id": "saderat.v1",
-          "regex": "صادرات[\\s\\S]*?(?:حساب|کارت)[:\\s]*[\\d.*]*?(?<last4>\\d{4})\\s*\\n[\\s\\S]*?(?<direction>برداشت|واریز|خرید)[:\\s]*(?<amount>[\\d,٬]+)[\\s\\S]*?مانده[:\\s]*(?<balance>[\\d,٬]+)",
+          "id": "saderat.v2",
+          "regex": "بانک صادرات[^\\n]*\\n(?<direction>[^\\n:]+?)\\s*:\\s*(?<amount>[\\d,]+)\\s*(?<sign>[+-])?\\s*\\nحساب\\s*:\\s*(?<account>[\\d-]+)\\s*\\nمانده\\s*:\\s*(?<balance>[\\d,]+)",
           "debit_words": [
             "برداشت",
-            "خرید"
+            "خرید",
+            "پرداخت",
+            "انتقالی",
+            "انتقال",
+            "کسر"
           ],
           "credit_words": [
-            "واریز"
+            "واریز",
+            "سود"
           ]
         }
       ],
       "tests": [
         {
-          "input": "بانک صادرات\nحساب:...4433\nبرداشت:120,000\nمانده:8,880,000\n1405/08/01 10:20",
-          "expect": {
-            "direction": "debit",
-            "amount_minor": 120000,
-            "balance_minor": 8880000,
-            "last4": "4433"
-          }
-        },
-        {
-          "input": "صادرات\nکارت: 6037****7788\nواریز: 3,000,000\nمانده: 11,880,000",
+          "input": "بانك صادرات ايران\n انتقال: 18,300,000+\n حساب:85009\n مانده:119,877,823\n 0305 - 08:23 ",
+          "received_at": "2026-05-26T09:00:00",
           "expect": {
             "direction": "credit",
-            "amount_minor": 3000000,
-            "balance_minor": 11880000,
-            "last4": "7788"
+            "amount_minor": 18300000,
+            "balance_minor": 119877823,
+            "account": "85009",
+            "occurred_at": "2026-05-26T08:23:00.000"
           }
         }
-      ],
-      "status": "needs_samples",
-      "note": "Templates are based on publicly circulated formats and are UNVERIFIED. Please contribute masked real samples."
+      ]
     },
     {
       "bank_id": "tejarat",
@@ -139,40 +152,41 @@
         "fa": "بانک تجارت"
       },
       "senders": [],
+      "keywords": [
+        "بانک تجارت"
+      ],
+      "status": "verified",
       "templates": [
         {
-          "id": "tejarat.v1",
-          "regex": "تجارت[\\s\\S]*?(?<direction>برداشت|واریز)[^\\d\\n]*?(?<last4>\\d{4})?\\s*\\n[\\s\\S]*?مبلغ[:\\s]*(?<amount>[\\d,٬]+)[\\s\\S]*?مانده[:\\s]*(?<balance>[\\d,٬]+)",
+          "id": "tejarat.v2",
+          "regex": "بانک تجارت\\s*\\nحساب\\s*:\\s*(?<account>[\\d-]+)\\s*\\n(?<direction>برداشت|واریز|خرید|انتقال)\\s*:\\s*(?<amount>[\\d,]+)\\s*(?<sign>[+-])?[\\s\\S]*?مانده\\s*:\\s*(?<balance>[\\d,]+)",
           "debit_words": [
-            "برداشت"
+            "برداشت",
+            "خرید",
+            "پرداخت",
+            "انتقالی",
+            "انتقال",
+            "کسر"
           ],
           "credit_words": [
-            "واریز"
+            "واریز",
+            "سود"
           ]
         }
       ],
       "tests": [
         {
-          "input": "بانک تجارت\nبرداشت از حساب 2211\nمبلغ: 450,000 ریال\nمانده: 2,050,000 ریال\n1405/08/01",
+          "input": "*بانک تجارت* \nحساب: 0320192383104 \nبرداشت: 20,014,500 ریال \nاز طريق: شتاب  \nمانده: 7,373,998 ریال \n1405/07/30\n19:32",
+          "received_at": "2026-10-22T19:33:00",
           "expect": {
             "direction": "debit",
-            "amount_minor": 450000,
-            "balance_minor": 2050000,
-            "last4": "2211"
-          }
-        },
-        {
-          "input": "بانک تجارت\nواریز به حساب 2211\nمبلغ: 1,000,000 ریال\nمانده: 3,050,000 ریال",
-          "expect": {
-            "direction": "credit",
-            "amount_minor": 1000000,
-            "balance_minor": 3050000,
-            "last4": "2211"
+            "amount_minor": 20014500,
+            "balance_minor": 7373998,
+            "account": "0320192383104",
+            "occurred_at": "2026-10-22T19:32:00.000"
           }
         }
-      ],
-      "status": "needs_samples",
-      "note": "Templates are based on publicly circulated formats and are UNVERIFIED. Please contribute masked real samples."
+      ]
     },
     {
       "bank_id": "pasargad",
@@ -214,7 +228,52 @@
         }
       ],
       "status": "needs_samples",
-      "note": "Templates are based on publicly circulated formats and are UNVERIFIED. Please contribute masked real samples."
+      "note": "Templates are based on publicly circulated formats and are UNVERIFIED. Please contribute masked real samples.",
+      "keywords": [
+        "پاسارگاد"
+      ]
+    },
+    {
+      "bank_id": "mehriran",
+      "name": {
+        "en": "Qarz al-Hasaneh Mehr Iran Bank",
+        "fa": "بانک قرض‌الحسنه مهر ایران"
+      },
+      "senders": [],
+      "keywords": [
+        "مهرایران",
+        "مهر ایران"
+      ],
+      "status": "verified",
+      "templates": [
+        {
+          "id": "mehriran.v1",
+          "regex": "مهر ?ایران[^\\n]*\\nحساب\\s*:\\s*(?<account>[\\d-]+)\\s*\\nمبلغ\\s*:\\s*(?<amount>[\\d,]+)\\s*(?<sign>[+-])?[\\s\\S]*?مانده\\s*:\\s*(?<balance>[\\d,]+)",
+          "debit_words": [
+            "برداشت",
+            "انتقال از",
+            "خرید",
+            "پرداخت"
+          ],
+          "credit_words": [
+            "واریز",
+            "انتقال به"
+          ]
+        }
+      ],
+      "tests": [
+        {
+          "input": "بانک قرض الحسنه مهرايران\nحساب:‪7616-700-7641552-1‬\nمبلغ:100,000,000-\nانتقال از خودپرداز\nمانده:58,871,131\nزمان:1403/8/29-9:22",
+          "received_at": "2024-11-19T09:23:00",
+          "expect": {
+            "direction": "debit",
+            "amount_minor": 100000000,
+            "balance_minor": 58871131,
+            "account": "7616-700-7641552-1",
+            "occurred_at": "2024-11-19T09:22:00.000"
+          }
+        }
+      ]
     }
   ]
 }

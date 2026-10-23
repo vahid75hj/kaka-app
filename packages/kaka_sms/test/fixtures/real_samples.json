@@ -1,0 +1,29 @@
+{
+  "note": "Real SMS (masked by the user) that no single template covers; read by the heuristic parser.",
+  "samples": [
+    {
+      "input": "پرداخت گروهي\nحساب:‪761670007641552001‬\nمبلغ:120,000,000\nمانده:131,788,333\nزمان:1405/7/4-11:57",
+      "received_at": "2026-09-26T11:58:00",
+      "expect": {
+        "direction": "debit",
+        "amount_minor": 120000000,
+        "balance_minor": 131788333,
+        "account": "761670007641552001",
+        "occurred_at": "2026-09-26T11:57:00.000",
+        "bank_id": null
+      }
+    },
+    {
+      "input": "‪761670007641552001‬\n48,000,000-\n1405/7/18-3:12\nمانده:3,780,333",
+      "received_at": "2026-10-10T03:13:00",
+      "expect": {
+        "direction": "debit",
+        "amount_minor": 48000000,
+        "balance_minor": 3780333,
+        "account": "761670007641552001",
+        "occurred_at": "2026-10-10T03:12:00.000",
+        "bank_id": null
+      }
+    }
+  ]
+}

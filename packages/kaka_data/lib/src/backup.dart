@@ -114,7 +114,7 @@ class LedgerSnapshot {
   final KakaDatabase _db;
 
   // Parents before children so foreign keys hold while inserting.
-  static const _order = ['accounts', 'transactions', 'postings', 'settings', 'drafts'];
+  static const _order = ['accounts', 'transactions', 'postings', 'settings', 'drafts', 'sms_links'];
 
   Future<Map<String, Object?>> export({DateTime? now}) async => {
     'format': 'kaka.snapshot',
@@ -137,6 +137,7 @@ class LedgerSnapshot {
         await _db.customStatement('DELETE FROM "$t"');
       }
       for (final t in _order) {
+        // Older backups lack newer tables/columns; missing ones simply stay empty/null.
         for (final raw in (tables[t] as List? ?? const [])) {
           final row = (raw as Map).cast<String, Object?>();
           final known = columns[t]!;

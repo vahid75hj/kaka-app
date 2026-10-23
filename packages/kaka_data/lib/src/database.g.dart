@@ -1304,6 +1304,42 @@ class $DraftsTable extends Drafts with TableInfo<$DraftsTable, DraftRow> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _accountIdMeta = const VerificationMeta('accountId');
+  @override
+  late final GeneratedColumn<String> accountId = GeneratedColumn<String>(
+    'account_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _balanceMinorMeta = const VerificationMeta('balanceMinor');
+  @override
+  late final GeneratedColumn<int> balanceMinor = GeneratedColumn<int>(
+    'balance_minor',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _senderMeta = const VerificationMeta('sender');
+  @override
+  late final GeneratedColumn<String> sender = GeneratedColumn<String>(
+    'sender',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _confidenceMeta = const VerificationMeta('confidence');
+  @override
+  late final GeneratedColumn<double> confidence = GeneratedColumn<double>(
+    'confidence',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1319,6 +1355,10 @@ class $DraftsTable extends Drafts with TableInfo<$DraftsTable, DraftRow> {
     bankId,
     last4,
     dedupKey,
+    accountId,
+    balanceMinor,
+    sender,
+    confidence,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1382,6 +1422,18 @@ class $DraftsTable extends Drafts with TableInfo<$DraftsTable, DraftRow> {
     if (data.containsKey('dedup_key')) {
       context.handle(_dedupKeyMeta, dedupKey.isAcceptableOrUnknown(data['dedup_key']!, _dedupKeyMeta));
     }
+    if (data.containsKey('account_id')) {
+      context.handle(_accountIdMeta, accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta));
+    }
+    if (data.containsKey('balance_minor')) {
+      context.handle(_balanceMinorMeta, balanceMinor.isAcceptableOrUnknown(data['balance_minor']!, _balanceMinorMeta));
+    }
+    if (data.containsKey('sender')) {
+      context.handle(_senderMeta, sender.isAcceptableOrUnknown(data['sender']!, _senderMeta));
+    }
+    if (data.containsKey('confidence')) {
+      context.handle(_confidenceMeta, confidence.isAcceptableOrUnknown(data['confidence']!, _confidenceMeta));
+    }
     return context;
   }
 
@@ -1404,6 +1456,10 @@ class $DraftsTable extends Drafts with TableInfo<$DraftsTable, DraftRow> {
       bankId: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}bank_id']),
       last4: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}last4']),
       dedupKey: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}dedup_key']),
+      accountId: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}account_id']),
+      balanceMinor: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}balance_minor']),
+      sender: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}sender']),
+      confidence: attachedDatabase.typeMapping.read(DriftSqlType.double, data['${effectivePrefix}confidence']),
     );
   }
 
@@ -1427,6 +1483,10 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
   final String? bankId;
   final String? last4;
   final String? dedupKey;
+  final String? accountId;
+  final int? balanceMinor;
+  final String? sender;
+  final double? confidence;
   const DraftRow({
     required this.id,
     required this.source,
@@ -1441,6 +1501,10 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
     this.bankId,
     this.last4,
     this.dedupKey,
+    this.accountId,
+    this.balanceMinor,
+    this.sender,
+    this.confidence,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1466,6 +1530,18 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
     if (!nullToAbsent || dedupKey != null) {
       map['dedup_key'] = Variable<String>(dedupKey);
     }
+    if (!nullToAbsent || accountId != null) {
+      map['account_id'] = Variable<String>(accountId);
+    }
+    if (!nullToAbsent || balanceMinor != null) {
+      map['balance_minor'] = Variable<int>(balanceMinor);
+    }
+    if (!nullToAbsent || sender != null) {
+      map['sender'] = Variable<String>(sender);
+    }
+    if (!nullToAbsent || confidence != null) {
+      map['confidence'] = Variable<double>(confidence);
+    }
     return map;
   }
 
@@ -1484,6 +1560,10 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
       bankId: bankId == null && nullToAbsent ? const Value.absent() : Value(bankId),
       last4: last4 == null && nullToAbsent ? const Value.absent() : Value(last4),
       dedupKey: dedupKey == null && nullToAbsent ? const Value.absent() : Value(dedupKey),
+      accountId: accountId == null && nullToAbsent ? const Value.absent() : Value(accountId),
+      balanceMinor: balanceMinor == null && nullToAbsent ? const Value.absent() : Value(balanceMinor),
+      sender: sender == null && nullToAbsent ? const Value.absent() : Value(sender),
+      confidence: confidence == null && nullToAbsent ? const Value.absent() : Value(confidence),
     );
   }
 
@@ -1503,6 +1583,10 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
       bankId: serializer.fromJson<String?>(json['bankId']),
       last4: serializer.fromJson<String?>(json['last4']),
       dedupKey: serializer.fromJson<String?>(json['dedupKey']),
+      accountId: serializer.fromJson<String?>(json['accountId']),
+      balanceMinor: serializer.fromJson<int?>(json['balanceMinor']),
+      sender: serializer.fromJson<String?>(json['sender']),
+      confidence: serializer.fromJson<double?>(json['confidence']),
     );
   }
   @override
@@ -1522,6 +1606,10 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
       'bankId': serializer.toJson<String?>(bankId),
       'last4': serializer.toJson<String?>(last4),
       'dedupKey': serializer.toJson<String?>(dedupKey),
+      'accountId': serializer.toJson<String?>(accountId),
+      'balanceMinor': serializer.toJson<int?>(balanceMinor),
+      'sender': serializer.toJson<String?>(sender),
+      'confidence': serializer.toJson<double?>(confidence),
     };
   }
 
@@ -1539,6 +1627,10 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
     Value<String?> bankId = const Value.absent(),
     Value<String?> last4 = const Value.absent(),
     Value<String?> dedupKey = const Value.absent(),
+    Value<String?> accountId = const Value.absent(),
+    Value<int?> balanceMinor = const Value.absent(),
+    Value<String?> sender = const Value.absent(),
+    Value<double?> confidence = const Value.absent(),
   }) => DraftRow(
     id: id ?? this.id,
     source: source ?? this.source,
@@ -1553,6 +1645,10 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
     bankId: bankId.present ? bankId.value : this.bankId,
     last4: last4.present ? last4.value : this.last4,
     dedupKey: dedupKey.present ? dedupKey.value : this.dedupKey,
+    accountId: accountId.present ? accountId.value : this.accountId,
+    balanceMinor: balanceMinor.present ? balanceMinor.value : this.balanceMinor,
+    sender: sender.present ? sender.value : this.sender,
+    confidence: confidence.present ? confidence.value : this.confidence,
   );
   DraftRow copyWithCompanion(DraftsCompanion data) {
     return DraftRow(
@@ -1569,6 +1665,10 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
       bankId: data.bankId.present ? data.bankId.value : this.bankId,
       last4: data.last4.present ? data.last4.value : this.last4,
       dedupKey: data.dedupKey.present ? data.dedupKey.value : this.dedupKey,
+      accountId: data.accountId.present ? data.accountId.value : this.accountId,
+      balanceMinor: data.balanceMinor.present ? data.balanceMinor.value : this.balanceMinor,
+      sender: data.sender.present ? data.sender.value : this.sender,
+      confidence: data.confidence.present ? data.confidence.value : this.confidence,
     );
   }
 
@@ -1587,7 +1687,11 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
           ..write('note: $note, ')
           ..write('bankId: $bankId, ')
           ..write('last4: $last4, ')
-          ..write('dedupKey: $dedupKey')
+          ..write('dedupKey: $dedupKey, ')
+          ..write('accountId: $accountId, ')
+          ..write('balanceMinor: $balanceMinor, ')
+          ..write('sender: $sender, ')
+          ..write('confidence: $confidence')
           ..write(')'))
         .toString();
   }
@@ -1607,6 +1711,10 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
     bankId,
     last4,
     dedupKey,
+    accountId,
+    balanceMinor,
+    sender,
+    confidence,
   );
   @override
   bool operator ==(Object other) =>
@@ -1624,7 +1732,11 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
           other.note == this.note &&
           other.bankId == this.bankId &&
           other.last4 == this.last4 &&
-          other.dedupKey == this.dedupKey);
+          other.dedupKey == this.dedupKey &&
+          other.accountId == this.accountId &&
+          other.balanceMinor == this.balanceMinor &&
+          other.sender == this.sender &&
+          other.confidence == this.confidence);
 }
 
 class DraftsCompanion extends UpdateCompanion<DraftRow> {
@@ -1641,6 +1753,10 @@ class DraftsCompanion extends UpdateCompanion<DraftRow> {
   final Value<String?> bankId;
   final Value<String?> last4;
   final Value<String?> dedupKey;
+  final Value<String?> accountId;
+  final Value<int?> balanceMinor;
+  final Value<String?> sender;
+  final Value<double?> confidence;
   final Value<int> rowid;
   const DraftsCompanion({
     this.id = const Value.absent(),
@@ -1656,6 +1772,10 @@ class DraftsCompanion extends UpdateCompanion<DraftRow> {
     this.bankId = const Value.absent(),
     this.last4 = const Value.absent(),
     this.dedupKey = const Value.absent(),
+    this.accountId = const Value.absent(),
+    this.balanceMinor = const Value.absent(),
+    this.sender = const Value.absent(),
+    this.confidence = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   DraftsCompanion.insert({
@@ -1672,6 +1792,10 @@ class DraftsCompanion extends UpdateCompanion<DraftRow> {
     this.bankId = const Value.absent(),
     this.last4 = const Value.absent(),
     this.dedupKey = const Value.absent(),
+    this.accountId = const Value.absent(),
+    this.balanceMinor = const Value.absent(),
+    this.sender = const Value.absent(),
+    this.confidence = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        source = Value(source),
@@ -1694,6 +1818,10 @@ class DraftsCompanion extends UpdateCompanion<DraftRow> {
     Expression<String>? bankId,
     Expression<String>? last4,
     Expression<String>? dedupKey,
+    Expression<String>? accountId,
+    Expression<int>? balanceMinor,
+    Expression<String>? sender,
+    Expression<double>? confidence,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1710,6 +1838,10 @@ class DraftsCompanion extends UpdateCompanion<DraftRow> {
       if (bankId != null) 'bank_id': bankId,
       if (last4 != null) 'last4': last4,
       if (dedupKey != null) 'dedup_key': dedupKey,
+      if (accountId != null) 'account_id': accountId,
+      if (balanceMinor != null) 'balance_minor': balanceMinor,
+      if (sender != null) 'sender': sender,
+      if (confidence != null) 'confidence': confidence,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1728,6 +1860,10 @@ class DraftsCompanion extends UpdateCompanion<DraftRow> {
     Value<String?>? bankId,
     Value<String?>? last4,
     Value<String?>? dedupKey,
+    Value<String?>? accountId,
+    Value<int?>? balanceMinor,
+    Value<String?>? sender,
+    Value<double?>? confidence,
     Value<int>? rowid,
   }) {
     return DraftsCompanion(
@@ -1744,6 +1880,10 @@ class DraftsCompanion extends UpdateCompanion<DraftRow> {
       bankId: bankId ?? this.bankId,
       last4: last4 ?? this.last4,
       dedupKey: dedupKey ?? this.dedupKey,
+      accountId: accountId ?? this.accountId,
+      balanceMinor: balanceMinor ?? this.balanceMinor,
+      sender: sender ?? this.sender,
+      confidence: confidence ?? this.confidence,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1790,6 +1930,18 @@ class DraftsCompanion extends UpdateCompanion<DraftRow> {
     if (dedupKey.present) {
       map['dedup_key'] = Variable<String>(dedupKey.value);
     }
+    if (accountId.present) {
+      map['account_id'] = Variable<String>(accountId.value);
+    }
+    if (balanceMinor.present) {
+      map['balance_minor'] = Variable<int>(balanceMinor.value);
+    }
+    if (sender.present) {
+      map['sender'] = Variable<String>(sender.value);
+    }
+    if (confidence.present) {
+      map['confidence'] = Variable<double>(confidence.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1812,6 +1964,281 @@ class DraftsCompanion extends UpdateCompanion<DraftRow> {
           ..write('bankId: $bankId, ')
           ..write('last4: $last4, ')
           ..write('dedupKey: $dedupKey, ')
+          ..write('accountId: $accountId, ')
+          ..write('balanceMinor: $balanceMinor, ')
+          ..write('sender: $sender, ')
+          ..write('confidence: $confidence, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SmsLinksTable extends SmsLinks with TableInfo<$SmsLinksTable, SmsLinkRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SmsLinksTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _senderMeta = const VerificationMeta('sender');
+  @override
+  late final GeneratedColumn<String> sender = GeneratedColumn<String>(
+    'sender',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _accountIdMeta = const VerificationMeta('accountId');
+  @override
+  late final GeneratedColumn<String> accountId = GeneratedColumn<String>(
+    'account_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _accountNumberMeta = const VerificationMeta('accountNumber');
+  @override
+  late final GeneratedColumn<String> accountNumber = GeneratedColumn<String>(
+    'account_number',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, sender, accountId, accountNumber];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'sms_links';
+  @override
+  VerificationContext validateIntegrity(Insertable<SmsLinkRow> instance, {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('sender')) {
+      context.handle(_senderMeta, sender.isAcceptableOrUnknown(data['sender']!, _senderMeta));
+    }
+    if (data.containsKey('account_id')) {
+      context.handle(_accountIdMeta, accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta));
+    }
+    if (data.containsKey('account_number')) {
+      context.handle(
+        _accountNumberMeta,
+        accountNumber.isAcceptableOrUnknown(data['account_number']!, _accountNumberMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SmsLinkRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SmsLinkRow(
+      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      sender: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}sender']),
+      accountId: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}account_id']),
+      accountNumber: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}account_number']),
+    );
+  }
+
+  @override
+  $SmsLinksTable createAlias(String alias) {
+    return $SmsLinksTable(attachedDatabase, alias);
+  }
+}
+
+class SmsLinkRow extends DataClass implements Insertable<SmsLinkRow> {
+  final String id;
+  final String? sender;
+  final String? accountId;
+  final String? accountNumber;
+  const SmsLinkRow({required this.id, this.sender, this.accountId, this.accountNumber});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    if (!nullToAbsent || sender != null) {
+      map['sender'] = Variable<String>(sender);
+    }
+    if (!nullToAbsent || accountId != null) {
+      map['account_id'] = Variable<String>(accountId);
+    }
+    if (!nullToAbsent || accountNumber != null) {
+      map['account_number'] = Variable<String>(accountNumber);
+    }
+    return map;
+  }
+
+  SmsLinksCompanion toCompanion(bool nullToAbsent) {
+    return SmsLinksCompanion(
+      id: Value(id),
+      sender: sender == null && nullToAbsent ? const Value.absent() : Value(sender),
+      accountId: accountId == null && nullToAbsent ? const Value.absent() : Value(accountId),
+      accountNumber: accountNumber == null && nullToAbsent ? const Value.absent() : Value(accountNumber),
+    );
+  }
+
+  factory SmsLinkRow.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SmsLinkRow(
+      id: serializer.fromJson<String>(json['id']),
+      sender: serializer.fromJson<String?>(json['sender']),
+      accountId: serializer.fromJson<String?>(json['accountId']),
+      accountNumber: serializer.fromJson<String?>(json['accountNumber']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'sender': serializer.toJson<String?>(sender),
+      'accountId': serializer.toJson<String?>(accountId),
+      'accountNumber': serializer.toJson<String?>(accountNumber),
+    };
+  }
+
+  SmsLinkRow copyWith({
+    String? id,
+    Value<String?> sender = const Value.absent(),
+    Value<String?> accountId = const Value.absent(),
+    Value<String?> accountNumber = const Value.absent(),
+  }) => SmsLinkRow(
+    id: id ?? this.id,
+    sender: sender.present ? sender.value : this.sender,
+    accountId: accountId.present ? accountId.value : this.accountId,
+    accountNumber: accountNumber.present ? accountNumber.value : this.accountNumber,
+  );
+  SmsLinkRow copyWithCompanion(SmsLinksCompanion data) {
+    return SmsLinkRow(
+      id: data.id.present ? data.id.value : this.id,
+      sender: data.sender.present ? data.sender.value : this.sender,
+      accountId: data.accountId.present ? data.accountId.value : this.accountId,
+      accountNumber: data.accountNumber.present ? data.accountNumber.value : this.accountNumber,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SmsLinkRow(')
+          ..write('id: $id, ')
+          ..write('sender: $sender, ')
+          ..write('accountId: $accountId, ')
+          ..write('accountNumber: $accountNumber')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, sender, accountId, accountNumber);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SmsLinkRow &&
+          other.id == this.id &&
+          other.sender == this.sender &&
+          other.accountId == this.accountId &&
+          other.accountNumber == this.accountNumber);
+}
+
+class SmsLinksCompanion extends UpdateCompanion<SmsLinkRow> {
+  final Value<String> id;
+  final Value<String?> sender;
+  final Value<String?> accountId;
+  final Value<String?> accountNumber;
+  final Value<int> rowid;
+  const SmsLinksCompanion({
+    this.id = const Value.absent(),
+    this.sender = const Value.absent(),
+    this.accountId = const Value.absent(),
+    this.accountNumber = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SmsLinksCompanion.insert({
+    required String id,
+    this.sender = const Value.absent(),
+    this.accountId = const Value.absent(),
+    this.accountNumber = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id);
+  static Insertable<SmsLinkRow> custom({
+    Expression<String>? id,
+    Expression<String>? sender,
+    Expression<String>? accountId,
+    Expression<String>? accountNumber,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (sender != null) 'sender': sender,
+      if (accountId != null) 'account_id': accountId,
+      if (accountNumber != null) 'account_number': accountNumber,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SmsLinksCompanion copyWith({
+    Value<String>? id,
+    Value<String?>? sender,
+    Value<String?>? accountId,
+    Value<String?>? accountNumber,
+    Value<int>? rowid,
+  }) {
+    return SmsLinksCompanion(
+      id: id ?? this.id,
+      sender: sender ?? this.sender,
+      accountId: accountId ?? this.accountId,
+      accountNumber: accountNumber ?? this.accountNumber,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (sender.present) {
+      map['sender'] = Variable<String>(sender.value);
+    }
+    if (accountId.present) {
+      map['account_id'] = Variable<String>(accountId.value);
+    }
+    if (accountNumber.present) {
+      map['account_number'] = Variable<String>(accountNumber.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SmsLinksCompanion(')
+          ..write('id: $id, ')
+          ..write('sender: $sender, ')
+          ..write('accountId: $accountId, ')
+          ..write('accountNumber: $accountNumber, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -1826,10 +2253,11 @@ abstract class _$KakaDatabase extends GeneratedDatabase {
   late final $PostingsTable postings = $PostingsTable(this);
   late final $SettingsTable settings = $SettingsTable(this);
   late final $DraftsTable drafts = $DraftsTable(this);
+  late final $SmsLinksTable smsLinks = $SmsLinksTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables => allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [accounts, transactions, postings, settings, drafts];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [accounts, transactions, postings, settings, drafts, smsLinks];
 }
 
 typedef $$AccountsTableCreateCompanionBuilder =
@@ -2777,6 +3205,10 @@ typedef $$DraftsTableCreateCompanionBuilder =
       Value<String?> bankId,
       Value<String?> last4,
       Value<String?> dedupKey,
+      Value<String?> accountId,
+      Value<int?> balanceMinor,
+      Value<String?> sender,
+      Value<double?> confidence,
       Value<int> rowid,
     });
 typedef $$DraftsTableUpdateCompanionBuilder =
@@ -2794,6 +3226,10 @@ typedef $$DraftsTableUpdateCompanionBuilder =
       Value<String?> bankId,
       Value<String?> last4,
       Value<String?> dedupKey,
+      Value<String?> accountId,
+      Value<int?> balanceMinor,
+      Value<String?> sender,
+      Value<double?> confidence,
       Value<int> rowid,
     });
 
@@ -2841,6 +3277,18 @@ class $$DraftsTableFilterComposer extends Composer<_$KakaDatabase, $DraftsTable>
 
   ColumnFilters<String> get dedupKey =>
       $composableBuilder(column: $table.dedupKey, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get accountId =>
+      $composableBuilder(column: $table.accountId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get balanceMinor =>
+      $composableBuilder(column: $table.balanceMinor, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get sender =>
+      $composableBuilder(column: $table.sender, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get confidence =>
+      $composableBuilder(column: $table.confidence, builder: (column) => ColumnFilters(column));
 }
 
 class $$DraftsTableOrderingComposer extends Composer<_$KakaDatabase, $DraftsTable> {
@@ -2888,6 +3336,18 @@ class $$DraftsTableOrderingComposer extends Composer<_$KakaDatabase, $DraftsTabl
 
   ColumnOrderings<String> get dedupKey =>
       $composableBuilder(column: $table.dedupKey, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get accountId =>
+      $composableBuilder(column: $table.accountId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get balanceMinor =>
+      $composableBuilder(column: $table.balanceMinor, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get sender =>
+      $composableBuilder(column: $table.sender, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get confidence =>
+      $composableBuilder(column: $table.confidence, builder: (column) => ColumnOrderings(column));
 }
 
 class $$DraftsTableAnnotationComposer extends Composer<_$KakaDatabase, $DraftsTable> {
@@ -2924,6 +3384,14 @@ class $$DraftsTableAnnotationComposer extends Composer<_$KakaDatabase, $DraftsTa
   GeneratedColumn<String> get last4 => $composableBuilder(column: $table.last4, builder: (column) => column);
 
   GeneratedColumn<String> get dedupKey => $composableBuilder(column: $table.dedupKey, builder: (column) => column);
+
+  GeneratedColumn<String> get accountId => $composableBuilder(column: $table.accountId, builder: (column) => column);
+
+  GeneratedColumn<int> get balanceMinor => $composableBuilder(column: $table.balanceMinor, builder: (column) => column);
+
+  GeneratedColumn<String> get sender => $composableBuilder(column: $table.sender, builder: (column) => column);
+
+  GeneratedColumn<double> get confidence => $composableBuilder(column: $table.confidence, builder: (column) => column);
 }
 
 class $$DraftsTableTableManager
@@ -2964,6 +3432,10 @@ class $$DraftsTableTableManager
                 Value<String?> bankId = const Value.absent(),
                 Value<String?> last4 = const Value.absent(),
                 Value<String?> dedupKey = const Value.absent(),
+                Value<String?> accountId = const Value.absent(),
+                Value<int?> balanceMinor = const Value.absent(),
+                Value<String?> sender = const Value.absent(),
+                Value<double?> confidence = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => DraftsCompanion(
                 id: id,
@@ -2979,6 +3451,10 @@ class $$DraftsTableTableManager
                 bankId: bankId,
                 last4: last4,
                 dedupKey: dedupKey,
+                accountId: accountId,
+                balanceMinor: balanceMinor,
+                sender: sender,
+                confidence: confidence,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -2996,6 +3472,10 @@ class $$DraftsTableTableManager
                 Value<String?> bankId = const Value.absent(),
                 Value<String?> last4 = const Value.absent(),
                 Value<String?> dedupKey = const Value.absent(),
+                Value<String?> accountId = const Value.absent(),
+                Value<int?> balanceMinor = const Value.absent(),
+                Value<String?> sender = const Value.absent(),
+                Value<double?> confidence = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => DraftsCompanion.insert(
                 id: id,
@@ -3011,6 +3491,10 @@ class $$DraftsTableTableManager
                 bankId: bankId,
                 last4: last4,
                 dedupKey: dedupKey,
+                accountId: accountId,
+                balanceMinor: balanceMinor,
+                sender: sender,
+                confidence: confidence,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -3040,6 +3524,159 @@ typedef $$DraftsTableProcessedTableManager =
       DraftRow,
       PrefetchHooks Function()
     >;
+typedef $$SmsLinksTableCreateCompanionBuilder =
+    SmsLinksCompanion Function({
+      required String id,
+      Value<String?> sender,
+      Value<String?> accountId,
+      Value<String?> accountNumber,
+      Value<int> rowid,
+    });
+typedef $$SmsLinksTableUpdateCompanionBuilder =
+    SmsLinksCompanion Function({
+      Value<String> id,
+      Value<String?> sender,
+      Value<String?> accountId,
+      Value<String?> accountNumber,
+      Value<int> rowid,
+    });
+
+class $$SmsLinksTableFilterComposer extends Composer<_$KakaDatabase, $SmsLinksTable> {
+  $$SmsLinksTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get sender =>
+      $composableBuilder(column: $table.sender, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get accountId =>
+      $composableBuilder(column: $table.accountId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get accountNumber =>
+      $composableBuilder(column: $table.accountNumber, builder: (column) => ColumnFilters(column));
+}
+
+class $$SmsLinksTableOrderingComposer extends Composer<_$KakaDatabase, $SmsLinksTable> {
+  $$SmsLinksTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get sender =>
+      $composableBuilder(column: $table.sender, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get accountId =>
+      $composableBuilder(column: $table.accountId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get accountNumber =>
+      $composableBuilder(column: $table.accountNumber, builder: (column) => ColumnOrderings(column));
+}
+
+class $$SmsLinksTableAnnotationComposer extends Composer<_$KakaDatabase, $SmsLinksTable> {
+  $$SmsLinksTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id => $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get sender => $composableBuilder(column: $table.sender, builder: (column) => column);
+
+  GeneratedColumn<String> get accountId => $composableBuilder(column: $table.accountId, builder: (column) => column);
+
+  GeneratedColumn<String> get accountNumber =>
+      $composableBuilder(column: $table.accountNumber, builder: (column) => column);
+}
+
+class $$SmsLinksTableTableManager
+    extends
+        RootTableManager<
+          _$KakaDatabase,
+          $SmsLinksTable,
+          SmsLinkRow,
+          $$SmsLinksTableFilterComposer,
+          $$SmsLinksTableOrderingComposer,
+          $$SmsLinksTableAnnotationComposer,
+          $$SmsLinksTableCreateCompanionBuilder,
+          $$SmsLinksTableUpdateCompanionBuilder,
+          (SmsLinkRow, BaseReferences<_$KakaDatabase, $SmsLinksTable, SmsLinkRow>),
+          SmsLinkRow,
+          PrefetchHooks Function()
+        > {
+  $$SmsLinksTableTableManager(_$KakaDatabase db, $SmsLinksTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () => $$SmsLinksTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () => $$SmsLinksTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () => $$SmsLinksTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String?> sender = const Value.absent(),
+                Value<String?> accountId = const Value.absent(),
+                Value<String?> accountNumber = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SmsLinksCompanion(
+                id: id,
+                sender: sender,
+                accountId: accountId,
+                accountNumber: accountNumber,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                Value<String?> sender = const Value.absent(),
+                Value<String?> accountId = const Value.absent(),
+                Value<String?> accountNumber = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SmsLinksCompanion.insert(
+                id: id,
+                sender: sender,
+                accountId: accountId,
+                accountNumber: accountNumber,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$SmsLinksTable, SmsLinkRow>(table),
+                  BaseReferences<_$KakaDatabase, $SmsLinksTable, SmsLinkRow>(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SmsLinksTableProcessedTableManager =
+    ProcessedTableManager<
+      _$KakaDatabase,
+      $SmsLinksTable,
+      SmsLinkRow,
+      $$SmsLinksTableFilterComposer,
+      $$SmsLinksTableOrderingComposer,
+      $$SmsLinksTableAnnotationComposer,
+      $$SmsLinksTableCreateCompanionBuilder,
+      $$SmsLinksTableUpdateCompanionBuilder,
+      (SmsLinkRow, BaseReferences<_$KakaDatabase, $SmsLinksTable, SmsLinkRow>),
+      SmsLinkRow,
+      PrefetchHooks Function()
+    >;
 
 class $KakaDatabaseManager {
   final _$KakaDatabase _db;
@@ -3049,4 +3686,5 @@ class $KakaDatabaseManager {
   $$PostingsTableTableManager get postings => $$PostingsTableTableManager(_db, _db.postings);
   $$SettingsTableTableManager get settings => $$SettingsTableTableManager(_db, _db.settings);
   $$DraftsTableTableManager get drafts => $$DraftsTableTableManager(_db, _db.drafts);
+  $$SmsLinksTableTableManager get smsLinks => $$SmsLinksTableTableManager(_db, _db.smsLinks);
 }

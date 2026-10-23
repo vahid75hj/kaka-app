@@ -22,6 +22,8 @@ class AppSettings {
     this.accent = Accent.monochrome,
     this.onboarded = false,
     this.appLock = false,
+    this.smsAutoRead = false,
+    this.smsLastScan,
   });
 
   factory AppSettings.defaultsFor(String localeCode) {
@@ -49,6 +51,12 @@ class AppSettings {
   /// Ask for the device biometric / PIN when the app opens or returns.
   final bool appLock;
 
+  /// Opt-in automatic bank SMS reading (Android).
+  final bool smsAutoRead;
+
+  /// Newest SMS already scanned from the inbox.
+  final DateTime? smsLastScan;
+
   bool get isPersian => localeCode == 'fa';
 
   AppSettings copyWith({
@@ -61,6 +69,8 @@ class AppSettings {
     Accent? accent,
     bool? onboarded,
     bool? appLock,
+    bool? smsAutoRead,
+    DateTime? Function()? smsLastScan,
   }) => AppSettings(
     localeCode: localeCode ?? this.localeCode,
     calendar: calendar ?? this.calendar,
@@ -71,6 +81,8 @@ class AppSettings {
     accent: accent ?? this.accent,
     onboarded: onboarded ?? this.onboarded,
     appLock: appLock ?? this.appLock,
+    smsAutoRead: smsAutoRead ?? this.smsAutoRead,
+    smsLastScan: smsLastScan != null ? smsLastScan() : this.smsLastScan,
   );
 
   Map<String, Object?> toJson() => {
@@ -83,6 +95,8 @@ class AppSettings {
     'accent': accent.name,
     'onboarded': onboarded,
     'app_lock': appLock,
+    'sms_auto_read': smsAutoRead,
+    'sms_last_scan': smsLastScan?.toUtc().toIso8601String(),
   };
 
   factory AppSettings.fromJson(Map<String, Object?> j) => AppSettings(
@@ -95,5 +109,7 @@ class AppSettings {
     accent: Accent.values.byName(j['accent'] as String),
     onboarded: j['onboarded'] as bool,
     appLock: j['app_lock'] as bool? ?? false,
+    smsAutoRead: j['sms_auto_read'] as bool? ?? false,
+    smsLastScan: j['sms_last_scan'] == null ? null : DateTime.parse(j['sms_last_scan'] as String).toLocal(),
   );
 }

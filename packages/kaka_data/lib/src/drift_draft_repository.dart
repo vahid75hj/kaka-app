@@ -41,8 +41,12 @@ class DriftDraftRepository implements DraftRepository {
           rawText: Value(d.rawText),
           note: Value(d.note),
           bankId: Value(d.bankId),
-          last4: Value(d.last4),
+          last4: Value(d.accountRef),
           dedupKey: Value(d.dedupKey),
+          accountId: Value(d.accountId),
+          balanceMinor: Value(d.balance?.minor),
+          sender: Value(d.sender),
+          confidence: Value(d.confidence),
         ),
       );
 
@@ -57,7 +61,11 @@ class DriftDraftRepository implements DraftRepository {
     rawText: r.rawText,
     note: r.note,
     bankId: r.bankId,
-    last4: r.last4,
+    accountRef: r.last4,
     dedupKey: r.dedupKey,
+    accountId: r.accountId,
+    balance: r.balanceMinor == null ? null : Money(r.balanceMinor!, Currency.byCode(r.currency)),
+    sender: r.sender,
+    confidence: r.confidence,
   );
 }

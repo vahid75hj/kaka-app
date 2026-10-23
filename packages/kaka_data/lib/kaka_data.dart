@@ -7,3 +7,4 @@ export 'src/drift_transaction_repository.dart';
 export 'src/drift_settings_store.dart';
 export 'src/drift_draft_repository.dart';
 export 'src/backup.dart';
+export 'src/drift_sms_link_repository.dart';

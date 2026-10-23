@@ -18,4 +18,5 @@ export 'src/ledger/repositories.dart';
 export 'src/ledger/ledger_service.dart';
 export 'src/settings/app_settings.dart';
 export 'src/drafts/draft.dart';
+export 'src/sms/sms_link.dart';
 export 'src/ledger/transaction_query.dart';

@@ -1,0 +1,52 @@
+import 'dart:io';
+
+import 'package:kaka_data/kaka_data.dart';
+import 'package:kaka_domain/kaka_domain.dart';
+import 'package:test/test.dart';
+
+void main() {
+  test('v2 database (Kaka 0.2.0) upgrades to v3 keeping drafts', () async {
+    final dir = Directory.systemTemp.createTempSync('kaka_mig');
+    addTearDown(() => dir.deleteSync(recursive: true));
+    final file = File('${dir.path}/l.db');
+
+    // Build a v2-shaped file: current schema minus the v3 additions.
+    var db = KakaDatabase.open(file, key: 'k');
+    await db.customStatement('DROP TABLE sms_links');
+    await db.customStatement('DROP TABLE drafts');
+    await db.customStatement(
+      'CREATE TABLE drafts (id TEXT NOT NULL, source TEXT NOT NULL, status TEXT NOT NULL, '
+      'is_expense INTEGER NOT NULL, amount_minor INTEGER NOT NULL, currency TEXT NOT NULL, '
+      "created_at INTEGER NOT NULL, occurred_at INTEGER NULL, raw_text TEXT NOT NULL DEFAULT '', "
+      "note TEXT NOT NULL DEFAULT '', bank_id TEXT NULL, last4 TEXT NULL, dedup_key TEXT NULL, PRIMARY KEY (id))",
+    );
+    await db.customStatement(
+      "INSERT INTO drafts (id, source, status, is_expense, amount_minor, currency, created_at) "
+      "VALUES ('old', 'share', 'pending', 1, 5000, 'IRR', 1760000000)",
+    );
+    await db.customStatement('PRAGMA user_version = 2');
+    await db.close();
+
+    db = KakaDatabase.open(file, key: 'k');
+    addTearDown(db.close);
+    final repo = DriftDraftRepository(db);
+    expect((await repo.findById('old'))?.amount.minor, 5000);
+    await repo.upsert(
+      Draft(
+        id: 'new',
+        source: DraftSource.sms,
+        isExpense: true,
+        amount: const Money(1, Currency.irr),
+        createdAt: DateTime(2026),
+        accountId: 'a',
+        balance: const Money(9, Currency.irr),
+        sender: 's',
+        confidence: 0.7,
+      ),
+    );
+    final n = await repo.findById('new');
+    expect((n!.accountId, n.balance?.minor, n.confidence), ('a', 9, 0.7));
+    await DriftSmsLinkRepository(db).upsert(const SmsLink(id: 'l', sender: '700717'));
+    expect(await DriftSmsLinkRepository(db).getAll(), hasLength(1));
+  });
+}

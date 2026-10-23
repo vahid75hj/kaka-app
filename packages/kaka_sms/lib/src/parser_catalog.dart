@@ -34,8 +34,9 @@ class SmsTemplate {
 }
 
 class SmsTest {
-  const SmsTest(this.input, this.expect);
+  const SmsTest(this.input, this.expect, {this.receivedAt});
   final String input;
+  final DateTime? receivedAt;
   final Map<String, Object?> expect;
 }
 
@@ -47,8 +48,12 @@ class BankParser {
     required this.senders,
     required this.status,
     required this.templates,
+    this.keywords = const [],
     this.tests = const [],
   });
+
+  /// Bank name variants found in SMS bodies (used when the sender is unknown).
+  final List<String> keywords;
 
   final String bankId;
   final String nameEn;
@@ -68,6 +73,7 @@ class BankParser {
       nameEn: name['en'] as String,
       nameFa: name['fa'] as String,
       senders: [...?(j['senders'] as List?)?.cast<String>()],
+      keywords: [...?(j['keywords'] as List?)?.cast<String>()],
       status: switch (j['status']) {
         'verified' => ParserStatus.verified,
         'community' => ParserStatus.community,
@@ -79,7 +85,11 @@ class BankParser {
       ],
       tests: [
         for (final t in (j['tests'] as List? ?? const []))
-          SmsTest((t as Map)['input'] as String, (t['expect'] as Map).cast<String, Object?>()),
+          SmsTest(
+            (t as Map)['input'] as String,
+            (t['expect'] as Map).cast<String, Object?>(),
+            receivedAt: t['received_at'] == null ? null : DateTime.parse(t['received_at'] as String),
+          ),
       ],
     );
   }

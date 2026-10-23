@@ -20,9 +20,13 @@ class Draft {
     this.rawText = '',
     this.note = '',
     this.bankId,
-    this.last4,
+    this.accountRef,
     this.dedupKey,
     this.status = DraftStatus.pending,
+    this.accountId,
+    this.balance,
+    this.sender,
+    this.confidence,
   });
 
   final String id;
@@ -38,7 +42,19 @@ class Draft {
   final String rawText;
   final String note;
   final String? bankId;
-  final String? last4;
+
+  /// Account number fragment printed in the SMS (e.g. `06009`).
+  final String? accountRef;
+
+  /// Kaka account suggested by an SMS link; the user can change it.
+  final String? accountId;
+
+  /// Balance the bank reported after this transaction.
+  final Money? balance;
+  final String? sender;
+
+  /// Parser confidence 0..1 (`null` for non-SMS drafts).
+  final double? confidence;
 
   /// Same purchase seen twice (SMS + share) collapses to one draft.
   final String? dedupKey;
@@ -54,9 +70,13 @@ class Draft {
     rawText: rawText,
     note: note,
     bankId: bankId,
-    last4: last4,
+    accountRef: accountRef,
     dedupKey: dedupKey,
     status: s,
+    accountId: accountId,
+    balance: balance,
+    sender: sender,
+    confidence: confidence,
   );
 }
 
