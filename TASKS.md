@@ -35,21 +35,21 @@ Phases: **MVP-1** = first usable APK · **MVP-2** = v0.1 feature-complete · **L
 - [x] `kaka_ai`: `AiProvider`, `OpenAiCompatProvider` (+ Ollama), `NoAiProvider`, on-device runtime contract, model catalog with merge, on-device tool loop
 
 ## MVP-2 — v0.1 complete
-- [ ] App lock (biometric / PIN, on by default) and optional `FLAG_SECURE`
-- [ ] Jalali date picker (currently Material picker, date shown in Jalali)
-- [ ] Category management screen (add / rename / archive, icons)
-- [ ] Question queue (`pending_questions`) for drafts from AI, SMS and share
-- [ ] Share-in (`ACTION_SEND`, `ACTION_PROCESS_TEXT`) → SMS parser → confirm card
-- [ ] Real SMS templates for the 5 banks (needs masked real samples) + "learn a new bank" flow (diff 3–5 samples)
+- [x] App lock (device biometric / PIN via `local_auth`, opt-in so nobody is locked out; 30 s grace) — `FLAG_SECURE` still open
+- [x] Jalali date picker (Saturday-first grid; Material picker for Gregorian)
+- [x] Category management screen (add / rename / archive across currencies) — custom icons still open
+- [x] Question queue (`drafts` table, schema v2) for drafts from SMS / share / paste; confirm-by-review, discard, dedup key
+- [x] Share-in (`ACTION_SEND`, `ACTION_PROCESS_TEXT`) + paste SMS → SMS parser → question queue
+- [~] SMS templates for the 5 banks: best-effort public-format templates + sample tests shipped as `needs_samples`; **verify with masked real samples**. "Learn a new bank" flow still open
 - [ ] CI step that runs every catalog entry's `tests`
-- [ ] Encrypted `.kaka` backup (Argon2id + XChaCha20-Poly1305) via SAF, restore, reminder
+- [x] Encrypted `.kaka` backup (Argon2id m=19 MiB t=2 + XChaCha20-Poly1305, header as AAD) via share sheet; restore via file picker — reminder still open
 - [ ] Exchange rates (manual first, one public source after spike) and cross-currency transfers via `FX:<cur>` accounts
 - [ ] Net worth converted to base currency with rate date / "stale" label
 - [ ] Gold & coins as assets (`asset_holdings`), valued by manual / latest price
 - [ ] Monthly report by category; Share-out CSV / summary + ready-made prompt
 - [ ] BYO-AI settings screen (OpenAI-compatible key in secure storage, Ollama URL, none) + chat tab using `ToolLoop` + card/IBAN masking
-- [ ] Transaction search & filters, edit-by-void-and-replace
-- [ ] Release signing on tags, split-per-ABI APKs on GitHub Releases, F-Droid metadata
+- [x] Transaction search & filters (text, kind, account, date range) — edit-by-void-and-replace still open
+- [~] Release signing (dedicated release key via `android/key.properties`, falls back to debug) + split-per-ABI APKs on GitHub Releases — CI signing on tags and F-Droid metadata still open
 - [ ] `CONTRIBUTING.md` (add a bank / model / language), `SECURITY.md`, issue templates
 
 ## Later (v0.2+)
