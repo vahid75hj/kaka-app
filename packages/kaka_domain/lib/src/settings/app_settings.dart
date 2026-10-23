@@ -21,6 +21,7 @@ class AppSettings {
     this.theme = ThemePreference.system,
     this.accent = Accent.monochrome,
     this.onboarded = false,
+    this.appLock = false,
   });
 
   factory AppSettings.defaultsFor(String localeCode) {
@@ -45,6 +46,9 @@ class AppSettings {
   final Accent accent;
   final bool onboarded;
 
+  /// Ask for the device biometric / PIN when the app opens or returns.
+  final bool appLock;
+
   bool get isPersian => localeCode == 'fa';
 
   AppSettings copyWith({
@@ -56,6 +60,7 @@ class AppSettings {
     ThemePreference? theme,
     Accent? accent,
     bool? onboarded,
+    bool? appLock,
   }) => AppSettings(
     localeCode: localeCode ?? this.localeCode,
     calendar: calendar ?? this.calendar,
@@ -65,6 +70,7 @@ class AppSettings {
     theme: theme ?? this.theme,
     accent: accent ?? this.accent,
     onboarded: onboarded ?? this.onboarded,
+    appLock: appLock ?? this.appLock,
   );
 
   Map<String, Object?> toJson() => {
@@ -76,6 +82,7 @@ class AppSettings {
     'theme': theme.name,
     'accent': accent.name,
     'onboarded': onboarded,
+    'app_lock': appLock,
   };
 
   factory AppSettings.fromJson(Map<String, Object?> j) => AppSettings(
@@ -87,5 +94,6 @@ class AppSettings {
     theme: ThemePreference.values.byName(j['theme'] as String),
     accent: Accent.values.byName(j['accent'] as String),
     onboarded: j['onboarded'] as bool,
+    appLock: j['app_lock'] as bool? ?? false,
   );
 }

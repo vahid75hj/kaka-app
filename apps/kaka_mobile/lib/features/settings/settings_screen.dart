@@ -6,7 +6,14 @@ import '../../app/providers.dart';
 import '../../core/l10n_x.dart';
 import '../../core/widgets.dart';
 import '../../theme/kaka_colors.dart';
+
+import 'package:go_router/go_router.dart';
+
+import '../../app/router.dart';
+import '../backup/backup_actions.dart';
+import '../lock/app_lock.dart';
 import '../onboarding/onboarding_screen.dart' show DecimalsPicker;
+import '../queue/queue_screen.dart' show showPasteSmsDialog;
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -23,6 +30,60 @@ class SettingsScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
         children: [
+          SectionHeader(l.settingsData),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.sell_outlined),
+            title: Text(l.categories),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => context.push(Routes.categories),
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.inbox_outlined),
+            title: Text(l.queueTitle),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => context.push(Routes.queue),
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.sms_outlined),
+            title: Text(l.pasteSms),
+            subtitle: Text(l.shareTip, style: TextStyle(color: c.textMuted, fontSize: 12)),
+            onTap: () => showPasteSmsDialog(context, ref),
+          ),
+          SectionHeader(l.security),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            secondary: const Icon(Icons.lock_outline_rounded),
+            title: Text(l.appLock),
+            subtitle: Text(l.appLockHint, style: TextStyle(color: c.textMuted, fontSize: 12)),
+            value: s.appLock,
+            onChanged: (on) async {
+              // Turning it on or off must itself pass the device check, so nobody locks themselves out.
+              final auth = ref.read(deviceAuthProvider);
+              if (!await auth.available()) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.appLockUnavailable)));
+                }
+                return;
+              }
+              if (await auth.authenticate(l.lockReason)) update((s) => s.copyWith(appLock: on));
+            },
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.ios_share_rounded),
+            title: Text(l.backupExport),
+            subtitle: Text(l.backupExportHint, style: TextStyle(color: c.textMuted, fontSize: 12)),
+            onTap: () => exportBackup(context, ref),
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.settings_backup_restore_rounded),
+            title: Text(l.backupRestore),
+            onTap: () => restoreBackup(context, ref),
+          ),
           SectionHeader(l.settingsTheme),
           SegmentedButton<ThemePreference>(
             segments: [
@@ -90,7 +151,7 @@ class SettingsScreen extends ConsumerWidget {
             onChanged: (d) => update((s) => s.copyWith(displayDecimals: d)),
           ),
           SectionHeader(l.about),
-          Text('${l.appName} 0.1.0 — ${l.aboutBody}', style: TextStyle(color: c.textMuted, height: 1.6)),
+          Text('${l.appName} 0.2.0 — ${l.aboutBody}', style: TextStyle(color: c.textMuted, height: 1.6)),
         ],
       ),
     );
