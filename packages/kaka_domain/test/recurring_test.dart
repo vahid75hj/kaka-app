@@ -94,4 +94,39 @@ void main() {
     expect(await service.run(), 1);
     expect(drafts.items.values.where((d) => d.isTransfer).single.toAccountId, 'savings');
   });
+
+  test('rule from a transaction: expense, income, transfer; not exchange/voided', () {
+    Account acc(String id, AccountType t, [Currency c = Currency.irr]) =>
+        Account(id: id, name: id, type: t, currency: c, createdAt: DateTime(2026));
+    final card = acc('card', AccountType.asset), cash = acc('cash', AccountType.asset);
+    final rent = acc('rent', AccountType.expense), pay = acc('pay', AccountType.income);
+    final usd = acc('usd', AccountType.asset, Currency.usd);
+    final all = {
+      for (final a in [card, cash, rent, pay, usd]) a.id: a,
+    };
+    final at = DateTime(2026, 10, 1, 9);
+    const m = Money(1500, Currency.irr);
+    final e = ruleFromTransaction(
+      TransactionFactory.expense(from: card, category: rent, amount: m, at: at, note: 'اجاره'),
+      all,
+      RecurrenceEvery.monthly,
+    )!;
+    expect(
+      (e.isExpense, e.accountId, e.category, e.amount, e.lastDone, e.note),
+      (true, 'card', 'rent', m, at, 'اجاره'),
+    );
+    final i = ruleFromTransaction(
+      TransactionFactory.income(to: card, category: pay, amount: m, at: at),
+      all,
+      RecurrenceEvery.monthly,
+    )!;
+    expect((i.isExpense, i.accountId, i.category), (false, 'card', 'pay'));
+    final t = ruleFromTransaction(
+      TransactionFactory.transfer(from: card, to: cash, amount: m, at: at),
+      all,
+      RecurrenceEvery.weekly,
+    )!;
+    expect((t.accountId, t.toAccountId, t.isTransfer, t.amount), ('card', 'cash', true, m));
+    expect(Recurrence.due(e, DateTime(2026, 10, 20), gregorianAddMonths), isEmpty);
+  });
 }

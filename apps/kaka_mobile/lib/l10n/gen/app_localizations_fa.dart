@@ -1042,4 +1042,7 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get settingsTools => 'ورود داده و هوش مصنوعی';
+
+  @override
+  String get repeatSaved => 'تکرار می‌شه؛ سر موعد توی صف میاد.';
 }

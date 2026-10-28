@@ -37,6 +37,57 @@ class TransactionTile extends ConsumerWidget {
     return null;
   }
 
+  Future<void> _actions(BuildContext context, WidgetRef ref) async {
+    final l = context.l10n;
+    final repeatable = const {
+      TransactionKind.expense,
+      TransactionKind.income,
+      TransactionKind.transfer,
+    }.contains(view.txn.kind);
+    final picked = await showModalBottomSheet<String>(
+      context: context,
+      builder: (sheet) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (repeatable) ...[
+              ListTile(
+                leading: const Icon(Icons.repeat_rounded),
+                title: Text(l.repeatMonthly),
+                onTap: () => Navigator.pop(sheet, 'monthly'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.repeat_rounded),
+                title: Text(l.repeatWeekly),
+                onTap: () => Navigator.pop(sheet, 'weekly'),
+              ),
+            ],
+            ListTile(
+              leading: const Icon(Icons.block_rounded),
+              title: Text(l.voidAction),
+              onTap: () => Navigator.pop(sheet, 'void'),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (picked == null || !context.mounted) return;
+    if (picked == 'void') return _confirmVoid(context, ref);
+    final accounts = {for (final a in await ref.read(accountRepositoryProvider).getAll()) a.id: a};
+    final rule = ruleFromTransaction(view.txn, accounts, RecurrenceEvery.values.byName(picked));
+    if (rule == null || !context.mounted) return;
+    await ref.read(recurringRepositoryProvider).upsert(rule);
+    if (context.mounted) {
+      final router = GoRouter.of(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l.repeatSaved),
+          action: SnackBarAction(label: l.recurring, onPressed: () => router.push(Routes.recurring)),
+        ),
+      );
+    }
+  }
+
   Future<void> _confirmVoid(BuildContext context, WidgetRef ref) async {
     final l = context.l10n;
     final ok = await showDialog<bool>(
@@ -71,7 +122,7 @@ class TransactionTile extends ConsumerWidget {
       contentPadding: const EdgeInsets.symmetric(horizontal: 4),
       // Gold/coin cash legs are owned by their asset movement: manage them there
       // so the holding and the cash are voided together.
-      onLongPress: voided || isAsset ? null : () => _confirmVoid(context, ref),
+      onLongPress: voided || isAsset ? null : () => _actions(context, ref),
       onTap: voided || view.txn.kind == TransactionKind.opening
           ? null
           : () => context.push(isAsset ? Routes.assets : Routes.editTransaction(view.txn.id)),

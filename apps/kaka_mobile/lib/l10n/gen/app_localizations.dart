@@ -2011,6 +2011,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Import & AI'**
   String get settingsTools;
+
+  /// No description provided for @repeatSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'It will repeat; due ones appear in the queue.'**
+  String get repeatSaved;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

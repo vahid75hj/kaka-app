@@ -488,5 +488,6 @@
   "importBadXlsx": "Could not read this Excel file. Try saving it as \"CSV UTF-8\".",
   "comingUp": "Coming up",
   "settingsPlanning": "Planning",
-  "settingsTools": "Import & AI"
+  "settingsTools": "Import & AI",
+  "repeatSaved": "It will repeat; due ones appear in the queue."
 }

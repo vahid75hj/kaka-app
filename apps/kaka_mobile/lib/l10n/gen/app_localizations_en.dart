@@ -1051,4 +1051,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsTools => 'Import & AI';
+
+  @override
+  String get repeatSaved => 'It will repeat; due ones appear in the queue.';
 }

@@ -2,6 +2,8 @@ import 'package:meta/meta.dart';
 
 import '../drafts/draft.dart';
 import '../ids.dart';
+import '../ledger/account.dart';
+import '../ledger/ledger_transaction.dart';
 import '../money/money.dart';
 
 enum RecurrenceEvery { weekly, monthly }
@@ -57,6 +59,38 @@ class RecurringRule {
     lastDone: lastDone ?? this.lastDone,
     active: active ?? this.active,
   );
+}
+
+/// A rule that repeats [t] (expense, income or same-currency transfer) from
+/// its date on; `lastDone` is that date, so the original isn't queued again.
+/// Null for other kinds (opening, exchange, gold) or odd postings.
+RecurringRule? ruleFromTransaction(LedgerTransaction t, Map<String, Account> accounts, RecurrenceEvery every) {
+  if (t.isVoided) return null;
+  final user = [
+    for (final p in t.postings)
+      if (accounts[p.accountId] case final a? when !a.isSystem) (p, a),
+  ];
+  final debit = user.where((x) => x.$1.amount.isPositive).firstOrNull;
+  final credit = user.where((x) => x.$1.amount.isNegative).firstOrNull;
+  if (debit == null || credit == null) return null;
+  RecurringRule make({required bool isExpense, required Account from, Account? to, String? category}) => RecurringRule(
+    id: Ids.next(),
+    isExpense: isExpense,
+    accountId: from.id,
+    toAccountId: to?.id,
+    category: category,
+    amount: debit.$1.amount,
+    note: t.note,
+    every: every,
+    start: t.occurredAt,
+    lastDone: t.occurredAt,
+  );
+  return switch (t.kind) {
+    TransactionKind.expense => make(isExpense: true, from: credit.$2, category: debit.$2.name),
+    TransactionKind.income => make(isExpense: false, from: debit.$2, category: credit.$2.name),
+    TransactionKind.transfer => make(isExpense: true, from: credit.$2, to: debit.$2),
+    _ => null,
+  };
 }
 
 abstract interface class RecurringRepository {
