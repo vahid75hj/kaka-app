@@ -62,7 +62,7 @@ Phases: **MVP-1** = first usable APK · **MVP-2** = v0.1 feature-complete · **L
 - [x] `CONTRIBUTING.md` (add a bank / model / language), `SECURITY.md`, issue templates
 
 ## Later (v0.2+)
-- [ ] On-device models: `flutter_gemma` runtime, download with mirrors + sha256, device fit check, probe
+- [~] On-device models: catalog (3 open Qwen models, real sha256/sizes), resumable mirror-aware sha256-verified downloader, device fit check — runtime adapter (`flutter_edge_ai`, ex-flutter_gemma) pending device testing, see `docs/on-device-models.md`
 - [ ] Fill `model_catalog/catalog.v1.json` after on-device benchmark
 - [x] `tools/kaka_mcp`: read-only desktop MCP server (stdio) over `.kaka` backups (RAM-only, masked, password via env/file)
 - [ ] Google Sheets mirror + Inbox tab (`drive.file`), `kaka-mcp --sheet`

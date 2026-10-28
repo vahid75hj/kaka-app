@@ -24,6 +24,9 @@ class CatalogModel implements ModelManifest {
     required this.downloads,
     required this.sha256,
     required this.tier,
+    this.minAndroidSdk = 0,
+    this.abis = const [],
+    this.license,
   });
 
   @override
@@ -41,6 +44,19 @@ class CatalogModel implements ModelManifest {
   final List<ModelDownload> downloads;
   final String? sha256;
   final String tier;
+
+  /// Lowest Android API level the runtime needs (LiteRT-LM: 30). 0 = any.
+  final int minAndroidSdk;
+
+  /// CPU ABIs the runtime ships for. Empty = any.
+  final List<String> abis;
+  final String? license;
+
+  /// Primary first, then mirrors (for networks where one host is blocked).
+  List<String> get urls => [
+    for (final d in downloads.where((d) => d.kind == 'primary')) d.url,
+    for (final d in downloads.where((d) => d.kind != 'primary')) d.url,
+  ];
 
   factory CatalogModel.fromJson(Map<String, Object?> j) {
     final name = j['name'] as Map<String, Object?>;
@@ -60,6 +76,9 @@ class CatalogModel implements ModelManifest {
       ],
       sha256: j['sha256'] as String?,
       tier: (j['tier'] as String?) ?? 'custom',
+      minAndroidSdk: (j['min_android_sdk'] as int?) ?? 0,
+      abis: [...?(j['abis'] as List?)?.cast<String>()],
+      license: j['license'] as String?,
     );
   }
 }
@@ -91,7 +110,35 @@ class ModelCatalog {
     return ModelCatalog(other.catalogVersion, byId.values.toList());
   }
 
+  /// Models that fit [device] (RAM, Android version, ABI, free space), best tier first.
+  List<CatalogModel> fittingDevice(DeviceProfile device) =>
+      models.where((m) => ModelFit.check(m, device).isEmpty).toList()..sort((a, b) => b.minRamMb.compareTo(a.minRamMb));
+
   /// Models a device with [ramMb] can run, best tier first.
   List<CatalogModel> fitting(int ramMb) =>
       models.where((m) => m.minRamMb <= ramMb).toList()..sort((a, b) => b.minRamMb.compareTo(a.minRamMb));
+}
+
+/// What Kaka knows about the phone (from the `app.kaka/device` channel).
+class DeviceProfile {
+  const DeviceProfile({required this.ramMb, required this.androidSdk, required this.abis, required this.freeBytes});
+  final int ramMb;
+  final int androidSdk;
+  final List<String> abis;
+  final int freeBytes;
+}
+
+enum FitProblem { ram, androidVersion, abi, disk }
+
+abstract final class ModelFit {
+  /// Keep this much free space after the download (the OS and Kaka need room too).
+  static const diskHeadroomBytes = 512 * 1024 * 1024;
+
+  /// Empty list = the model fits.
+  static List<FitProblem> check(CatalogModel m, DeviceProfile d) => [
+    if (m.minRamMb > d.ramMb) FitProblem.ram,
+    if (m.minAndroidSdk > d.androidSdk) FitProblem.androidVersion,
+    if (m.abis.isNotEmpty && !m.abis.any(d.abis.contains)) FitProblem.abi,
+    if (m.sizeBytes + diskHeadroomBytes > d.freeBytes) FitProblem.disk,
+  ];
 }
