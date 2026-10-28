@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kaka_domain/kaka_domain.dart';
 
 import '../../app/providers.dart';
 import '../../app/router.dart';
@@ -18,6 +19,21 @@ class _Snooze extends Notifier<bool> {
   bool build() => false;
   void snooze() => state = true;
 }
+
+/// Steps of the home checklist: (done, which step).
+enum GettingStartedStep { account, transaction, sms, backup }
+
+final gettingStartedProvider = Provider<Map<GettingStartedStep, bool>>((ref) {
+  final s = ref.watch(settingsProvider);
+  final accounts = ref.watch(accountsProvider).value ?? const [];
+  final txns = ref.watch(transactionsProvider).value ?? const [];
+  return {
+    GettingStartedStep.account: accounts.any((a) => !a.isSystem && a.type.isBalanceSheet),
+    GettingStartedStep.transaction: txns.any((t) => t.kind != TransactionKind.opening && !t.isVoided),
+    GettingStartedStep.sms: s.smsAutoRead || (ref.watch(smsLinksProvider).value ?? const []).isNotEmpty,
+    GettingStartedStep.backup: s.lastBackupAt != null,
+  };
+});
 
 final _backupSnoozedProvider = NotifierProvider<_Snooze, bool>(_Snooze.new);
 
@@ -101,6 +117,7 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ),
               ),
+            const _GettingStarted(),
             if (ref.watch(backupDueProvider) && !ref.watch(_backupSnoozedProvider))
               Padding(
                 padding: const EdgeInsets.only(top: 14),
@@ -203,11 +220,21 @@ class HomeScreen extends ConsumerWidget {
             SectionHeader(l.recent, action: l.seeAll, onAction: () => context.go(Routes.transactions)),
             if (recent.isEmpty)
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 24),
-                child: Text(
-                  l.noTransactions,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: c.textMuted),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Column(
+                  children: [
+                    Text(
+                      l.noTransactions,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: c.textMuted),
+                    ),
+                    const SizedBox(height: 8),
+                    TextButton.icon(
+                      onPressed: () => context.push(Routes.addTransaction),
+                      icon: const Icon(Icons.add_rounded),
+                      label: Text(l.addFirstTransaction),
+                    ),
+                  ],
                 ),
               )
             else
@@ -218,6 +245,77 @@ class HomeScreen extends ConsumerWidget {
                     for (var i = 0; i < recent.length; i++) ...[if (i > 0) const Divider(), TransactionTile(recent[i])],
                   ],
                 ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// First-run checklist; disappears when everything is done or the user hides it.
+class _GettingStarted extends ConsumerWidget {
+  const _GettingStarted();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
+    final c = KakaColors.of(context);
+    final f = ref.watch(formatProvider);
+    final steps = ref.watch(gettingStartedProvider);
+    if (ref.watch(settingsProvider.select((s) => s.hideGettingStarted)) || steps.values.every((d) => d)) {
+      return const SizedBox.shrink();
+    }
+    final done = steps.values.where((d) => d).length;
+    (String, VoidCallback) info(GettingStartedStep s) => switch (s) {
+      GettingStartedStep.account => (l.gsAccount, () => context.push(Routes.newAccount)),
+      GettingStartedStep.transaction => (l.gsTransaction, () => context.push(Routes.addTransaction)),
+      GettingStartedStep.sms => (l.gsSms, () => context.push(Routes.settings)),
+      GettingStartedStep.backup => (l.gsBackup, () => exportBackup(context, ref)),
+    };
+    return Padding(
+      padding: const EdgeInsets.only(top: 14),
+      child: KCard(
+        padding: const EdgeInsets.fromLTRB(16, 12, 8, 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(l.gettingStarted, style: const TextStyle(fontWeight: FontWeight.w800)),
+                ),
+                Text(
+                  f.digits(l.stepsDone('$done', '${steps.length}')),
+                  style: TextStyle(color: c.textMuted, fontSize: 12),
+                ),
+                TextButton(
+                  onPressed: () =>
+                      ref.read(settingsProvider.notifier).update((s) => s.copyWith(hideGettingStarted: true)),
+                  child: Text(l.hide),
+                ),
+              ],
+            ),
+            LinearProgressIndicator(value: done / steps.length, minHeight: 4, borderRadius: BorderRadius.circular(2)),
+            const SizedBox(height: 4),
+            for (final e in steps.entries)
+              ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                visualDensity: VisualDensity.compact,
+                leading: Icon(
+                  e.value ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded,
+                  color: e.value ? c.positive : c.textFaint,
+                ),
+                title: Text(
+                  info(e.key).$1,
+                  style: TextStyle(
+                    color: e.value ? c.textMuted : null,
+                    decoration: e.value ? TextDecoration.lineThrough : null,
+                  ),
+                ),
+                trailing: e.value ? null : const Icon(Icons.chevron_right_rounded),
+                onTap: e.value ? null : info(e.key).$2,
               ),
           ],
         ),

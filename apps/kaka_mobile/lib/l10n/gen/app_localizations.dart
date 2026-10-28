@@ -1651,6 +1651,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not encrypted: use https:// for servers outside your home network.'**
   String get aiInsecureUrl;
+
+  /// No description provided for @addFirstTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first transaction'**
+  String get addFirstTransaction;
+
+  /// No description provided for @gettingStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Getting started'**
+  String get gettingStarted;
+
+  /// No description provided for @gsAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an account (wallet, bank, card)'**
+  String get gsAccount;
+
+  /// No description provided for @gsTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Record your first income or expense'**
+  String get gsTransaction;
+
+  /// No description provided for @gsSms.
+  ///
+  /// In en, this message translates to:
+  /// **'Let Kaka read your bank SMS (optional)'**
+  String get gsSms;
+
+  /// No description provided for @gsBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Save an encrypted backup'**
+  String get gsBackup;
+
+  /// No description provided for @hide.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get hide;
+
+  /// No description provided for @stepsDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total}'**
+  String stepsDone(Object done, Object total);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

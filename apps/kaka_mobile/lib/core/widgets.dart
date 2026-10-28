@@ -67,3 +67,47 @@ class AmountText extends StatelessWidget {
     ),
   );
 }
+
+/// Icon + message + optional action for screens with nothing to show yet.
+class EmptyState extends StatelessWidget {
+  const EmptyState({super.key, required this.icon, required this.message, this.action, this.onAction, this.secondary});
+  final IconData icon;
+  final String message;
+  final String? action;
+  final VoidCallback? onAction;
+
+  /// Extra button (e.g. "Paste SMS") under the main action.
+  final Widget? secondary;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = KakaColors.of(context);
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(color: c.accentSoft, shape: BoxShape.circle),
+              child: Icon(icon, size: 30, color: c.accentText),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: c.textMuted, height: 1.7),
+            ),
+            if (action != null) ...[
+              const SizedBox(height: 16),
+              FilledButton.tonal(onPressed: onAction, child: Text(action!)),
+            ],
+            ?secondary,
+          ],
+        ),
+      ),
+    );
+  }
+}

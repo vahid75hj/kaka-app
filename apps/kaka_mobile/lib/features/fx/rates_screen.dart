@@ -6,7 +6,7 @@ import '../../app/providers.dart';
 import '../../core/date_picker.dart';
 import '../../core/l10n_x.dart';
 import '../../core/money_input.dart';
-import '../../theme/kaka_colors.dart';
+import '../../core/widgets.dart';
 
 /// Manual exchange rates per date: "1 USD = x base".
 class RatesScreen extends ConsumerWidget {
@@ -15,7 +15,6 @@ class RatesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = context.l10n;
-    final c = KakaColors.of(context);
     final f = ref.watch(formatProvider);
     final base = ref.watch(settingsProvider).baseUnit;
     final rates = (ref.watch(exchangeRatesProvider).value ?? const <ExchangeRate>[])
@@ -29,15 +28,11 @@ class RatesScreen extends ConsumerWidget {
         child: const Icon(Icons.add_rounded),
       ),
       body: rates.isEmpty
-          ? Center(
-              child: Padding(
-                padding: const EdgeInsets.all(32),
-                child: Text(
-                  l.noRates,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: c.textMuted, height: 1.6),
-                ),
-              ),
+          ? EmptyState(
+              icon: Icons.currency_exchange_rounded,
+              message: l.noRates,
+              action: l.addRate,
+              onAction: () => _addRate(context, ref),
             )
           : ListView(
               padding: const EdgeInsets.only(bottom: 96),

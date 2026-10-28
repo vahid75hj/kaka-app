@@ -364,5 +364,19 @@
   "neverBackedUp": "No backup yet",
   "changeIcon": "Change icon",
   "defaultIcon": "Default icon",
-  "aiInsecureUrl": "Not encrypted: use https:// for servers outside your home network."
+  "aiInsecureUrl": "Not encrypted: use https:// for servers outside your home network.",
+  "addFirstTransaction": "Add your first transaction",
+  "gettingStarted": "Getting started",
+  "gsAccount": "Add an account (wallet, bank, card)",
+  "gsTransaction": "Record your first income or expense",
+  "gsSms": "Let Kaka read your bank SMS (optional)",
+  "gsBackup": "Save an encrypted backup",
+  "hide": "Hide",
+  "stepsDone": "{done} of {total}",
+  "@stepsDone": {
+    "placeholders": {
+      "done": {},
+      "total": {}
+    }
+  }
 }

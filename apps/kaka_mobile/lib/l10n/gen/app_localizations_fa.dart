@@ -835,4 +835,30 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get aiInsecureUrl => 'رمزنگاری نشده: برای سرور بیرون از شبکهٔ خانه از https:// استفاده کن.';
+
+  @override
+  String get addFirstTransaction => 'اولین تراکنش رو ثبت کن';
+
+  @override
+  String get gettingStarted => 'شروع کار';
+
+  @override
+  String get gsAccount => 'یه حساب بساز (کیف پول، بانک، کارت)';
+
+  @override
+  String get gsTransaction => 'اولین درآمد یا هزینه رو ثبت کن';
+
+  @override
+  String get gsSms => 'خواندن پیامک بانکی رو روشن کن (اختیاری)';
+
+  @override
+  String get gsBackup => 'یه پشتیبان رمزدار بگیر';
+
+  @override
+  String get hide => 'پنهان کن';
+
+  @override
+  String stepsDone(Object done, Object total) {
+    return '$done از $total';
+  }
 }

@@ -31,6 +31,7 @@ class AppSettings {
     this.smsBackground = false,
     this.lastBackupAt,
     this.backupReminderDays = 14,
+    this.hideGettingStarted = false,
   });
 
   factory AppSettings.defaultsFor(String localeCode) {
@@ -81,6 +82,9 @@ class AppSettings {
   /// Remind to back up after this many days (0 = never).
   final int backupReminderDays;
 
+  /// The home "getting started" checklist was dismissed.
+  final bool hideGettingStarted;
+
   /// Whether a backup reminder is due at [now]: there is data worth saving and
   /// the last backup is older than [backupReminderDays] (or never happened).
   bool backupDue(DateTime now, {required DateTime? firstActivity}) {
@@ -110,6 +114,7 @@ class AppSettings {
     bool? smsBackground,
     DateTime? Function()? lastBackupAt,
     int? backupReminderDays,
+    bool? hideGettingStarted,
   }) => AppSettings(
     localeCode: localeCode ?? this.localeCode,
     calendar: calendar ?? this.calendar,
@@ -129,6 +134,7 @@ class AppSettings {
     smsBackground: smsBackground ?? this.smsBackground,
     lastBackupAt: lastBackupAt != null ? lastBackupAt() : this.lastBackupAt,
     backupReminderDays: backupReminderDays ?? this.backupReminderDays,
+    hideGettingStarted: hideGettingStarted ?? this.hideGettingStarted,
   );
 
   Map<String, Object?> toJson() => {
@@ -150,6 +156,7 @@ class AppSettings {
     'sms_background': smsBackground,
     'last_backup_at': lastBackupAt?.toUtc().toIso8601String(),
     'backup_reminder_days': backupReminderDays,
+    'hide_getting_started': hideGettingStarted,
   };
 
   factory AppSettings.fromJson(Map<String, Object?> j) => AppSettings(
@@ -171,5 +178,6 @@ class AppSettings {
     smsBackground: j['sms_background'] as bool? ?? false,
     lastBackupAt: j['last_backup_at'] == null ? null : DateTime.parse(j['last_backup_at'] as String).toLocal(),
     backupReminderDays: j['backup_reminder_days'] as int? ?? 14,
+    hideGettingStarted: j['hide_getting_started'] as bool? ?? false,
   );
 }

@@ -844,4 +844,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aiInsecureUrl => 'Not encrypted: use https:// for servers outside your home network.';
+
+  @override
+  String get addFirstTransaction => 'Add your first transaction';
+
+  @override
+  String get gettingStarted => 'Getting started';
+
+  @override
+  String get gsAccount => 'Add an account (wallet, bank, card)';
+
+  @override
+  String get gsTransaction => 'Record your first income or expense';
+
+  @override
+  String get gsSms => 'Let Kaka read your bank SMS (optional)';
+
+  @override
+  String get gsBackup => 'Save an encrypted backup';
+
+  @override
+  String get hide => 'Hide';
+
+  @override
+  String stepsDone(Object done, Object total) {
+    return '$done of $total';
+  }
 }

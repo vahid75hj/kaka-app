@@ -61,6 +61,8 @@ Phases: **MVP-1** = first usable APK · **MVP-2** = v0.1 feature-complete · **L
 - [x] Real app icon (adaptive + monochrome, notification icon)
 - [x] `CONTRIBUTING.md` (add a bank / model / language), `SECURITY.md`, issue templates
 
+- [x] UX: empty states with actions (queue, transactions, rates), first-run "getting started" checklist (RTL-checked)
+
 ## Later (v0.2+)
 - [~] On-device models: catalog (3 open Qwen models, real sha256/sizes), resumable mirror-aware sha256-verified downloader, device fit check — runtime adapter (`flutter_edge_ai`, ex-flutter_gemma) pending device testing, see `docs/on-device-models.md`
 - [ ] Fill `model_catalog/catalog.v1.json` after on-device benchmark

@@ -18,7 +18,6 @@ class QueueScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = context.l10n;
-    final c = KakaColors.of(context);
     final drafts = ref.watch(pendingDraftsProvider).value ?? const <Draft>[];
     return Scaffold(
       appBar: AppBar(
@@ -32,15 +31,14 @@ class QueueScreen extends ConsumerWidget {
         ],
       ),
       body: drafts.isEmpty
-          ? Center(
-              child: Padding(
-                padding: const EdgeInsets.all(32),
-                child: Text(
-                  l.queueEmpty,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: c.textMuted, height: 1.7),
-                ),
-              ),
+          ? EmptyState(
+              icon: Icons.inbox_outlined,
+              message: l.queueEmpty,
+              action: l.pasteSms,
+              onAction: () => showPasteSmsDialog(context, ref),
+              secondary: ref.watch(settingsProvider).smsAutoRead
+                  ? null
+                  : TextButton(onPressed: () => context.push(Routes.settings), child: Text(l.smsAutoRead)),
             )
           : ListView.separated(
               padding: const EdgeInsets.all(16),

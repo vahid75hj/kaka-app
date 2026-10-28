@@ -5,8 +5,11 @@ import 'package:kaka_domain/kaka_domain.dart';
 import '../../app/providers.dart';
 import '../../core/date_picker.dart';
 import '../../core/l10n_x.dart';
-import '../../theme/kaka_colors.dart';
 import 'transaction_tile.dart';
+import '../../core/widgets.dart';
+import '../../app/router.dart';
+
+import 'package:go_router/go_router.dart';
 
 class TransactionsScreen extends ConsumerStatefulWidget {
   const TransactionsScreen({super.key});
@@ -41,7 +44,6 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    final c = KakaColors.of(context);
     final f = ref.watch(formatProvider);
     final accounts = ref.watch(accountsProvider).value ?? const <Account>[];
     final byId = {for (final a in accounts) a.id: a};
@@ -140,9 +142,14 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
           ),
           Expanded(
             child: views.isEmpty
-                ? Center(
-                    child: Text(_query.isEmpty ? l.noTransactions : l.noResults, style: TextStyle(color: c.textMuted)),
-                  )
+                ? _query.isEmpty
+                      ? EmptyState(
+                          icon: Icons.receipt_long_outlined,
+                          message: l.noTransactions,
+                          action: l.addFirstTransaction,
+                          onAction: () => context.push(Routes.addTransaction),
+                        )
+                      : EmptyState(icon: Icons.search_off_rounded, message: l.noResults)
                 : ListView.separated(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 96),
                     itemCount: views.length,

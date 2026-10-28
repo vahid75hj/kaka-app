@@ -1,4 +1,8 @@
 import 'dart:io';
+import 'dart:ui' as ui;
+
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,7 +23,17 @@ void main() {
   tearDown(() => dir.deleteSync(recursive: true));
 
   testWidgets('Persian onboarding creates a toman account and lands on home', (tester) async {
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 2.75;
+    addTearDown(tester.view.reset);
     await tester.runAsync(() async {
+      if (Platform.environment['KAKA_SHOT'] != null) {
+        for (final w in ['Regular', 'Bold', 'ExtraBold']) {
+          final loader = FontLoader('Vazirmatn')
+            ..addFont(File('assets/fonts/Vazirmatn-$w.ttf').readAsBytes().then(ByteData.sublistView));
+          await loader.load();
+        }
+      }
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
@@ -47,6 +61,16 @@ void main() {
 
       expect(find.text('دارایی خالص'), findsOneWidget);
       expect(find.text('۱٬۲۵۰٬۰۰۰'), findsOneWidget);
+      // First-run checklist: the account step is already done (1 of 4).
+      expect(find.textContaining('شروع کار'), findsOneWidget);
+      expect(find.text('۱ از ۴'), findsOneWidget);
+      expect(tester.takeException(), isNull, reason: 'no layout overflow in RTL');
+      if (Platform.environment['KAKA_SHOT'] != null) {
+        final boundary = tester.renderObject<RenderRepaintBoundary>(find.byType(RepaintBoundary).first);
+        final image = await boundary.toImage(pixelRatio: 1);
+        final png = await image.toByteData(format: ui.ImageByteFormat.png);
+        File(Platform.environment['KAKA_SHOT']!).writeAsBytesSync(png!.buffer.asUint8List());
+      }
       final accounts = await DriftAccountRepository(db).getAll();
       expect(accounts.firstWhere((a) => a.type == AccountType.asset).currency, Currency.irr);
 
