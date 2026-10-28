@@ -1633,6 +1633,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No backup yet'**
   String get neverBackedUp;
+
+  /// No description provided for @changeIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Change icon'**
+  String get changeIcon;
+
+  /// No description provided for @defaultIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Default icon'**
+  String get defaultIcon;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

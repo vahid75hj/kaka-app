@@ -76,8 +76,17 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, AccountRow>
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _iconMeta = const VerificationMeta('icon');
   @override
-  List<GeneratedColumn> get $columns => [id, name, type, currency, isSystem, archived, createdAt];
+  late final GeneratedColumn<String> icon = GeneratedColumn<String>(
+    'icon',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, name, type, currency, isSystem, archived, createdAt, icon];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -118,6 +127,9 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, AccountRow>
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
+    if (data.containsKey('icon')) {
+      context.handle(_iconMeta, icon.isAcceptableOrUnknown(data['icon']!, _iconMeta));
+    }
     return context;
   }
 
@@ -134,6 +146,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, AccountRow>
       isSystem: attachedDatabase.typeMapping.read(DriftSqlType.bool, data['${effectivePrefix}is_system'])!,
       archived: attachedDatabase.typeMapping.read(DriftSqlType.bool, data['${effectivePrefix}archived'])!,
       createdAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      icon: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}icon']),
     );
   }
 
@@ -151,6 +164,7 @@ class AccountRow extends DataClass implements Insertable<AccountRow> {
   final bool isSystem;
   final bool archived;
   final DateTime createdAt;
+  final String? icon;
   const AccountRow({
     required this.id,
     required this.name,
@@ -159,6 +173,7 @@ class AccountRow extends DataClass implements Insertable<AccountRow> {
     required this.isSystem,
     required this.archived,
     required this.createdAt,
+    this.icon,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -170,6 +185,9 @@ class AccountRow extends DataClass implements Insertable<AccountRow> {
     map['is_system'] = Variable<bool>(isSystem);
     map['archived'] = Variable<bool>(archived);
     map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || icon != null) {
+      map['icon'] = Variable<String>(icon);
+    }
     return map;
   }
 
@@ -182,6 +200,7 @@ class AccountRow extends DataClass implements Insertable<AccountRow> {
       isSystem: Value(isSystem),
       archived: Value(archived),
       createdAt: Value(createdAt),
+      icon: icon == null && nullToAbsent ? const Value.absent() : Value(icon),
     );
   }
 
@@ -195,6 +214,7 @@ class AccountRow extends DataClass implements Insertable<AccountRow> {
       isSystem: serializer.fromJson<bool>(json['isSystem']),
       archived: serializer.fromJson<bool>(json['archived']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      icon: serializer.fromJson<String?>(json['icon']),
     );
   }
   @override
@@ -208,6 +228,7 @@ class AccountRow extends DataClass implements Insertable<AccountRow> {
       'isSystem': serializer.toJson<bool>(isSystem),
       'archived': serializer.toJson<bool>(archived),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'icon': serializer.toJson<String?>(icon),
     };
   }
 
@@ -219,6 +240,7 @@ class AccountRow extends DataClass implements Insertable<AccountRow> {
     bool? isSystem,
     bool? archived,
     DateTime? createdAt,
+    Value<String?> icon = const Value.absent(),
   }) => AccountRow(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -227,6 +249,7 @@ class AccountRow extends DataClass implements Insertable<AccountRow> {
     isSystem: isSystem ?? this.isSystem,
     archived: archived ?? this.archived,
     createdAt: createdAt ?? this.createdAt,
+    icon: icon.present ? icon.value : this.icon,
   );
   AccountRow copyWithCompanion(AccountsCompanion data) {
     return AccountRow(
@@ -237,6 +260,7 @@ class AccountRow extends DataClass implements Insertable<AccountRow> {
       isSystem: data.isSystem.present ? data.isSystem.value : this.isSystem,
       archived: data.archived.present ? data.archived.value : this.archived,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      icon: data.icon.present ? data.icon.value : this.icon,
     );
   }
 
@@ -249,13 +273,14 @@ class AccountRow extends DataClass implements Insertable<AccountRow> {
           ..write('currency: $currency, ')
           ..write('isSystem: $isSystem, ')
           ..write('archived: $archived, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('icon: $icon')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, type, currency, isSystem, archived, createdAt);
+  int get hashCode => Object.hash(id, name, type, currency, isSystem, archived, createdAt, icon);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -266,7 +291,8 @@ class AccountRow extends DataClass implements Insertable<AccountRow> {
           other.currency == this.currency &&
           other.isSystem == this.isSystem &&
           other.archived == this.archived &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.icon == this.icon);
 }
 
 class AccountsCompanion extends UpdateCompanion<AccountRow> {
@@ -277,6 +303,7 @@ class AccountsCompanion extends UpdateCompanion<AccountRow> {
   final Value<bool> isSystem;
   final Value<bool> archived;
   final Value<DateTime> createdAt;
+  final Value<String?> icon;
   final Value<int> rowid;
   const AccountsCompanion({
     this.id = const Value.absent(),
@@ -286,6 +313,7 @@ class AccountsCompanion extends UpdateCompanion<AccountRow> {
     this.isSystem = const Value.absent(),
     this.archived = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.icon = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   AccountsCompanion.insert({
@@ -296,6 +324,7 @@ class AccountsCompanion extends UpdateCompanion<AccountRow> {
     this.isSystem = const Value.absent(),
     this.archived = const Value.absent(),
     required DateTime createdAt,
+    this.icon = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
@@ -310,6 +339,7 @@ class AccountsCompanion extends UpdateCompanion<AccountRow> {
     Expression<bool>? isSystem,
     Expression<bool>? archived,
     Expression<DateTime>? createdAt,
+    Expression<String>? icon,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -320,6 +350,7 @@ class AccountsCompanion extends UpdateCompanion<AccountRow> {
       if (isSystem != null) 'is_system': isSystem,
       if (archived != null) 'archived': archived,
       if (createdAt != null) 'created_at': createdAt,
+      if (icon != null) 'icon': icon,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -332,6 +363,7 @@ class AccountsCompanion extends UpdateCompanion<AccountRow> {
     Value<bool>? isSystem,
     Value<bool>? archived,
     Value<DateTime>? createdAt,
+    Value<String?>? icon,
     Value<int>? rowid,
   }) {
     return AccountsCompanion(
@@ -342,6 +374,7 @@ class AccountsCompanion extends UpdateCompanion<AccountRow> {
       isSystem: isSystem ?? this.isSystem,
       archived: archived ?? this.archived,
       createdAt: createdAt ?? this.createdAt,
+      icon: icon ?? this.icon,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -370,6 +403,9 @@ class AccountsCompanion extends UpdateCompanion<AccountRow> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (icon.present) {
+      map['icon'] = Variable<String>(icon.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -386,6 +422,7 @@ class AccountsCompanion extends UpdateCompanion<AccountRow> {
           ..write('isSystem: $isSystem, ')
           ..write('archived: $archived, ')
           ..write('createdAt: $createdAt, ')
+          ..write('icon: $icon, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -3994,6 +4031,7 @@ typedef $$AccountsTableCreateCompanionBuilder =
       Value<bool> isSystem,
       Value<bool> archived,
       required DateTime createdAt,
+      Value<String?> icon,
       Value<int> rowid,
     });
 typedef $$AccountsTableUpdateCompanionBuilder =
@@ -4005,6 +4043,7 @@ typedef $$AccountsTableUpdateCompanionBuilder =
       Value<bool> isSystem,
       Value<bool> archived,
       Value<DateTime> createdAt,
+      Value<String?> icon,
       Value<int> rowid,
     });
 
@@ -4050,6 +4089,8 @@ class $$AccountsTableFilterComposer extends Composer<_$KakaDatabase, $AccountsTa
 
   ColumnFilters<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get icon => $composableBuilder(column: $table.icon, builder: (column) => ColumnFilters(column));
 
   Expression<bool> postingsRefs(Expression<bool> Function($$PostingsTableFilterComposer f) f) {
     final $$PostingsTableFilterComposer composer = $composerBuilder(
@@ -4097,6 +4138,9 @@ class $$AccountsTableOrderingComposer extends Composer<_$KakaDatabase, $Accounts
 
   ColumnOrderings<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get icon =>
+      $composableBuilder(column: $table.icon, builder: (column) => ColumnOrderings(column));
 }
 
 class $$AccountsTableAnnotationComposer extends Composer<_$KakaDatabase, $AccountsTable> {
@@ -4120,6 +4164,8 @@ class $$AccountsTableAnnotationComposer extends Composer<_$KakaDatabase, $Accoun
   GeneratedColumn<bool> get archived => $composableBuilder(column: $table.archived, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt => $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<String> get icon => $composableBuilder(column: $table.icon, builder: (column) => column);
 
   Expression<T> postingsRefs<T extends Object>(Expression<T> Function($$PostingsTableAnnotationComposer a) f) {
     final $$PostingsTableAnnotationComposer composer = $composerBuilder(
@@ -4172,6 +4218,7 @@ class $$AccountsTableTableManager
                 Value<bool> isSystem = const Value.absent(),
                 Value<bool> archived = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<String?> icon = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AccountsCompanion(
                 id: id,
@@ -4181,6 +4228,7 @@ class $$AccountsTableTableManager
                 isSystem: isSystem,
                 archived: archived,
                 createdAt: createdAt,
+                icon: icon,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -4192,6 +4240,7 @@ class $$AccountsTableTableManager
                 Value<bool> isSystem = const Value.absent(),
                 Value<bool> archived = const Value.absent(),
                 required DateTime createdAt,
+                Value<String?> icon = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AccountsCompanion.insert(
                 id: id,
@@ -4201,6 +4250,7 @@ class $$AccountsTableTableManager
                 isSystem: isSystem,
                 archived: archived,
                 createdAt: createdAt,
+                icon: icon,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

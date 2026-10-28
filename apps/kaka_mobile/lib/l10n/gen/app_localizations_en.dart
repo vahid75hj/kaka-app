@@ -835,4 +835,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get neverBackedUp => 'No backup yet';
+
+  @override
+  String get changeIcon => 'Change icon';
+
+  @override
+  String get defaultIcon => 'Default icon';
 }

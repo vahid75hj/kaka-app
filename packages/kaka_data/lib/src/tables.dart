@@ -9,6 +9,8 @@ class Accounts extends Table {
   BoolColumn get isSystem => boolean().withDefault(const Constant(false))();
   BoolColumn get archived => boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime()();
+  // v5
+  TextColumn get icon => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};

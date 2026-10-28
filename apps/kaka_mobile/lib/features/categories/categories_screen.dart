@@ -3,12 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kaka_domain/kaka_domain.dart';
 
 import '../../app/providers.dart';
+import '../../core/category_icons.dart';
 import '../../core/l10n_x.dart';
 import '../../theme/kaka_colors.dart';
 
 /// A category as the user sees it: one name, possibly backed by one account per currency.
 class CategoryEntry {
-  const CategoryEntry(this.name, this.type, {required this.archived, required this.currencies});
+  const CategoryEntry(this.name, this.type, {required this.archived, required this.currencies, this.icon});
+  final String? icon;
   final String name;
   final AccountType type;
   final bool archived;
@@ -26,6 +28,7 @@ class CategoryEntry {
           type,
           archived: e.value.every((a) => a.archived),
           currencies: [for (final a in e.value) a.currency],
+          icon: e.value.map((a) => a.icon).nonNulls.firstOrNull,
         ),
     ];
   }
@@ -63,6 +66,43 @@ class CategoriesScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+Future<void> _pickIcon(BuildContext context, WidgetRef ref, CategoryEntry e) async {
+  final l = context.l10n;
+  final c = KakaColors.of(context);
+  final picked = await showModalBottomSheet<String>(
+    context: context,
+    showDragHandle: true,
+    builder: (sheet) => SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(l.changeIcon, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: [
+                for (final entry in CategoryIcons.all.entries)
+                  IconButton.outlined(
+                    isSelected: entry.key == e.icon,
+                    onPressed: () => Navigator.pop(sheet, entry.key),
+                    icon: Icon(entry.value, color: c.accentText),
+                  ),
+              ],
+            ),
+            if (e.icon != null) TextButton(onPressed: () => Navigator.pop(sheet, ''), child: Text(l.defaultIcon)),
+          ],
+        ),
+      ),
+    ),
+  );
+  if (picked == null) return;
+  await ref.read(ledgerProvider).setCategoryIcon(e.type, e.name, picked.isEmpty ? null : picked);
 }
 
 Future<void> _edit(BuildContext context, WidgetRef ref, AccountType type, CategoryEntry? existing) async {
@@ -121,9 +161,13 @@ class _CategoryList extends ConsumerWidget {
       );
     }
     Widget tile(CategoryEntry e) => ListTile(
-      leading: Icon(
-        type == AccountType.expense ? Icons.sell_outlined : Icons.savings_outlined,
-        color: e.archived ? c.textFaint : c.accentText,
+      leading: IconButton(
+        tooltip: l.changeIcon,
+        onPressed: e.archived ? null : () => _pickIcon(context, ref, e),
+        icon: Icon(
+          CategoryIcons.of(e.icon, name: e.name, type: type),
+          color: e.archived ? c.textFaint : c.accentText,
+        ),
       ),
       title: Text(e.name, style: TextStyle(color: e.archived ? c.textFaint : null)),
       subtitle: Text(e.currencies.map((x) => x.code).join(' · '), style: TextStyle(color: c.textMuted, fontSize: 12)),

@@ -37,7 +37,7 @@ Phases: **MVP-1** = first usable APK · **MVP-2** = v0.1 feature-complete · **L
 ## MVP-2 — v0.1 complete
 - [x] App lock (device biometric / PIN via `local_auth`, opt-in so nobody is locked out; 30 s grace) — `FLAG_SECURE` still open
 - [x] Jalali date picker (Saturday-first grid; Material picker for Gregorian)
-- [x] Category management screen (add / rename / archive across currencies) — custom icons still open
+- [x] Category management screen (add / rename / archive across currencies) + custom category icons (30 icons, shared across currencies, shown in chips and lists)
 - [x] Question queue (`drafts` table, schema v2) for drafts from SMS / share / paste; confirm-by-review, discard, dedup key
 - [x] Share-in (`ACTION_SEND`, `ACTION_PROCESS_TEXT`) + paste SMS → SMS parser → question queue
 - [x] SMS parser rework (v0.3.0): normalization (ك/ي, bidi marks, `*`), verified templates from real samples (Melli, Saderat, Tejarat, **Mehr Iran**), heuristic fallback with confidence, MMDD dates with year inferred from receive time — Mellat/Pasargad still `needs_samples`

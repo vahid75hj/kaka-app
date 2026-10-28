@@ -206,4 +206,16 @@ void main() {
     expect(back.backupDue(DateTime(2026, 10, 8), firstActivity: DateTime(2026, 9, 1)), isTrue);
     expect(back.copyWith(backupReminderDays: 0).backupDue(DateTime(2027), firstActivity: DateTime(2026)), isFalse);
   });
+
+  test('category icons follow the name across currencies and new currencies inherit them', () async {
+    await ledger.ensureCategory('غذا', AccountType.expense, Currency.irr);
+    await ledger.ensureCategory('غذا', AccountType.expense, Currency.usd);
+    await ledger.setCategoryIcon(AccountType.expense, 'غذا', 'food');
+    expect(accounts.items.values.where((a) => a.name == 'غذا').map((a) => a.icon), everyElement('food'));
+    final eur = await ledger.ensureCategory('غذا', AccountType.expense, Currency.byCode('EUR'));
+    expect(eur.icon, 'food');
+    await ledger.setCategoryIcon(AccountType.expense, 'غذا', null);
+    expect(accounts.items.values.where((a) => a.name == 'غذا').map((a) => a.icon), everyElement(isNull));
+    expect(() => ledger.setCategoryIcon(AccountType.asset, 'w', 'x'), throwsA(isA<DomainException>()));
+  });
 }

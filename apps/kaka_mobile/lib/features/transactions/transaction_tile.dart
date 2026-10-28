@@ -5,6 +5,7 @@ import 'package:kaka_domain/kaka_domain.dart';
 
 import '../../app/providers.dart';
 import '../../app/router.dart';
+import '../../core/category_icons.dart';
 import '../../core/l10n_x.dart';
 import '../../core/widgets.dart';
 import '../../theme/kaka_colors.dart';
@@ -22,6 +23,19 @@ class TransactionTile extends ConsumerWidget {
     TransactionKind.opening => Icons.flag_outlined,
     TransactionKind.asset => Icons.toll_outlined,
   };
+
+  /// Expense/income rows show their category's icon.
+  IconData? _categoryIcon(WidgetRef ref) {
+    final kind = view.txn.kind;
+    if (kind != TransactionKind.expense && kind != TransactionKind.income) return null;
+    final wanted = kind == TransactionKind.expense ? AccountType.expense : AccountType.income;
+    final accounts = ref.watch(accountsByIdProvider);
+    for (final p in view.txn.postings) {
+      final a = accounts[p.accountId];
+      if (a != null && a.type == wanted) return CategoryIcons.of(a.icon, name: a.name, type: wanted);
+    }
+    return null;
+  }
 
   Future<void> _confirmVoid(BuildContext context, WidgetRef ref) async {
     final l = context.l10n;
@@ -69,7 +83,7 @@ class TransactionTile extends ConsumerWidget {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: c.line),
         ),
-        child: Icon(_icon, size: 20, color: c.accentText),
+        child: Icon(_categoryIcon(ref) ?? _icon, size: 20, color: c.accentText),
       ),
       title: Text(
         view.title,
@@ -91,6 +105,10 @@ class TransactionTile extends ConsumerWidget {
     );
   }
 }
+
+final accountsByIdProvider = Provider<Map<String, Account>>(
+  (ref) => {for (final a in ref.watch(accountsProvider).value ?? const <Account>[]) a.id: a},
+);
 
 /// Builds tiles for [txns] once accounts are known.
 final transactionViewsProvider = Provider.family<List<TransactionView>, ({String opening, String asset})>((

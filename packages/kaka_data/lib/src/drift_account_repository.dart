@@ -30,6 +30,7 @@ class DriftAccountRepository implements AccountRepository {
           currency: a.currency.code,
           isSystem: Value(a.isSystem),
           archived: Value(a.archived),
+          icon: Value(a.icon),
           createdAt: a.createdAt,
         ),
       );
@@ -45,5 +46,6 @@ class DriftAccountRepository implements AccountRepository {
     createdAt: r.createdAt,
     isSystem: r.isSystem,
     archived: r.archived,
+    icon: r.icon,
   );
 }

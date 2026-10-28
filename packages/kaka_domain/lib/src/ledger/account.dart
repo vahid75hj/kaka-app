@@ -29,6 +29,7 @@ class Account {
     required this.createdAt,
     this.isSystem = false,
     this.archived = false,
+    this.icon,
   });
 
   final String id;
@@ -41,7 +42,10 @@ class Account {
   final bool isSystem;
   final bool archived;
 
-  Account copyWith({String? name, bool? archived}) => Account(
+  /// Optional icon key for categories (the app maps keys to glyphs).
+  final String? icon;
+
+  Account copyWith({String? name, bool? archived, String? Function()? icon}) => Account(
     id: id,
     name: name ?? this.name,
     type: type,
@@ -49,6 +53,7 @@ class Account {
     createdAt: createdAt,
     isSystem: isSystem,
     archived: archived ?? this.archived,
+    icon: icon != null ? icon() : this.icon,
   );
 
   @override
@@ -58,8 +63,9 @@ class Account {
       other.name == name &&
       other.type == type &&
       other.currency == currency &&
-      other.archived == archived;
+      other.archived == archived &&
+      other.icon == icon;
 
   @override
-  int get hashCode => Object.hash(id, name, type, currency, archived);
+  int get hashCode => Object.hash(id, name, type, currency, archived, icon);
 }

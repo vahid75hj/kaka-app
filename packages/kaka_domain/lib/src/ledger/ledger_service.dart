@@ -183,7 +183,9 @@ class LedgerService {
     for (final a in all) {
       if (a.type == type && a.name == name && a.currency == currency) return a;
     }
-    final created = Account(id: Ids.next(), name: name, type: type, currency: currency, createdAt: _now());
+    // A category first used in a new currency inherits the icon chosen elsewhere.
+    final icon = all.where((a) => a.type == type && a.name == name && a.icon != null).firstOrNull?.icon;
+    final created = Account(id: Ids.next(), name: name, type: type, currency: currency, createdAt: _now(), icon: icon);
     await _accounts.upsert(created);
     return created;
   }
@@ -215,6 +217,14 @@ class LedgerService {
     }
     for (final a in all.where((a) => a.type == type && a.name == from)) {
       await _accounts.upsert(a.copyWith(name: trimmed));
+    }
+  }
+
+  /// Icons are shared by name across currencies, like renames. `null` = default icon.
+  Future<void> setCategoryIcon(AccountType type, String name, String? icon) async {
+    _requireCategoryType(type);
+    for (final a in (await _accounts.getAll()).where((a) => a.type == type && a.name == name)) {
+      await _accounts.upsert(a.copyWith(icon: () => icon));
     }
   }
 

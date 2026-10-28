@@ -62,6 +62,7 @@ void main() {
     // A real v3 file has no v5 columns either.
     await db.customStatement('ALTER TABLE drafts DROP COLUMN to_account_id');
     await db.customStatement('ALTER TABLE drafts DROP COLUMN category');
+    await db.customStatement('ALTER TABLE accounts DROP COLUMN icon');
     await db.customStatement('PRAGMA user_version = 3');
     await db.close();
 
@@ -110,6 +111,7 @@ void main() {
     await db.customStatement('ALTER TABLE asset_movements DROP COLUMN transaction_id');
     await db.customStatement('ALTER TABLE drafts DROP COLUMN to_account_id');
     await db.customStatement('ALTER TABLE drafts DROP COLUMN category');
+    await db.customStatement('ALTER TABLE accounts DROP COLUMN icon');
     await db.customStatement(
       "INSERT INTO asset_movements (id, asset_type_id, quantity_milli, moved_at, note) VALUES ('old', 'gold18', 1500, 0, '')",
     );
@@ -141,5 +143,17 @@ void main() {
     );
     final d = (await drafts.findById('d'))!;
     expect((d.isTransfer, d.toAccountId, d.category), (true, 'b', 'x'));
+    final accounts = DriftAccountRepository(db);
+    await accounts.upsert(
+      Account(
+        id: 'c',
+        name: 'غذا',
+        type: AccountType.expense,
+        currency: Currency.irr,
+        createdAt: DateTime(2026),
+        icon: 'food',
+      ),
+    );
+    expect((await accounts.findById('c'))!.icon, 'food');
   });
 }

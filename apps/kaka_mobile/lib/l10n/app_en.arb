@@ -361,5 +361,7 @@
       "date": {}
     }
   },
-  "neverBackedUp": "No backup yet"
+  "neverBackedUp": "No backup yet",
+  "changeIcon": "Change icon",
+  "defaultIcon": "Default icon"
 }

@@ -5,6 +5,7 @@ import 'package:kaka_data/kaka_data.dart';
 import 'package:kaka_domain/kaka_domain.dart';
 
 import '../../app/providers.dart';
+import '../../core/category_icons.dart';
 import '../../core/date_picker.dart';
 import '../../core/l10n_x.dart';
 import '../../theme/kaka_colors.dart';
@@ -186,7 +187,12 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     final to = wallets.where((a) => a.id == _toAccountId).firstOrNull;
     final wantedType = _kind == TransactionKind.income ? AccountType.income : AccountType.expense;
     // Category names are shared across currencies; one account per currency is created on demand.
-    final categories = {for (final a in accounts.where((a) => a.type == wantedType && !a.archived)) a.name}.toList();
+    final categoryAccounts = accounts.where((a) => a.type == wantedType && !a.archived && !a.isSystem);
+    final categories = {for (final a in categoryAccounts) a.name}.toList();
+    final iconOf = <String, String?>{};
+    for (final a in categoryAccounts) {
+      iconOf[a.name] ??= a.icon;
+    }
     if (!categories.contains(_category)) _category = categories.firstOrNull;
 
     return Scaffold(
@@ -259,6 +265,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
               children: [
                 for (final name in categories)
                   ChoiceChip(
+                    avatar: Icon(CategoryIcons.of(iconOf[name], name: name, type: wantedType), size: 18),
                     label: Text(name),
                     selected: name == _category,
                     onSelected: (_) => setState(() => _category = name),

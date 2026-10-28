@@ -71,6 +71,7 @@ class KakaDatabase extends _$KakaDatabase {
         await _addIfMissing(m, assetMovements, assetMovements.transactionId);
         await _addIfMissing(m, drafts, drafts.toAccountId);
         await _addIfMissing(m, drafts, drafts.category);
+        await _addIfMissing(m, accounts, accounts.icon);
       }
     },
   );

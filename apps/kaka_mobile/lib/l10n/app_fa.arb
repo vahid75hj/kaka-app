@@ -256,5 +256,7 @@
   "backupReminderOff": "خاموش",
   "everyNDays": "هر {days} روز",
   "lastBackup": "آخرین پشتیبان: {date}",
-  "neverBackedUp": "هنوز پشتیبانی نگرفتی"
+  "neverBackedUp": "هنوز پشتیبانی نگرفتی",
+  "changeIcon": "تغییر آیکون",
+  "defaultIcon": "آیکون پیش‌فرض"
 }

@@ -826,4 +826,10 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get neverBackedUp => 'هنوز پشتیبانی نگرفتی';
+
+  @override
+  String get changeIcon => 'تغییر آیکون';
+
+  @override
+  String get defaultIcon => 'آیکون پیش‌فرض';
 }
