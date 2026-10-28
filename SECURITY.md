@@ -22,6 +22,7 @@ Include the version, the device or Android version, steps to reproduce and the i
 - `INTERNET`: used only by the optional bring-your-own-AI chat, to reach the endpoint you configure. With AI set to "none", nothing uses it.
 - `READ_SMS` / `RECEIVE_SMS`: requested only when you turn on automatic SMS reading.
 - `POST_NOTIFICATIONS`: requested only when you turn on background SMS reading.
+- Bank SMS received while Kaka is closed wait in app-private storage (excluded from device backups), encrypted with AES-256-GCM under a non-exportable Android Keystore key, until Kaka moves them into the encrypted ledger.
 - `USE_BIOMETRIC`: the app lock.
 
 ## Release signing certificate

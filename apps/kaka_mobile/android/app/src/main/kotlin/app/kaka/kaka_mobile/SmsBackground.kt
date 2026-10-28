@@ -37,7 +37,9 @@ import java.util.concurrent.TimeUnit
  */
 object PendingSms {
     private const val MAX = 200
-    private fun file(ctx: Context) = File(ctx.filesDir, "sms_pending.json")
+    private const val KEY_ALIAS = "kaka_pending_sms"
+    private fun legacyFile(ctx: Context) = File(ctx.filesDir, "sms_pending.json")
+    private fun file(ctx: Context) = File(ctx.noBackupFilesDir, "sms_pending.bin")
 
     @Synchronized
     fun add(ctx: Context, items: List<Map<String, Any>>) {
@@ -45,7 +47,7 @@ object PendingSms {
         for (m in items) arr.put(JSONObject(m))
         // Keep the newest MAX; the inbox scan on next open covers anything older.
         while (arr.length() > MAX) arr.remove(0)
-        file(ctx).writeText(arr.toString())
+        write(ctx, arr)
     }
 
     @Synchronized
@@ -63,13 +65,64 @@ object PendingSms {
         val arr = read(ctx)
         val rest = JSONArray()
         for (i in count until arr.length()) rest.put(arr.get(i))
-        if (rest.length() == 0) file(ctx).delete() else file(ctx).writeText(rest.toString())
+        if (rest.length() == 0) file(ctx).delete() else write(ctx, rest)
     }
 
-    private fun read(ctx: Context): JSONArray = try {
-        file(ctx).takeIf { it.exists() }?.readText()?.let { JSONArray(it) } ?: JSONArray()
-    } catch (_: Exception) {
-        JSONArray()
+    /** AES-256-GCM with a non-exportable Android Keystore key; file = 12-byte IV + ciphertext. */
+    private fun key(): javax.crypto.SecretKey {
+        val ks = java.security.KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
+        (ks.getKey(KEY_ALIAS, null) as? javax.crypto.SecretKey)?.let { return it }
+        val gen = javax.crypto.KeyGenerator.getInstance(android.security.keystore.KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
+        gen.init(
+            android.security.keystore.KeyGenParameterSpec.Builder(
+                KEY_ALIAS,
+                android.security.keystore.KeyProperties.PURPOSE_ENCRYPT or android.security.keystore.KeyProperties.PURPOSE_DECRYPT,
+            )
+                .setBlockModes(android.security.keystore.KeyProperties.BLOCK_MODE_GCM)
+                .setEncryptionPaddings(android.security.keystore.KeyProperties.ENCRYPTION_PADDING_NONE)
+                .setKeySize(256)
+                .build(),
+        )
+        return gen.generateKey()
+    }
+
+    private fun write(ctx: Context, arr: JSONArray) {
+        val c = javax.crypto.Cipher.getInstance("AES/GCM/NoPadding")
+        c.init(javax.crypto.Cipher.ENCRYPT_MODE, key())
+        val out = c.iv + c.doFinal(arr.toString().toByteArray(Charsets.UTF_8))
+        val tmp = File(file(ctx).path + ".tmp")
+        tmp.writeBytes(out)
+        tmp.renameTo(file(ctx))
+    }
+
+    private fun read(ctx: Context): JSONArray {
+        val result = try {
+            val f = file(ctx)
+            if (!f.exists()) {
+                JSONArray()
+            } else {
+                val bytes = f.readBytes()
+                val c = javax.crypto.Cipher.getInstance("AES/GCM/NoPadding")
+                c.init(javax.crypto.Cipher.DECRYPT_MODE, key(), javax.crypto.spec.GCMParameterSpec(128, bytes, 0, 12))
+                JSONArray(String(c.doFinal(bytes, 12, bytes.size - 12), Charsets.UTF_8))
+            }
+        } catch (_: Exception) {
+            // Unreadable (key lost after a restore, tampering): drop it; the inbox scan recovers.
+            file(ctx).delete()
+            JSONArray()
+        }
+        // 0.5.0 stored this as plain JSON: fold it in once and delete it.
+        val legacy = legacyFile(ctx)
+        if (legacy.exists()) {
+            try {
+                val old = JSONArray(legacy.readText())
+                for (i in 0 until old.length()) result.put(old.get(i))
+            } catch (_: Exception) {
+            }
+            legacy.delete()
+            if (result.length() > 0) write(ctx, result)
+        }
+        return result
     }
 }
 
