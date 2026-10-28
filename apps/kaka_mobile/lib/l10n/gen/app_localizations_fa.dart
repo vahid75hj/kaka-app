@@ -1033,4 +1033,7 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get importBadXlsx => 'این فایل اکسل خونده نشد. با «CSV UTF-8» ذخیره‌اش کن و دوباره امتحان کن.';
+
+  @override
+  String get comingUp => 'به‌زودی';
 }

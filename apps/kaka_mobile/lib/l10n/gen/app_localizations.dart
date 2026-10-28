@@ -1993,6 +1993,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not read this Excel file. Try saving it as \"CSV UTF-8\".'**
   String get importBadXlsx;
+
+  /// No description provided for @comingUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming up'**
+  String get comingUp;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

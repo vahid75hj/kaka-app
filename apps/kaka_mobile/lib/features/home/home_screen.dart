@@ -6,6 +6,7 @@ import 'package:kaka_domain/kaka_domain.dart';
 import '../../app/providers.dart';
 import '../../app/router.dart';
 import '../budgets/budgets_screen.dart';
+import '../../core/app_format.dart';
 import '../../core/l10n_x.dart';
 import '../../core/widgets.dart';
 import '../../theme/kaka_colors.dart';
@@ -58,8 +59,15 @@ class HomeScreen extends ConsumerWidget {
     final f = ref.watch(formatProvider);
     final summary = ref.watch(homeSummaryProvider);
     final recent = ref.watch(transactionViewsProvider((opening: l.opening, asset: l.goldAndCoins))).take(5).toList();
-    final budgets = ref.watch(budgetStatusesProvider);
     final now = DateTime.now();
+    final budgets = ref.watch(budgetStatusesProvider);
+    final addMonths = monthAdderFor(f.settings.calendar);
+    final accountNames = {for (final a in ref.watch(accountsProvider).value ?? const <Account>[]) a.id: a.name};
+    final upcoming = [
+      for (final r in ref.watch(recurringRulesProvider).value ?? const <RecurringRule>[])
+        if (r.active && Recurrence.next(r, addMonths).isBefore(now.add(const Duration(days: 7))))
+          (r, Recurrence.next(r, addMonths)),
+    ]..sort((a, b) => a.$2.compareTo(b.$2));
     final pending = ref.watch(pendingDraftsProvider).value?.length ?? 0;
 
     return Scaffold(
@@ -221,6 +229,31 @@ class HomeScreen extends ConsumerWidget {
                       if (i > 0) const SizedBox(height: 12),
                       BudgetBar(budgets[i], compact: true),
                     ],
+                  ],
+                ),
+              ),
+            ],
+            if (upcoming.isNotEmpty) ...[
+              SectionHeader(l.comingUp, action: l.seeAll, onAction: () => context.push(Routes.recurring)),
+              KCard(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                child: Column(
+                  children: [
+                    for (final (r, at) in upcoming.take(3))
+                      ListTile(
+                        dense: true,
+                        contentPadding: EdgeInsets.zero,
+                        leading: const Icon(Icons.repeat_rounded),
+                        title: Text(
+                          r.isTransfer
+                              ? '${accountNames[r.accountId] ?? '?'} → ${accountNames[r.toAccountId] ?? '?'}'
+                              : (r.category ?? l.catOther),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        subtitle: Text(f.date(at)),
+                        trailing: AmountText(f.money(r.amount)),
+                      ),
                   ],
                 ),
               ),

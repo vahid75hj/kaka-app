@@ -316,5 +316,6 @@
   "recurringNext": "بعدی: {date}",
   "recurringPaused": "متوقف",
   "recurringDeleteConfirm": "دیگه تکرار نشه؟ تراکنش‌های ثبت‌شده سر جاشون می‌مونن.",
-  "importBadXlsx": "این فایل اکسل خونده نشد. با «CSV UTF-8» ذخیره‌اش کن و دوباره امتحان کن."
+  "importBadXlsx": "این فایل اکسل خونده نشد. با «CSV UTF-8» ذخیره‌اش کن و دوباره امتحان کن.",
+  "comingUp": "به‌زودی"
 }

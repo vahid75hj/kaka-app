@@ -485,5 +485,6 @@
   },
   "recurringPaused": "Paused",
   "recurringDeleteConfirm": "Stop repeating this? Transactions already recorded stay.",
-  "importBadXlsx": "Could not read this Excel file. Try saving it as \"CSV UTF-8\"."
+  "importBadXlsx": "Could not read this Excel file. Try saving it as \"CSV UTF-8\".",
+  "comingUp": "Coming up"
 }

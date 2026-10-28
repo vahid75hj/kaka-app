@@ -1042,4 +1042,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get importBadXlsx => 'Could not read this Excel file. Try saving it as \"CSV UTF-8\".';
+
+  @override
+  String get comingUp => 'Coming up';
 }
