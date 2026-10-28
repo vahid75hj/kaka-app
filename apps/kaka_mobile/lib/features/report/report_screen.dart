@@ -41,7 +41,12 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
     final report = MonthlyReport.build(txns, accounts, ref.watch(converterProvider), from: _month, to: end);
     final net = report.totalIncome - report.totalExpense;
 
-    Widget bars(List<CategoryTotal> items, Color color) {
+    final limits = {
+      for (final b in ref.watch(budgetsProvider).value ?? const <Budget>[])
+        if (b.limit.currency == report.base) b.category: b.limit,
+    };
+
+    Widget bars(List<CategoryTotal> items, Color color, {bool budgets = false}) {
       if (items.isEmpty) return Text(l.noTransactions, style: TextStyle(color: c.textMuted));
       final max = items.first.amount.minor.abs().clamp(1, 1 << 62);
       return Column(
@@ -57,7 +62,23 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
                       Expanded(
                         child: Text(i.name, style: const TextStyle(fontWeight: FontWeight.w600)),
                       ),
-                      AmountText(f.money(i.amount), style: const TextStyle(fontSize: 13)),
+                      Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: AmountText(
+                            budgets && limits[i.name] != null
+                                ? l.budgetSpentOf(f.number(i.amount), f.money(limits[i.name]!))
+                                : f.money(i.amount),
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: budgets && limits[i.name] != null && i.amount.minor > limits[i.name]!.minor
+                                  ? c.negative
+                                  : null,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -127,7 +148,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
               child: Text(l.reportSkipped, style: TextStyle(color: c.negative, fontSize: 12)),
             ),
           SectionHeader(l.expense),
-          bars(report.expense, c.negative),
+          bars(report.expense, c.negative, budgets: true),
           SectionHeader(l.income),
           bars(report.income, c.positive),
         ],
