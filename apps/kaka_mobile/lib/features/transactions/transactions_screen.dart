@@ -12,15 +12,18 @@ import '../../app/router.dart';
 import 'package:go_router/go_router.dart';
 
 class TransactionsScreen extends ConsumerStatefulWidget {
-  const TransactionsScreen({super.key});
+  const TransactionsScreen({super.key, this.initialQuery});
+
+  /// Opens pre-filtered (e.g. from a budget: that category, this month).
+  final TransactionQuery? initialQuery;
 
   @override
   ConsumerState<TransactionsScreen> createState() => _TransactionsScreenState();
 }
 
 class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
-  final _search = TextEditingController();
-  var _query = const TransactionQuery();
+  late final _search = TextEditingController(text: widget.initialQuery?.text ?? '');
+  late var _query = widget.initialQuery ?? const TransactionQuery();
 
   @override
   void dispose() {

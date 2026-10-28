@@ -1,3 +1,4 @@
+import 'package:kaka_domain/kaka_domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -41,6 +42,7 @@ abstract final class Routes {
   static const budgets = '/budgets';
   static const importCsv = '/import';
   static const recurring = '/recurring';
+  static const filteredTransactions = '/transactions-filtered';
   static const learnBank = '/sms/learn';
   static const aiSettings = '/ai';
   static const chat = '/chat';
@@ -94,6 +96,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: Routes.report, builder: (_, _) => const ReportScreen()),
       GoRoute(path: Routes.budgets, builder: (_, _) => const BudgetsScreen()),
       GoRoute(path: Routes.importCsv, builder: (_, _) => const ImportScreen()),
+      GoRoute(
+        path: Routes.filteredTransactions,
+        builder: (_, state) => TransactionsScreen(initialQuery: state.extra as TransactionQuery?),
+      ),
       GoRoute(path: Routes.recurring, builder: (_, _) => const RecurringScreen()),
       GoRoute(path: Routes.learnBank, builder: (_, _) => const LearnBankScreen()),
       GoRoute(path: Routes.aiSettings, builder: (_, _) => const AiSettingsScreen()),

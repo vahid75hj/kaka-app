@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kaka_domain/kaka_domain.dart';
 
+import 'package:go_router/go_router.dart';
+
 import '../../app/providers.dart';
+import '../../app/router.dart';
 import '../../core/category_icons.dart';
 import '../../core/l10n_x.dart';
 import '../../core/money_input.dart';
@@ -58,8 +61,24 @@ class BudgetsScreen extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: KCard(
-                      onTap: () => editBudget(context, ref, existing: s.budget),
-                      child: BudgetBar(s),
+                      onTap: () => context.push(
+                        Routes.filteredTransactions,
+                        extra: TransactionQuery(
+                          text: s.budget.category,
+                          kinds: const {TransactionKind.expense},
+                          from: f.startOfMonth(DateTime.now()),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(child: BudgetBar(s)),
+                          IconButton(
+                            tooltip: l.editBudget,
+                            icon: const Icon(Icons.edit_outlined, size: 20),
+                            onPressed: () => editBudget(context, ref, existing: s.budget),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
               ],
