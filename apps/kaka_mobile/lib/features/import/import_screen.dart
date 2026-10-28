@@ -39,6 +39,9 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
   bool _toman = false;
   bool _busy = false;
 
+  /// Full history for duplicate checks (the app-wide list is capped).
+  List<LedgerTransaction>? _existing;
+
   @override
   void initState() {
     super.initState();
@@ -57,8 +60,14 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
       }
       _error = null;
       _table = table;
+      _loadExisting();
       _mapping = CsvMapping.detect(table.first);
     });
+  }
+
+  Future<void> _loadExisting() async {
+    final all = await ref.read(transactionRepositoryProvider).watchRecent(limit: 1 << 30).first;
+    if (mounted) setState(() => _existing = all);
   }
 
   Future<void> _pick() async {
@@ -104,7 +113,7 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
       result = CsvImport.read(table, _mapping, unit, jalali: jalaliToGregorian);
       fresh = CsvImport.withoutDuplicates(
         result.rows,
-        ref.watch(transactionsProvider).value ?? const <LedgerTransaction>[],
+        _existing ?? ref.watch(transactionsProvider).value ?? const <LedgerTransaction>[],
         account.id,
       );
     }
@@ -238,7 +247,7 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
               ),
               const SizedBox(height: 16),
               FilledButton.icon(
-                onPressed: _busy || fresh.isEmpty ? null : () => _import(account!, fresh),
+                onPressed: _busy || fresh.isEmpty || _existing == null ? null : () => _import(account!, fresh),
                 icon: const Icon(Icons.download_done_rounded),
                 label: Text(l.importNow(f.digits('${fresh.length}'))),
               ),
