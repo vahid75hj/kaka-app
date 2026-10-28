@@ -23,6 +23,24 @@ class AiKeyStore {
       value == null || value.isEmpty ? _storage.delete(key: _key) : _storage.write(key: _key, value: value);
 }
 
+/// `http://` to a host outside this device / the local network: the API key and
+/// (masked) data would cross the internet unencrypted.
+bool isInsecureEndpoint(String url) {
+  final u = Uri.tryParse(url.trim());
+  if (u == null || u.scheme != 'http' || u.host.isEmpty) return false;
+  final h = u.host.toLowerCase();
+  if (h == 'localhost' || h.endsWith('.local') || h.startsWith('127.') || h == '::1' || h == '[::1]') return false;
+  final ip = RegExp(r'^(\d+)\.(\d+)\.\d+\.\d+$').firstMatch(h);
+  if (ip != null) {
+    final a = int.parse(ip[1]!);
+    final b = int.parse(ip[2]!);
+    if (a == 10 || (a == 192 && b == 168) || (a == 172 && b >= 16 && b <= 31) || (a == 100 && b >= 64 && b <= 127)) {
+      return false;
+    }
+  }
+  return true;
+}
+
 final aiKeyStoreProvider = Provider<AiKeyStore>((ref) => AiKeyStore());
 
 /// Builds the provider chosen in settings (`none` → [NoAiProvider]).

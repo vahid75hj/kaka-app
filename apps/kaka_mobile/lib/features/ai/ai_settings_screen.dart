@@ -73,9 +73,12 @@ class _AiSettingsScreenState extends ConsumerState<AiSettingsScreen> {
               controller: _url,
               keyboardType: TextInputType.url,
               textDirection: TextDirection.ltr,
+              onChanged: (_) => setState(() {}),
               decoration: InputDecoration(
                 labelText: l.aiBaseUrl,
                 hintText: _provider == 'ollama' ? 'http://192.168.1.10:11434' : 'https://api.openai.com/v1',
+                errorText: isInsecureEndpoint(_url.text) ? l.aiInsecureUrl : null,
+                errorMaxLines: 3,
               ),
             ),
             TextField(

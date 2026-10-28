@@ -841,4 +841,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get defaultIcon => 'Default icon';
+
+  @override
+  String get aiInsecureUrl => 'Not encrypted: use https:// for servers outside your home network.';
 }

@@ -258,5 +258,6 @@
   "lastBackup": "آخرین پشتیبان: {date}",
   "neverBackedUp": "هنوز پشتیبانی نگرفتی",
   "changeIcon": "تغییر آیکون",
-  "defaultIcon": "آیکون پیش‌فرض"
+  "defaultIcon": "آیکون پیش‌فرض",
+  "aiInsecureUrl": "رمزنگاری نشده: برای سرور بیرون از شبکهٔ خانه از https:// استفاده کن."
 }

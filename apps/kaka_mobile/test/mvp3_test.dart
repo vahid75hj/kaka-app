@@ -201,4 +201,22 @@ void main() {
         .update((s) => s.copyWith(backupReminderDays: 0, lastBackupAt: () => null));
     expect(container.read(backupDueProvider), isFalse, reason: 'reminder off');
   });
+
+  test('insecure AI endpoint warning: only plain http to public hosts', () {
+    for (final ok in [
+      'https://api.openai.com/v1',
+      'http://localhost:11434',
+      'http://127.0.0.1:8080',
+      'http://192.168.1.10:11434',
+      'http://10.0.0.5',
+      'http://172.20.1.1',
+      'http://my-pc.local:11434',
+      '',
+    ]) {
+      expect(isInsecureEndpoint(ok), isFalse, reason: ok);
+    }
+    for (final bad in ['http://api.example.com/v1', 'http://8.8.8.8:11434', 'http://172.32.0.1']) {
+      expect(isInsecureEndpoint(bad), isTrue, reason: bad);
+    }
+  });
 }

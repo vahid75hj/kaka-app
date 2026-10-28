@@ -18,6 +18,12 @@ Include the version, the device or Android version, steps to reproduce and the i
 - SMS parsing that could be abused (for example, regex denial of service from a crafted SMS)
 - APKs not signed with the published certificate
 
+## Permissions
+- `INTERNET`: used only by the optional bring-your-own-AI chat, to reach the endpoint you configure. With AI set to "none", nothing uses it.
+- `READ_SMS` / `RECEIVE_SMS`: requested only when you turn on automatic SMS reading.
+- `POST_NOTIFICATIONS`: requested only when you turn on background SMS reading.
+- `USE_BIOMETRIC`: the app lock.
+
 ## Release signing certificate
 SHA-256: `8f:f0:2c:bd:66:51:24:b4:4d:1c:78:b4:e5:f5:d9:b3:dd:ac:12:24:95:4e:2c:60:ee:ef:fd:5c:ef:c4:18:9e`
 

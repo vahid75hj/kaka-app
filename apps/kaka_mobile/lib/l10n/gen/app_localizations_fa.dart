@@ -832,4 +832,7 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get defaultIcon => 'آیکون پیش‌فرض';
+
+  @override
+  String get aiInsecureUrl => 'رمزنگاری نشده: برای سرور بیرون از شبکهٔ خانه از https:// استفاده کن.';
 }

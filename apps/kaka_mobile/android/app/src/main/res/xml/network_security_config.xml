@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Kaka's only network use is the AI endpoint the user types in (often Ollama over http on the LAN).
+     Cleartext is allowed for that; the AI settings screen warns when a non-local URL is not https. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system"/>
+        </trust-anchors>
+    </base-config>
+</network-security-config>

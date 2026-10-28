@@ -1645,6 +1645,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Default icon'**
   String get defaultIcon;
+
+  /// No description provided for @aiInsecureUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Not encrypted: use https:// for servers outside your home network.'**
+  String get aiInsecureUrl;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
