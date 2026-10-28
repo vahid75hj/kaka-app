@@ -74,7 +74,7 @@ Phases: **MVP-1** = first usable APK · **MVP-2** = v0.1 feature-complete · **L
 - [ ] Fill `model_catalog/catalog.v1.json` after on-device benchmark
 - [x] `tools/kaka_mcp`: read-only desktop MCP server (stdio) over `.kaka` backups (RAM-only, masked, password via env/file)
 - [ ] Google Sheets mirror + Inbox tab (`drive.file`), `kaka-mcp --sheet`
-- [ ] Persian eval set + CI eval on Ollama
+- [x] Persian eval set (30 cases) + `tools/kaka_eval` runner; CI recipe in docs/ci/eval.yml (not yet run on a real model)
 - [ ] llama.cpp (GGUF) runtime, Android AppFunctions, iOS/desktop, Excel (.xlsx) import, LAN/QR transfer
 
 ## Spikes / open questions

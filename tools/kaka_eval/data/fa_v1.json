@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "notes": "Today is 2026-10-23 (1 Aban 1405). Rial accounts take amounts in rial: 1 toman = 10 rial. Colloquial \"۸۵ تومن\" for everyday items means 85 thousand toman, as Iranians say it. See lib/src/fixture.dart for the ledger.",
+  "cases": [
+    {"id": "add_expense_toman", "prompt": "۱۲۰ هزار تومن ناهار دادم با کارت ملت", "tool": "add_transaction", "args": {"kind": "expense", "account": "کارت ملت", "amount": "1200000"}},
+    {"id": "add_expense_rial", "prompt": "۵۰۰٬۰۰۰ ریال از کیف پول دادم تاکسی", "tool": "add_transaction", "args": {"kind": "expense", "account": "کیف پول", "amount": "500000"}},
+    {"id": "add_expense_colloquial", "prompt": "یه قهوه گرفتم ۸۵ تومن، نقدی", "tool": "add_transaction", "args": {"kind": "expense", "account": "کیف پول", "amount": "850000"}},
+    {"id": "add_expense_million", "prompt": "اجاره این ماه رو دادم، ۱۵ میلیون تومن از کارت ملت", "tool": "add_transaction", "args": {"kind": "expense", "account": "کارت ملت", "amount": "150000000"}},
+    {"id": "add_expense_latin_digits", "prompt": "25000 تومان شارژ موبایل خریدم با کارت ملت", "tool": "add_transaction", "args": {"kind": "expense", "account": "کارت ملت", "amount": "250000"}},
+    {"id": "add_expense_category", "prompt": "قبض گاز ۳۰۰ هزار تومن شد، از کارت ملت پرداخت کردم. دسته‌اش قبوض", "tool": "add_transaction", "args": {"kind": "expense", "account": "کارت ملت", "amount": "3000000", "category": "قبوض"}},
+    {"id": "add_expense_yesterday", "prompt": "دیروز ۲۰۰ تومن نون خریدم نقد", "tool": "add_transaction", "args": {"kind": "expense", "account": "کیف پول", "amount": "2000000", "date": "2026-10-22"}},
+    {"id": "add_expense_usd", "prompt": "اشتراک نتفلیکس ۱۵.۴۹ دلار از حساب دلاری کم شد", "tool": "add_transaction", "args": {"kind": "expense", "account": "حساب دلاری", "amount": "15.49"}},
+    {"id": "add_income_salary", "prompt": "حقوقم اومد، ۴۵ میلیون تومن به کارت ملت", "tool": "add_transaction", "args": {"kind": "income", "account": "کارت ملت", "amount": "450000000"}},
+    {"id": "add_income_gift", "prompt": "مامانم یک میلیون تومن بهم کادو داد، گذاشتم تو کیف پولم", "tool": "add_transaction", "args": {"kind": "income", "account": "کیف پول", "amount": "10000000"}},
+    {"id": "add_income_freelance", "prompt": "بابت پروژه ۲ میلیون و ۵۰۰ تومن واریز شد به کارت ملت", "tool": "add_transaction", "args": {"kind": "income", "account": "کارت ملت", "amount": "25000000"}},
+    {"id": "add_transfer_atm", "prompt": "۵۰۰ تومن از کارت ملت نقد گرفتم (عابربانک)", "tool": "add_transaction", "args": {"kind": "transfer", "account": "کارت ملت", "to_account": "کیف پول", "amount": "5000000"}},
+    {"id": "add_transfer_deposit", "prompt": "یک میلیون نقدی رو ریختم به کارت ملت", "tool": "add_transaction", "args": {"kind": "transfer", "account": "کیف پول", "to_account": "کارت ملت", "amount": "10000000"}},
+    {"id": "add_note", "prompt": "۹۵ تومن کتاب «صد سال تنهایی» خریدم با کارت ملت", "tool": "add_transaction", "args": {"kind": "expense", "amount": "950000", "note": "صد سال تنهایی"}},
+    {"id": "add_hezar_rial", "prompt": "۳۵۰ هزار ریال پارکینگ دادم نقدی", "tool": "add_transaction", "args": {"kind": "expense", "account": "کیف پول", "amount": "350000"}},
+    {"id": "add_toman_suffix", "prompt": "خرید میوه ۴۸۰ تومنی، کارت ملت", "tool": "add_transaction", "args": {"kind": "expense", "account": "کارت ملت", "amount": "4800000"}},
+
+    {"id": "read_balance_all", "prompt": "الان چقدر پول دارم؟", "tool": "get_balance", "forbid": ["add_transaction"]},
+    {"id": "read_balance_one", "prompt": "موجودی کارت ملتم چنده؟", "tool": "get_balance", "args": {"account": "کارت ملت"}, "forbid": ["add_transaction"]},
+    {"id": "read_accounts", "prompt": "چه حساب‌هایی ثبت کردم؟", "tool": "list_accounts", "forbid": ["add_transaction"]},
+    {"id": "read_spending_month", "prompt": "این ماه (اکتبر) برای چی بیشتر خرج کردم؟", "tool": "summarize_spending", "args": {"from": "2026-10-01"}, "forbid": ["add_transaction"]},
+    {"id": "read_spending_week", "prompt": "هفته‌ی گذشته چقدر خرج کردم؟", "tool": "summarize_spending", "forbid": ["add_transaction"]},
+    {"id": "read_txn_search", "prompt": "اسنپ‌هام رو نشون بده", "tool": "list_transactions", "args": {"query": "اسنپ"}, "forbid": ["add_transaction"]},
+    {"id": "read_txn_recent", "prompt": "آخرین تراکنش‌هام چی بوده؟", "tool": "list_transactions", "forbid": ["add_transaction"]},
+    {"id": "read_txn_account", "prompt": "تراکنش‌های کیف پولم رو بگو", "tool": "list_transactions", "args": {"account": "کیف پول"}, "forbid": ["add_transaction"]},
+    {"id": "read_budget", "prompt": "از بودجه‌ی غذام چقدر مونده؟", "tool": "list_budgets", "forbid": ["add_transaction"]},
+    {"id": "read_budget_over", "prompt": "از بودجه‌ام زدم بیرون؟", "tool": "list_budgets", "forbid": ["add_transaction"]},
+    {"id": "read_income", "prompt": "حقوق این ماهم کی اومد؟", "tool": "list_transactions", "forbid": ["add_transaction"]},
+
+    {"id": "no_write_greeting", "prompt": "سلام! خوبی؟", "forbid": ["add_transaction"]},
+    {"id": "no_write_advice", "prompt": "چطوری می‌تونم پس‌انداز کنم؟", "forbid": ["add_transaction"]},
+    {"id": "no_write_hypothetical", "prompt": "اگه ماهی ۲ میلیون پس‌انداز کنم یه سال دیگه چقدر دارم؟", "forbid": ["add_transaction"]}
+  ]
+}

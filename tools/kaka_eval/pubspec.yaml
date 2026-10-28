@@ -1,0 +1,25 @@
+name: kaka_eval
+description: Persian tool-calling eval for the AI models Kaka can use (Ollama, any OpenAI-compatible endpoint).
+publish_to: none
+version: 0.1.0
+resolution: workspace
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  kaka_ai:
+    path: ../../packages/kaka_ai
+  kaka_data:
+    path: ../../packages/kaka_data
+  kaka_domain:
+    path: ../../packages/kaka_domain
+  kaka_tools:
+    path: ../../packages/kaka_tools
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0
+
+executables:
+  kaka-eval: kaka_eval

@@ -6,3 +6,4 @@ export 'src/model_catalog.dart';
 export 'src/openai_compat_provider.dart';
 export 'src/tool_loop.dart';
 export 'src/model_download.dart';
+export 'src/prompt.dart';

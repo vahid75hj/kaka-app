@@ -24,12 +24,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   final _history = <ChatMessage>[];
   var _busy = false;
 
-  String get _system =>
-      'You are Kaka, a private personal-finance assistant inside an offline app. '
-      'Answer in the user\'s language (${ref.read(settingsProvider).isPersian ? 'Persian' : 'English'}). '
-      'Use the tools to read accounts and transactions; never invent numbers. '
-      'add_transaction only creates a draft the user must confirm in Kaka — say so. '
-      'Account and card numbers are masked; never ask for them. Today is ${DateTime.now().toIso8601String().substring(0, 10)}.';
+  String get _system => KakaPrompt.system(persian: ref.read(settingsProvider).isPersian, today: DateTime.now());
 
   @override
   void dispose() {

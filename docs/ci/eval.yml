@@ -1,0 +1,14 @@
+# Manual workflow: copy to .github/workflows/ (needs a token with `workflow` scope).
+name: ai-eval
+on: workflow_dispatch
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+      - run: curl -fsSL https://ollama.com/install.sh | sh
+      - run: ollama serve & sleep 5 && ollama pull qwen2.5:1.5b
+      - run: dart pub get && cd tools/kaka_eval && dart run kaka_eval --model qwen2.5:1.5b --out report.json || true
+      - uses: actions/upload-artifact@v4
+        with: { name: eval-report, path: tools/kaka_eval/report.json }

@@ -12,6 +12,7 @@ workspace:
   - packages/kaka_ai
   - apps/kaka_mobile
   - tools/kaka_mcp
+  - tools/kaka_eval
 
 dev_dependencies:
   melos: ^7.0.0
