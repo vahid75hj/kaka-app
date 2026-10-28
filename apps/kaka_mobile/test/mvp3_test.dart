@@ -121,4 +121,41 @@ void main() {
     final listed = await maskedTool(runner, 'list_accounts', {});
     expect(jsonEncode(listed), isNot(contains(RegExp(r'\d{8,}'))));
   });
+
+  test('gold bought from an account: cash leaves, net worth = cash + market value, void restores', () async {
+    final ledger = container.read(ledgerProvider);
+    final wallet = await ledger.createAccount(
+      name: 'کیف',
+      type: AccountType.asset,
+      currency: Currency.irr,
+      openingBalance: const Money(10000000, Currency.irr),
+    );
+    await container.read(assetRepositoryProvider).ensureBuiltIns();
+    final m = await container
+        .read(assetTradingProvider)
+        .trade(
+          assetTypeId: 'gold18',
+          quantityMilli: 2000,
+          buy: true,
+          total: const Money(8000000, Currency.irr),
+          cash: wallet,
+        );
+    final assets = container.read(assetRepositoryProvider);
+    await assets.upsertPrice(
+      AssetPrice(id: 'p', assetTypeId: 'gold18', date: DateTime(2026), price: const Money(4500000, Currency.irr)),
+    );
+    final holdings = AssetMath.holdings(
+      await assets.watchTypes().first,
+      await assets.watchMovements().first,
+      await assets.watchPrices().first,
+    );
+    final balances = await ledger.watchBalances().first;
+    expect(balances.firstWhere((b) => b.account.id == wallet.id).balance.minor, 2000000);
+    expect(NetWorth.of(balances, holdings, CurrencyConverter(Currency.irr, const [])).total.minor, 2000000 + 9000000);
+
+    await container.read(assetTradingProvider).voidMovement(m);
+    final after = await ledger.watchBalances().first;
+    expect(after.firstWhere((b) => b.account.id == wallet.id).balance.minor, 10000000);
+    expect((await assets.watchMovements().first).single.voidedAt, isNotNull);
+  });
 }

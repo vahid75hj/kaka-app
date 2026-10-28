@@ -20,7 +20,7 @@ class HomeScreen extends ConsumerWidget {
     final c = KakaColors.of(context);
     final f = ref.watch(formatProvider);
     final summary = ref.watch(homeSummaryProvider);
-    final recent = ref.watch(transactionViewsProvider(l.opening)).take(5).toList();
+    final recent = ref.watch(transactionViewsProvider((opening: l.opening, asset: l.goldAndCoins))).take(5).toList();
     final now = DateTime.now();
     final pending = ref.watch(pendingDraftsProvider).value?.length ?? 0;
 

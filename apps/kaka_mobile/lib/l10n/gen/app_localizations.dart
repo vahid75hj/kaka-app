@@ -1501,6 +1501,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rates are old ({date})'**
   String ratesStale(String date);
+
+  /// No description provided for @payFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid from account'**
+  String get payFrom;
+
+  /// No description provided for @receiveInto.
+  ///
+  /// In en, this message translates to:
+  /// **'Received into account'**
+  String get receiveInto;
+
+  /// No description provided for @noCashAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'None (holdings only)'**
+  String get noCashAccount;
+
+  /// No description provided for @errTotalRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the total to move money'**
+  String get errTotalRequired;
+
+  /// No description provided for @errSellMoreThanHeld.
+  ///
+  /// In en, this message translates to:
+  /// **'You hold only {held}'**
+  String errSellMoreThanHeld(Object held);
+
+  /// No description provided for @assetHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get assetHistory;
+
+  /// No description provided for @assetVoidBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Void this movement? Linked cash is returned too.'**
+  String get assetVoidBody;
+
+  /// No description provided for @goldAndCoins.
+  ///
+  /// In en, this message translates to:
+  /// **'Gold & coins'**
+  String get goldAndCoins;
+
+  /// No description provided for @estimateFromPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimate: {amount}'**
+  String estimateFromPrice(Object amount);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

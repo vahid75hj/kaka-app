@@ -96,9 +96,34 @@ class LedgerService {
     ),
   );
 
+  /// Cash side of a gold/coin buy or sell. Returns the transaction id so the
+  /// asset movement can point at it.
+  Future<String> recordAssetTrade({
+    required Account cash,
+    required Money total,
+    required bool buy,
+    DateTime? at,
+    String note = '',
+  }) async {
+    final txn = TransactionFactory.assetTrade(
+      cash: cash,
+      holdings: await _systemEquity('Assets:${total.currency.code}', total.currency),
+      total: total,
+      buy: buy,
+      at: at ?? _now(),
+      note: note,
+    );
+    await _record(txn);
+    return txn.id;
+  }
+
+  /// Voids by id (used when the linked asset movement is voided).
+  Future<void> voidById(String id) => _transactions.markVoided(id, _now());
+
   /// The system `FX:<cur>` equity account for [currency].
-  Future<Account> fxAccount(Currency currency) async {
-    final name = 'FX:${currency.code}';
+  Future<Account> fxAccount(Currency currency) => _systemEquity('FX:${currency.code}', currency);
+
+  Future<Account> _systemEquity(String name, Currency currency) async {
     final all = await _accounts.getAll();
     final found = all.where((a) => a.isSystem && a.name == name && a.currency == currency);
     if (found.isNotEmpty) return found.first;
@@ -213,19 +238,6 @@ class LedgerService {
     await _transactions.insert(txn);
   }
 
-  Future<Account> _openingEquity(Currency currency) async {
-    final all = await _accounts.getAll();
-    final found = all.where((a) => a.isSystem && a.type == AccountType.equity && a.currency == currency);
-    if (found.isNotEmpty) return found.first;
-    final equity = Account(
-      id: Ids.next(),
-      name: 'Opening balances ${currency.code}',
-      type: AccountType.equity,
-      currency: currency,
-      createdAt: _now(),
-      isSystem: true,
-    );
-    await _accounts.upsert(equity);
-    return equity;
-  }
+  /// Matched by name: `FX:<cur>` and `Assets:<cur>` are system equity too.
+  Future<Account> _openingEquity(Currency currency) => _systemEquity('Opening balances ${currency.code}', currency);
 }

@@ -97,4 +97,29 @@ void main() {
     final snap = await LedgerSnapshot(db).export();
     expect((snap['tables'] as Map).keys, containsAll(['fx_rates', 'asset_movements', 'custom_parsers']));
   });
+
+  test('v4 database (Kaka 0.4.0) upgrades to v5: movements keep rows, gain transaction_id', () async {
+    final dir = Directory.systemTemp.createTempSync('kaka_mig5');
+    addTearDown(() => dir.deleteSync(recursive: true));
+    final file = File('${dir.path}/l.db');
+    var db = KakaDatabase.open(file, key: 'k');
+    await DriftAssetRepository(db).ensureBuiltIns();
+    await db.customStatement('ALTER TABLE asset_movements DROP COLUMN transaction_id');
+    await db.customStatement(
+      "INSERT INTO asset_movements (id, asset_type_id, quantity_milli, moved_at, note) VALUES ('old', 'gold18', 1500, 0, '')",
+    );
+    await db.customStatement('PRAGMA user_version = 4');
+    await db.close();
+
+    db = KakaDatabase.open(file, key: 'k');
+    addTearDown(db.close);
+    final assets = DriftAssetRepository(db);
+    await assets.insertMovement(
+      AssetMovement(id: 'new', assetTypeId: 'gold18', quantityMilli: 500, date: DateTime(2026), transactionId: 't1'),
+    );
+    final all = {for (final m in await assets.watchMovements().first) m.id: m};
+    expect(all['old']!.quantityMilli, 1500);
+    expect(all['old']!.transactionId, isNull);
+    expect(all['new']!.transactionId, 't1');
+  });
 }

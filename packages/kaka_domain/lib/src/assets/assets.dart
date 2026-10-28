@@ -1,5 +1,9 @@
 import 'package:meta/meta.dart';
 
+import '../failures.dart';
+import '../ids.dart';
+import '../ledger/account.dart';
+import '../ledger/ledger_service.dart';
 import '../money/money.dart';
 
 enum AssetUnit { gram, coin }
@@ -43,8 +47,12 @@ class AssetMovement {
     this.total,
     this.note = '',
     this.voidedAt,
+    this.transactionId,
   });
   final String id;
+
+  /// Ledger transaction that moved the cash, when paid from / into an account.
+  final String? transactionId;
   final String assetTypeId;
   final int quantityMilli;
   final DateTime date;
@@ -61,6 +69,56 @@ class AssetPrice {
   final String assetTypeId;
   final DateTime date;
   final Money price;
+}
+
+/// Buy/sell use case: the holding change and (optionally) the cash side.
+class AssetTrading {
+  AssetTrading(this._assets, this._ledger, {DateTime Function()? clock}) : _now = clock ?? DateTime.now;
+  final AssetRepository _assets;
+  final LedgerService _ledger;
+  final DateTime Function() _now;
+
+  /// [quantityMilli] is positive; [buy] decides the sign. When [cash] is given,
+  /// [total] is required and must be in the account's currency.
+  Future<AssetMovement> trade({
+    required String assetTypeId,
+    required int quantityMilli,
+    required bool buy,
+    Money? total,
+    Account? cash,
+    int heldMilli = 0,
+    DateTime? at,
+    String note = '',
+  }) async {
+    if (quantityMilli <= 0) throw const DomainException('asset.bad_quantity');
+    if (!buy && quantityMilli > heldMilli) throw const DomainException('asset.sell_more_than_held');
+    if (total != null && !total.isPositive) throw const DomainException('amount.not_positive');
+    final when = at ?? _now();
+    String? txnId;
+    if (cash != null) {
+      if (total == null) throw const DomainException('asset.total_required');
+      if (total.currency != cash.currency) throw const DomainException('ledger.currency_mismatch');
+      txnId = await _ledger.recordAssetTrade(cash: cash, total: total, buy: buy, at: when, note: note);
+    }
+    final m = AssetMovement(
+      id: Ids.next(),
+      assetTypeId: assetTypeId,
+      quantityMilli: buy ? quantityMilli : -quantityMilli,
+      date: when,
+      total: total,
+      note: note.trim(),
+      transactionId: txnId,
+    );
+    await _assets.insertMovement(m);
+    return m;
+  }
+
+  /// Voids the movement and its cash transaction together.
+  Future<void> voidMovement(AssetMovement m) async {
+    if (m.voidedAt != null) return;
+    if (m.transactionId != null) await _ledger.voidById(m.transactionId!);
+    await _assets.voidMovement(m.id, _now());
+  }
 }
 
 abstract interface class AssetRepository {

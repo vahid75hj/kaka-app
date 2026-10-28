@@ -12,7 +12,12 @@ class TransactionView {
   /// transfers unsigned.
   final Money amount;
 
-  static TransactionView of(LedgerTransaction t, Map<String, Account> accounts, {required String openingLabel}) {
+  static TransactionView of(
+    LedgerTransaction t,
+    Map<String, Account> accounts, {
+    required String openingLabel,
+    String assetLabel = 'Gold & coins',
+  }) {
     Account? acc(Posting p) => accounts[p.accountId];
     final debit = t.postings.firstWhere((p) => p.amount.isPositive);
     final credit = t.postings.firstWhere((p) => p.amount.isNegative);
@@ -45,6 +50,18 @@ class TransactionView {
         final out = user.where((p) => p.amount.isNegative).firstOrNull ?? credit;
         final route = '${acc(out)?.name ?? '?'} → ${acc(into)?.name ?? '?'}';
         return TransactionView(txn: t, title: withNote(route), subtitle: route, amount: into.amount);
+      }(),
+      // Buy: cash → Assets:<cur>; sell: Assets:<cur> → cash. Signed like income/expense.
+      TransactionKind.asset => () {
+        final buy = acc(debit)?.isSystem ?? false;
+        final cash = buy ? credit : debit;
+        final name = acc(cash)?.name ?? '?';
+        return TransactionView(
+          txn: t,
+          title: withNote(assetLabel),
+          subtitle: t.note.isEmpty ? name : '$assetLabel · $name',
+          amount: cash.amount,
+        );
       }(),
       TransactionKind.opening => TransactionView(
         txn: t,

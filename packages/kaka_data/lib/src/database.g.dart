@@ -2941,6 +2941,15 @@ class $AssetMovementsTable extends AssetMovements with TableInfo<$AssetMovements
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _transactionIdMeta = const VerificationMeta('transactionId');
+  @override
+  late final GeneratedColumn<String> transactionId = GeneratedColumn<String>(
+    'transaction_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -2951,6 +2960,7 @@ class $AssetMovementsTable extends AssetMovements with TableInfo<$AssetMovements
     totalCurrency,
     note,
     voidedAt,
+    transactionId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2999,6 +3009,12 @@ class $AssetMovementsTable extends AssetMovements with TableInfo<$AssetMovements
     if (data.containsKey('voided_at')) {
       context.handle(_voidedAtMeta, voidedAt.isAcceptableOrUnknown(data['voided_at']!, _voidedAtMeta));
     }
+    if (data.containsKey('transaction_id')) {
+      context.handle(
+        _transactionIdMeta,
+        transactionId.isAcceptableOrUnknown(data['transaction_id']!, _transactionIdMeta),
+      );
+    }
     return context;
   }
 
@@ -3016,6 +3032,7 @@ class $AssetMovementsTable extends AssetMovements with TableInfo<$AssetMovements
       totalCurrency: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}total_currency']),
       note: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}note'])!,
       voidedAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}voided_at']),
+      transactionId: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}transaction_id']),
     );
   }
 
@@ -3034,6 +3051,9 @@ class AssetMovementRow extends DataClass implements Insertable<AssetMovementRow>
   final String? totalCurrency;
   final String note;
   final DateTime? voidedAt;
+
+  /// v5: the ledger transaction that moved cash for this buy/sell.
+  final String? transactionId;
   const AssetMovementRow({
     required this.id,
     required this.assetTypeId,
@@ -3043,6 +3063,7 @@ class AssetMovementRow extends DataClass implements Insertable<AssetMovementRow>
     this.totalCurrency,
     required this.note,
     this.voidedAt,
+    this.transactionId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3061,6 +3082,9 @@ class AssetMovementRow extends DataClass implements Insertable<AssetMovementRow>
     if (!nullToAbsent || voidedAt != null) {
       map['voided_at'] = Variable<DateTime>(voidedAt);
     }
+    if (!nullToAbsent || transactionId != null) {
+      map['transaction_id'] = Variable<String>(transactionId);
+    }
     return map;
   }
 
@@ -3074,6 +3098,7 @@ class AssetMovementRow extends DataClass implements Insertable<AssetMovementRow>
       totalCurrency: totalCurrency == null && nullToAbsent ? const Value.absent() : Value(totalCurrency),
       note: Value(note),
       voidedAt: voidedAt == null && nullToAbsent ? const Value.absent() : Value(voidedAt),
+      transactionId: transactionId == null && nullToAbsent ? const Value.absent() : Value(transactionId),
     );
   }
 
@@ -3088,6 +3113,7 @@ class AssetMovementRow extends DataClass implements Insertable<AssetMovementRow>
       totalCurrency: serializer.fromJson<String?>(json['totalCurrency']),
       note: serializer.fromJson<String>(json['note']),
       voidedAt: serializer.fromJson<DateTime?>(json['voidedAt']),
+      transactionId: serializer.fromJson<String?>(json['transactionId']),
     );
   }
   @override
@@ -3102,6 +3128,7 @@ class AssetMovementRow extends DataClass implements Insertable<AssetMovementRow>
       'totalCurrency': serializer.toJson<String?>(totalCurrency),
       'note': serializer.toJson<String>(note),
       'voidedAt': serializer.toJson<DateTime?>(voidedAt),
+      'transactionId': serializer.toJson<String?>(transactionId),
     };
   }
 
@@ -3114,6 +3141,7 @@ class AssetMovementRow extends DataClass implements Insertable<AssetMovementRow>
     Value<String?> totalCurrency = const Value.absent(),
     String? note,
     Value<DateTime?> voidedAt = const Value.absent(),
+    Value<String?> transactionId = const Value.absent(),
   }) => AssetMovementRow(
     id: id ?? this.id,
     assetTypeId: assetTypeId ?? this.assetTypeId,
@@ -3123,6 +3151,7 @@ class AssetMovementRow extends DataClass implements Insertable<AssetMovementRow>
     totalCurrency: totalCurrency.present ? totalCurrency.value : this.totalCurrency,
     note: note ?? this.note,
     voidedAt: voidedAt.present ? voidedAt.value : this.voidedAt,
+    transactionId: transactionId.present ? transactionId.value : this.transactionId,
   );
   AssetMovementRow copyWithCompanion(AssetMovementsCompanion data) {
     return AssetMovementRow(
@@ -3134,6 +3163,7 @@ class AssetMovementRow extends DataClass implements Insertable<AssetMovementRow>
       totalCurrency: data.totalCurrency.present ? data.totalCurrency.value : this.totalCurrency,
       note: data.note.present ? data.note.value : this.note,
       voidedAt: data.voidedAt.present ? data.voidedAt.value : this.voidedAt,
+      transactionId: data.transactionId.present ? data.transactionId.value : this.transactionId,
     );
   }
 
@@ -3147,13 +3177,15 @@ class AssetMovementRow extends DataClass implements Insertable<AssetMovementRow>
           ..write('totalMinor: $totalMinor, ')
           ..write('totalCurrency: $totalCurrency, ')
           ..write('note: $note, ')
-          ..write('voidedAt: $voidedAt')
+          ..write('voidedAt: $voidedAt, ')
+          ..write('transactionId: $transactionId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, assetTypeId, quantityMilli, movedAt, totalMinor, totalCurrency, note, voidedAt);
+  int get hashCode =>
+      Object.hash(id, assetTypeId, quantityMilli, movedAt, totalMinor, totalCurrency, note, voidedAt, transactionId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3165,7 +3197,8 @@ class AssetMovementRow extends DataClass implements Insertable<AssetMovementRow>
           other.totalMinor == this.totalMinor &&
           other.totalCurrency == this.totalCurrency &&
           other.note == this.note &&
-          other.voidedAt == this.voidedAt);
+          other.voidedAt == this.voidedAt &&
+          other.transactionId == this.transactionId);
 }
 
 class AssetMovementsCompanion extends UpdateCompanion<AssetMovementRow> {
@@ -3177,6 +3210,7 @@ class AssetMovementsCompanion extends UpdateCompanion<AssetMovementRow> {
   final Value<String?> totalCurrency;
   final Value<String> note;
   final Value<DateTime?> voidedAt;
+  final Value<String?> transactionId;
   final Value<int> rowid;
   const AssetMovementsCompanion({
     this.id = const Value.absent(),
@@ -3187,6 +3221,7 @@ class AssetMovementsCompanion extends UpdateCompanion<AssetMovementRow> {
     this.totalCurrency = const Value.absent(),
     this.note = const Value.absent(),
     this.voidedAt = const Value.absent(),
+    this.transactionId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   AssetMovementsCompanion.insert({
@@ -3198,6 +3233,7 @@ class AssetMovementsCompanion extends UpdateCompanion<AssetMovementRow> {
     this.totalCurrency = const Value.absent(),
     this.note = const Value.absent(),
     this.voidedAt = const Value.absent(),
+    this.transactionId = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        assetTypeId = Value(assetTypeId),
@@ -3212,6 +3248,7 @@ class AssetMovementsCompanion extends UpdateCompanion<AssetMovementRow> {
     Expression<String>? totalCurrency,
     Expression<String>? note,
     Expression<DateTime>? voidedAt,
+    Expression<String>? transactionId,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -3223,6 +3260,7 @@ class AssetMovementsCompanion extends UpdateCompanion<AssetMovementRow> {
       if (totalCurrency != null) 'total_currency': totalCurrency,
       if (note != null) 'note': note,
       if (voidedAt != null) 'voided_at': voidedAt,
+      if (transactionId != null) 'transaction_id': transactionId,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -3236,6 +3274,7 @@ class AssetMovementsCompanion extends UpdateCompanion<AssetMovementRow> {
     Value<String?>? totalCurrency,
     Value<String>? note,
     Value<DateTime?>? voidedAt,
+    Value<String?>? transactionId,
     Value<int>? rowid,
   }) {
     return AssetMovementsCompanion(
@@ -3247,6 +3286,7 @@ class AssetMovementsCompanion extends UpdateCompanion<AssetMovementRow> {
       totalCurrency: totalCurrency ?? this.totalCurrency,
       note: note ?? this.note,
       voidedAt: voidedAt ?? this.voidedAt,
+      transactionId: transactionId ?? this.transactionId,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -3278,6 +3318,9 @@ class AssetMovementsCompanion extends UpdateCompanion<AssetMovementRow> {
     if (voidedAt.present) {
       map['voided_at'] = Variable<DateTime>(voidedAt.value);
     }
+    if (transactionId.present) {
+      map['transaction_id'] = Variable<String>(transactionId.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -3295,6 +3338,7 @@ class AssetMovementsCompanion extends UpdateCompanion<AssetMovementRow> {
           ..write('totalCurrency: $totalCurrency, ')
           ..write('note: $note, ')
           ..write('voidedAt: $voidedAt, ')
+          ..write('transactionId: $transactionId, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -5749,6 +5793,7 @@ typedef $$AssetMovementsTableCreateCompanionBuilder =
       Value<String?> totalCurrency,
       Value<String> note,
       Value<DateTime?> voidedAt,
+      Value<String?> transactionId,
       Value<int> rowid,
     });
 typedef $$AssetMovementsTableUpdateCompanionBuilder =
@@ -5761,6 +5806,7 @@ typedef $$AssetMovementsTableUpdateCompanionBuilder =
       Value<String?> totalCurrency,
       Value<String> note,
       Value<DateTime?> voidedAt,
+      Value<String?> transactionId,
       Value<int> rowid,
     });
 
@@ -5807,6 +5853,9 @@ class $$AssetMovementsTableFilterComposer extends Composer<_$KakaDatabase, $Asse
 
   ColumnFilters<DateTime> get voidedAt =>
       $composableBuilder(column: $table.voidedAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get transactionId =>
+      $composableBuilder(column: $table.transactionId, builder: (column) => ColumnFilters(column));
 
   $$AssetTypesTableFilterComposer get assetTypeId {
     final $$AssetTypesTableFilterComposer composer = $composerBuilder(
@@ -5855,6 +5904,9 @@ class $$AssetMovementsTableOrderingComposer extends Composer<_$KakaDatabase, $As
   ColumnOrderings<DateTime> get voidedAt =>
       $composableBuilder(column: $table.voidedAt, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<String> get transactionId =>
+      $composableBuilder(column: $table.transactionId, builder: (column) => ColumnOrderings(column));
+
   $$AssetTypesTableOrderingComposer get assetTypeId {
     final $$AssetTypesTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -5897,6 +5949,9 @@ class $$AssetMovementsTableAnnotationComposer extends Composer<_$KakaDatabase, $
   GeneratedColumn<String> get note => $composableBuilder(column: $table.note, builder: (column) => column);
 
   GeneratedColumn<DateTime> get voidedAt => $composableBuilder(column: $table.voidedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get transactionId =>
+      $composableBuilder(column: $table.transactionId, builder: (column) => column);
 
   $$AssetTypesTableAnnotationComposer get assetTypeId {
     final $$AssetTypesTableAnnotationComposer composer = $composerBuilder(
@@ -5950,6 +6005,7 @@ class $$AssetMovementsTableTableManager
                 Value<String?> totalCurrency = const Value.absent(),
                 Value<String> note = const Value.absent(),
                 Value<DateTime?> voidedAt = const Value.absent(),
+                Value<String?> transactionId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AssetMovementsCompanion(
                 id: id,
@@ -5960,6 +6016,7 @@ class $$AssetMovementsTableTableManager
                 totalCurrency: totalCurrency,
                 note: note,
                 voidedAt: voidedAt,
+                transactionId: transactionId,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -5972,6 +6029,7 @@ class $$AssetMovementsTableTableManager
                 Value<String?> totalCurrency = const Value.absent(),
                 Value<String> note = const Value.absent(),
                 Value<DateTime?> voidedAt = const Value.absent(),
+                Value<String?> transactionId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => AssetMovementsCompanion.insert(
                 id: id,
@@ -5982,6 +6040,7 @@ class $$AssetMovementsTableTableManager
                 totalCurrency: totalCurrency,
                 note: note,
                 voidedAt: voidedAt,
+                transactionId: transactionId,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

@@ -100,6 +100,23 @@ abstract final class TransactionFactory {
     );
   }
 
+  /// Buying gold/coins: [cash] pays [total] into the system [holdings] account.
+  /// Selling: [cash] receives [total] from it.
+  static LedgerTransaction assetTrade({
+    required Account cash,
+    required Account holdings,
+    required Money total,
+    required bool buy,
+    required DateTime at,
+    String note = '',
+  }) {
+    _require(cash.type.isBalanceSheet, 'ledger.not_money_account');
+    _require(holdings.isSystem && holdings.type == AccountType.equity, 'ledger.not_holdings_account');
+    return buy
+        ? _pair(TransactionKind.asset, debit: holdings, credit: cash, amount: total, at: at, note: note)
+        : _pair(TransactionKind.asset, debit: cash, credit: holdings, amount: total, at: at, note: note);
+  }
+
   static LedgerTransaction _pair(
     TransactionKind kind, {
     required Account debit,

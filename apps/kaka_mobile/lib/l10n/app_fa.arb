@@ -234,5 +234,14 @@
   "sampleN": "نمونهٔ {n}",
   "sampleNotRead": "نمونهٔ {n} خونده نشد",
   "ratesAsOf": "نرخ‌ها تا {date}",
-  "ratesStale": "نرخ‌ها قدیمی‌ان ({date})"
+  "ratesStale": "نرخ‌ها قدیمی‌ان ({date})",
+  "payFrom": "پرداخت از حساب",
+  "receiveInto": "واریز به حساب",
+  "noCashAccount": "هیچ‌کدام (فقط موجودی طلا)",
+  "errTotalRequired": "برای جابه‌جایی پول، مبلغ کل رو وارد کن",
+  "errSellMoreThanHeld": "فقط {held} داری",
+  "assetHistory": "سابقه",
+  "assetVoidBody": "این مورد باطل بشه؟ پولِ مرتبط هم برمی‌گرده.",
+  "goldAndCoins": "طلا و سکه",
+  "estimateFromPrice": "تخمین: {amount}"
 }

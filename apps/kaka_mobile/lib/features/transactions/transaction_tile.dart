@@ -20,6 +20,7 @@ class TransactionTile extends ConsumerWidget {
     TransactionKind.transfer => Icons.swap_horiz_rounded,
     TransactionKind.exchange => Icons.currency_exchange_rounded,
     TransactionKind.opening => Icons.flag_outlined,
+    TransactionKind.asset => Icons.toll_outlined,
   };
 
   Future<void> _confirmVoid(BuildContext context, WidgetRef ref) async {
@@ -43,6 +44,7 @@ class TransactionTile extends ConsumerWidget {
     final c = KakaColors.of(context);
     final f = ref.watch(formatProvider);
     final voided = view.txn.isVoided;
+    final isAsset = view.txn.kind == TransactionKind.asset;
     final color = voided
         ? c.textFaint
         : switch (view.txn.kind) {
@@ -53,10 +55,12 @@ class TransactionTile extends ConsumerWidget {
     final strike = voided ? TextDecoration.lineThrough : null;
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-      onLongPress: voided ? null : () => _confirmVoid(context, ref),
+      // Gold/coin cash legs are owned by their asset movement: manage them there
+      // so the holding and the cash are voided together.
+      onLongPress: voided || isAsset ? null : () => _confirmVoid(context, ref),
       onTap: voided || view.txn.kind == TransactionKind.opening
           ? null
-          : () => context.push(Routes.editTransaction(view.txn.id)),
+          : () => context.push(isAsset ? Routes.assets : Routes.editTransaction(view.txn.id)),
       leading: Container(
         width: 42,
         height: 42,
@@ -80,7 +84,7 @@ class TransactionTile extends ConsumerWidget {
         style: TextStyle(color: c.textMuted, fontSize: 12),
       ),
       trailing: AmountText(
-        f.money(view.amount, signed: view.txn.kind == TransactionKind.income),
+        f.money(view.amount, signed: view.txn.kind == TransactionKind.income || (isAsset && view.amount.isPositive)),
         color: color,
         style: TextStyle(fontSize: 14.5, decoration: strike),
       ),
@@ -89,9 +93,14 @@ class TransactionTile extends ConsumerWidget {
 }
 
 /// Builds tiles for [txns] once accounts are known.
-final transactionViewsProvider = Provider.family<List<TransactionView>, String>((ref, openingLabel) {
+final transactionViewsProvider = Provider.family<List<TransactionView>, ({String opening, String asset})>((
+  ref,
+  labels,
+) {
   final accounts = {for (final a in ref.watch(accountsProvider).value ?? const <Account>[]) a.id: a};
   final txns = ref.watch(transactionsProvider).value ?? const <LedgerTransaction>[];
   if (accounts.isEmpty) return const [];
-  return [for (final t in txns) TransactionView.of(t, accounts, openingLabel: openingLabel)];
+  return [
+    for (final t in txns) TransactionView.of(t, accounts, openingLabel: labels.opening, assetLabel: labels.asset),
+  ];
 });

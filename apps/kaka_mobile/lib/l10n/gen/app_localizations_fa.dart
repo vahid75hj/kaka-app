@@ -749,4 +749,35 @@ class AppLocalizationsFa extends AppLocalizations {
   String ratesStale(String date) {
     return 'نرخ‌ها قدیمی‌ان ($date)';
   }
+
+  @override
+  String get payFrom => 'پرداخت از حساب';
+
+  @override
+  String get receiveInto => 'واریز به حساب';
+
+  @override
+  String get noCashAccount => 'هیچ‌کدام (فقط موجودی طلا)';
+
+  @override
+  String get errTotalRequired => 'برای جابه‌جایی پول، مبلغ کل رو وارد کن';
+
+  @override
+  String errSellMoreThanHeld(Object held) {
+    return 'فقط $held داری';
+  }
+
+  @override
+  String get assetHistory => 'سابقه';
+
+  @override
+  String get assetVoidBody => 'این مورد باطل بشه؟ پولِ مرتبط هم برمی‌گرده.';
+
+  @override
+  String get goldAndCoins => 'طلا و سکه';
+
+  @override
+  String estimateFromPrice(Object amount) {
+    return 'تخمین: $amount';
+  }
 }

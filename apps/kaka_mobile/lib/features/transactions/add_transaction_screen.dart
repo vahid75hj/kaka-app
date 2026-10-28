@@ -76,7 +76,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
           _toAccountId = debit.accountId;
           _amount.text = exactAmountText(-credit.amount, f.unitFor(credit.amount.currency));
           _toAmount.text = exactAmountText(debit.amount, f.unitFor(debit.amount.currency));
-        case TransactionKind.opening:
+        case TransactionKind.opening || TransactionKind.asset:
           break;
       }
     });
@@ -150,7 +150,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                 note: _note.text,
               );
             }
-          case TransactionKind.opening || TransactionKind.exchange:
+          case TransactionKind.opening || TransactionKind.exchange || TransactionKind.asset:
             break;
         }
       }

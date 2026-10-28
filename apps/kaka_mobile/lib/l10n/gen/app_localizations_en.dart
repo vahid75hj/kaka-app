@@ -758,4 +758,35 @@ class AppLocalizationsEn extends AppLocalizations {
   String ratesStale(String date) {
     return 'Rates are old ($date)';
   }
+
+  @override
+  String get payFrom => 'Paid from account';
+
+  @override
+  String get receiveInto => 'Received into account';
+
+  @override
+  String get noCashAccount => 'None (holdings only)';
+
+  @override
+  String get errTotalRequired => 'Enter the total to move money';
+
+  @override
+  String errSellMoreThanHeld(Object held) {
+    return 'You hold only $held';
+  }
+
+  @override
+  String get assetHistory => 'History';
+
+  @override
+  String get assetVoidBody => 'Void this movement? Linked cash is returned too.';
+
+  @override
+  String get goldAndCoins => 'Gold & coins';
+
+  @override
+  String estimateFromPrice(Object amount) {
+    return 'Estimate: $amount';
+  }
 }

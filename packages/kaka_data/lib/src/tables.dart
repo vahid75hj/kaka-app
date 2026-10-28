@@ -127,6 +127,9 @@ class AssetMovements extends Table {
   TextColumn get note => text().withDefault(const Constant(''))();
   DateTimeColumn get voidedAt => dateTime().nullable()();
 
+  /// v5: the ledger transaction that moved cash for this buy/sell.
+  TextColumn get transactionId => text().nullable()();
+
   @override
   Set<Column> get primaryKey => {id};
 }

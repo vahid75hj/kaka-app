@@ -42,7 +42,7 @@ class KakaDatabase extends _$KakaDatabase {
   }
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -65,6 +65,8 @@ class KakaDatabase extends _$KakaDatabase {
           await m.createTable(t);
         }
       }
+      // Tables created above already have the v5 column.
+      if (from == 4) await m.addColumn(assetMovements, assetMovements.transactionId);
     },
   );
 }

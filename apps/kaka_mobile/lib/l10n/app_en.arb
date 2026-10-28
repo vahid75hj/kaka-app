@@ -314,5 +314,24 @@
         "type": "String"
       }
     }
+  },
+  "payFrom": "Paid from account",
+  "receiveInto": "Received into account",
+  "noCashAccount": "None (holdings only)",
+  "errTotalRequired": "Enter the total to move money",
+  "errSellMoreThanHeld": "You hold only {held}",
+  "@errSellMoreThanHeld": {
+    "placeholders": {
+      "held": {}
+    }
+  },
+  "assetHistory": "History",
+  "assetVoidBody": "Void this movement? Linked cash is returned too.",
+  "goldAndCoins": "Gold & coins",
+  "estimateFromPrice": "Estimate: {amount}",
+  "@estimateFromPrice": {
+    "placeholders": {
+      "amount": {}
+    }
   }
 }

@@ -111,6 +111,9 @@ final assetRepositoryProvider = Provider<DriftAssetRepository>((ref) {
   repo.ensureBuiltIns().ignore();
   return repo;
 });
+final assetTradingProvider = Provider<AssetTrading>(
+  (ref) => AssetTrading(ref.watch(assetRepositoryProvider), ref.watch(ledgerProvider)),
+);
 final assetTypesProvider = StreamProvider<List<AssetType>>((ref) => ref.watch(assetRepositoryProvider).watchTypes());
 final assetMovementsProvider = StreamProvider<List<AssetMovement>>(
   (ref) => ref.watch(assetRepositoryProvider).watchMovements(),
