@@ -64,8 +64,9 @@ class BudgetsScreen extends ConsumerWidget {
                       onTap: () => context.push(
                         Routes.filteredTransactions,
                         extra: TransactionQuery(
-                          text: s.budget.category,
+                          category: s.budget.category,
                           kinds: const {TransactionKind.expense},
+                          showVoided: false,
                           from: f.startOfMonth(DateTime.now()),
                         ),
                       ),

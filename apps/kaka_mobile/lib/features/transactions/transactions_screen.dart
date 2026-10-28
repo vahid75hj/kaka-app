@@ -86,6 +86,15 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
+                if (_query.category != null)
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(end: 8),
+                    child: InputChip(
+                      avatar: const Icon(Icons.sell_outlined, size: 18),
+                      label: Text(_query.category!),
+                      onDeleted: () => setState(() => _query = _query.copyWith(category: () => null)),
+                    ),
+                  ),
                 for (final (k, label) in [
                   (TransactionKind.expense, l.expense),
                   (TransactionKind.income, l.income),

@@ -15,7 +15,11 @@ class TransactionQuery {
     this.from,
     this.to,
     this.showVoided = true,
+    this.category,
   });
+
+  /// Income/expense category by name (any currency).
+  final String? category;
 
   /// Matched (case-insensitive, digit-normalized) against note, account and category names.
   final String text;
@@ -32,7 +36,13 @@ class TransactionQuery {
   final bool showVoided;
 
   bool get isEmpty =>
-      text.trim().isEmpty && kinds.isEmpty && accountId == null && from == null && to == null && showVoided;
+      text.trim().isEmpty &&
+      kinds.isEmpty &&
+      accountId == null &&
+      from == null &&
+      to == null &&
+      showVoided &&
+      category == null;
 
   TransactionQuery copyWith({
     String? text,
@@ -41,6 +51,7 @@ class TransactionQuery {
     DateTime? Function()? from,
     DateTime? Function()? to,
     bool? showVoided,
+    String? Function()? category,
   }) => TransactionQuery(
     text: text ?? this.text,
     kinds: kinds ?? this.kinds,
@@ -48,6 +59,7 @@ class TransactionQuery {
     from: from != null ? from() : this.from,
     to: to != null ? to() : this.to,
     showVoided: showVoided ?? this.showVoided,
+    category: category != null ? category() : this.category,
   );
 
   static String _norm(String s) => Digits.normalize(s).replaceAll('ي', 'ی').replaceAll('ك', 'ک').toLowerCase().trim();
@@ -56,6 +68,13 @@ class TransactionQuery {
     if (!showVoided && t.isVoided) return false;
     if (kinds.isNotEmpty && !kinds.contains(t.kind)) return false;
     if (accountId != null && !t.postings.any((p) => p.accountId == accountId)) return false;
+    if (category != null &&
+        !t.postings.any((p) {
+          final a = accounts[p.accountId];
+          return a != null && !a.type.isBalanceSheet && !a.isSystem && a.name == category;
+        })) {
+      return false;
+    }
     if (from != null && t.occurredAt.isBefore(from!)) return false;
     if (to != null) {
       final end = DateTime(to!.year, to!.month, to!.day).add(const Duration(days: 1));

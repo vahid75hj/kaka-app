@@ -150,4 +150,17 @@ void main() {
     final usd = await ledger.ensureCategory('غذا', AccountType.expense, Currency.irr);
     expect(() => ledger.importRows(usd, rows, fallbackCategory: 'x'), throwsA(isA<DomainException>()));
   });
+
+  test('query by category name ignores notes that merely mention it', () async {
+    final accounts = _MemAccounts(), txns = _MemTxns();
+    final ledger = LedgerService(accounts, txns);
+    final card = await ledger.createAccount(name: 'کارت', type: AccountType.asset, currency: Currency.irr);
+    final food = await ledger.ensureCategory('غذا', AccountType.expense, Currency.irr);
+    final fun = await ledger.ensureCategory('تفریح', AccountType.expense, Currency.irr);
+    await ledger.recordExpense(from: card, category: food, amount: const Money(1, Currency.irr));
+    await ledger.recordExpense(from: card, category: fun, amount: const Money(2, Currency.irr), note: 'غذا با دوستان');
+    final byId = {for (final a in await accounts.getAll()) a.id: a};
+    expect(const TransactionQuery(category: 'غذا').apply(txns.items, byId), hasLength(1));
+    expect(const TransactionQuery(text: 'غذا').apply(txns.items, byId), hasLength(2));
+  });
 }
