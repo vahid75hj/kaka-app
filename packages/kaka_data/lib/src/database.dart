@@ -33,6 +33,10 @@ class KakaDatabase extends _$KakaDatabase {
   factory KakaDatabase.open(File file, {required String key}) =>
       KakaDatabase(NativeDatabase(file, setup: (db) => _unlock(db, key)));
 
+  /// Unencrypted, RAM-only database (desktop tools reading a decrypted backup; tests).
+  factory KakaDatabase.inMemory() =>
+      KakaDatabase(NativeDatabase.memory(setup: (db) => db.execute('PRAGMA foreign_keys = ON;')));
+
   static void _unlock(Database db, String key) {
     if (db.select('PRAGMA cipher;').isEmpty) {
       throw StateError('SQLite was built without SQLite3MultipleCiphers; refusing to store data unencrypted.');

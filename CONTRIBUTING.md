@@ -25,6 +25,7 @@ CI runs exactly these. The workflow is in `docs/ci/ci.yml`. Move it to `.github/
 | `kaka_tools` | Tool schema for AI (`add_transaction` only creates drafts), masking |
 | `kaka_ai` | OpenAI-compatible / Ollama clients and the tool loop |
 | `apps/kaka_mobile` | Flutter UI (Riverpod, go_router, gen-l10n fa/en) |
+| `tools/kaka_mcp` | Read-only MCP server (stdio) over a `.kaka` backup |
 
 Dependencies point inward: UI → data/sms/ai → domain. The domain imports no Flutter.
 

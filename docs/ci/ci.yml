@@ -33,7 +33,7 @@ jobs:
       # (sms_parser_test.dart), so a broken bank template fails CI.
       - name: Test packages
         run: |
-          for p in packages/*/; do
+          for p in packages/*/ tools/*/; do
             if [ -d "$p/test" ]; then
               echo "::group::$p"
               (cd "$p" && dart test) || exit 1

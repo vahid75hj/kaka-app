@@ -64,7 +64,7 @@ Phases: **MVP-1** = first usable APK · **MVP-2** = v0.1 feature-complete · **L
 ## Later (v0.2+)
 - [ ] On-device models: `flutter_gemma` runtime, download with mirrors + sha256, device fit check, probe
 - [ ] Fill `model_catalog/catalog.v1.json` after on-device benchmark
-- [ ] `tools/kaka_mcp`: desktop MCP server (stdio) reading `.kaka` backups
+- [x] `tools/kaka_mcp`: read-only desktop MCP server (stdio) over `.kaka` backups (RAM-only, masked, password via env/file)
 - [ ] Google Sheets mirror + Inbox tab (`drive.file`), `kaka-mcp --sheet`
 - [ ] Persian eval set + CI eval on Ollama
 - [ ] llama.cpp (GGUF) runtime, Android AppFunctions, iOS/desktop, budgets, CSV/Excel import, LAN/QR transfer

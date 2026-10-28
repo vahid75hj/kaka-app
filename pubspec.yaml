@@ -11,6 +11,7 @@ workspace:
   - packages/kaka_sms
   - packages/kaka_ai
   - apps/kaka_mobile
+  - tools/kaka_mcp
 
 dev_dependencies:
   melos: ^7.0.0

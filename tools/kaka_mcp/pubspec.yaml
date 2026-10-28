@@ -1,0 +1,23 @@
+name: kaka_mcp
+description: Read-only MCP server (stdio) over an encrypted Kaka `.kaka` backup, for Claude Desktop, Cursor and other MCP clients.
+publish_to: none
+version: 0.1.0
+resolution: workspace
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  kaka_data:
+    path: ../../packages/kaka_data
+  kaka_domain:
+    path: ../../packages/kaka_domain
+  kaka_tools:
+    path: ../../packages/kaka_tools
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0
+
+executables:
+  kaka-mcp: kaka_mcp
