@@ -273,6 +273,18 @@ abstract final class CsvImport {
   static DateTime? parseDate(String raw, {required JalaliToGregorian jalali}) {
     final s = Digits.normalize(raw.trim());
     if (s.isEmpty) return null;
+    // Excel serial day (days since 1899-12-30), as .xlsx stores dates; fraction = time.
+    final serial = RegExp(r'^(\d{5})(\.\d+)?$').firstMatch(s);
+    if (serial != null) {
+      final days = int.parse(serial[1]!);
+      if (days < 20000 || days > 80000) return null;
+      final frac = double.parse('0${serial[2] ?? ''}');
+      final minutes = (frac * 24 * 60).round();
+      final d = DateTime(1899, 12, 30 + days);
+      return frac == 0
+          ? DateTime(d.year, d.month, d.day, 12)
+          : DateTime(d.year, d.month, d.day, minutes ~/ 60, minutes % 60);
+    }
     if (RegExp(r'^\d{4}-\d{2}-\d{2}T').hasMatch(s)) {
       final iso = DateTime.tryParse(s);
       if (iso != null) return iso.toLocal();

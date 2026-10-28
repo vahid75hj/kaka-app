@@ -412,9 +412,9 @@
   "budgetCurrencyChanged": "Base currency changed — edit this budget to set a new limit.",
   "allCategoriesBudgeted": "Every expense category already has a budget.",
   "undo": "Undo",
-  "importCsv": "Import CSV",
+  "importCsv": "Import CSV / Excel",
   "importCsvHint": "Bank statement, spreadsheet or Kaka export",
-  "importHint": "Pick a CSV file (save Excel sheets as \"CSV UTF-8\"). Kaka guesses the columns; check them, see the preview, then import. Rows already in the account are skipped, and you can undo the whole import.",
+  "importHint": "Pick a CSV or Excel (.xlsx) file. Kaka guesses the columns; check them, see the preview, then import. Rows already in the account are skipped, and you can undo the whole import.",
   "importChooseFile": "Choose file",
   "importEmpty": "This file has no data rows.",
   "importNotUtf8": "Could not read the file as UTF-8. In Excel use Save As → \"CSV UTF-8\".",
@@ -484,5 +484,6 @@
     }
   },
   "recurringPaused": "Paused",
-  "recurringDeleteConfirm": "Stop repeating this? Transactions already recorded stay."
+  "recurringDeleteConfirm": "Stop repeating this? Transactions already recorded stay.",
+  "importBadXlsx": "Could not read this Excel file. Try saving it as \"CSV UTF-8\"."
 }

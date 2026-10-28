@@ -10,6 +10,7 @@ import '../../app/providers.dart';
 import '../../core/l10n_x.dart';
 import '../../core/widgets.dart';
 import '../../theme/kaka_colors.dart';
+import 'xlsx_reader.dart';
 
 DateTime jalaliToGregorian(int y, int m, int d) {
   final j = Jalali(y, m, d);
@@ -44,8 +45,9 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
     if (widget.initialText != null) _load(widget.initialText!, 'test.csv');
   }
 
-  void _load(String text, String name) {
-    final table = CsvReader.parse(text);
+  void _load(String text, String name) => _loadTable(CsvReader.parse(text), name);
+
+  void _loadTable(List<List<String>> table, String name) {
     setState(() {
       _fileName = name;
       if (table.length < 2) {
@@ -60,12 +62,24 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
   }
 
   Future<void> _pick() async {
-    final picked = await FilePicker.pickFiles(type: FileType.custom, allowedExtensions: const ['csv', 'txt', 'tsv']);
+    final picked = await FilePicker.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: const ['csv', 'txt', 'tsv', 'xlsx'],
+    );
     if (picked.isEmpty || !mounted) return;
     final bytes = await picked.first.xFile.readAsBytes();
     if (!mounted) return;
+    final name = picked.first.name;
+    if (name.toLowerCase().endsWith('.xlsx')) {
+      try {
+        _loadTable(XlsxReader.read(bytes), name);
+      } catch (_) {
+        setState(() => _error = context.l10n.importBadXlsx);
+      }
+      return;
+    }
     try {
-      _load(utf8.decode(bytes), picked.first.name);
+      _load(utf8.decode(bytes), name);
     } on FormatException {
       setState(() => _error = context.l10n.importNotUtf8);
     }

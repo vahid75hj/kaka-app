@@ -9,6 +9,7 @@ environment:
   sdk: ^3.13.5
 
 dependencies:
+  archive: ^4.5.2
   file_picker: ^13.1.0
   flutter:
     sdk: flutter
@@ -32,6 +33,7 @@ dependencies:
   path_provider: ^2.1.6
   shamsi_date: ^1.1.1
   share_plus: ^13.3.1
+  xml: ^7.1.0
 
 dev_dependencies:
   flutter_test:

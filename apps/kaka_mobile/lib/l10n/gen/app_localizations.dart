@@ -1775,7 +1775,7 @@ abstract class AppLocalizations {
   /// No description provided for @importCsv.
   ///
   /// In en, this message translates to:
-  /// **'Import CSV'**
+  /// **'Import CSV / Excel'**
   String get importCsv;
 
   /// No description provided for @importCsvHint.
@@ -1787,7 +1787,7 @@ abstract class AppLocalizations {
   /// No description provided for @importHint.
   ///
   /// In en, this message translates to:
-  /// **'Pick a CSV file (save Excel sheets as \"CSV UTF-8\"). Kaka guesses the columns; check them, see the preview, then import. Rows already in the account are skipped, and you can undo the whole import.'**
+  /// **'Pick a CSV or Excel (.xlsx) file. Kaka guesses the columns; check them, see the preview, then import. Rows already in the account are skipped, and you can undo the whole import.'**
   String get importHint;
 
   /// No description provided for @importChooseFile.
@@ -1987,6 +1987,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stop repeating this? Transactions already recorded stay.'**
   String get recurringDeleteConfirm;
+
+  /// No description provided for @importBadXlsx.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not read this Excel file. Try saving it as \"CSV UTF-8\".'**
+  String get importBadXlsx;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

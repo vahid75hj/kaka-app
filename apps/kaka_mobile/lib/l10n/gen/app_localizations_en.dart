@@ -917,14 +917,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get undo => 'Undo';
 
   @override
-  String get importCsv => 'Import CSV';
+  String get importCsv => 'Import CSV / Excel';
 
   @override
   String get importCsvHint => 'Bank statement, spreadsheet or Kaka export';
 
   @override
   String get importHint =>
-      'Pick a CSV file (save Excel sheets as \"CSV UTF-8\"). Kaka guesses the columns; check them, see the preview, then import. Rows already in the account are skipped, and you can undo the whole import.';
+      'Pick a CSV or Excel (.xlsx) file. Kaka guesses the columns; check them, see the preview, then import. Rows already in the account are skipped, and you can undo the whole import.';
 
   @override
   String get importChooseFile => 'Choose file';
@@ -1039,4 +1039,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recurringDeleteConfirm => 'Stop repeating this? Transactions already recorded stay.';
+
+  @override
+  String get importBadXlsx => 'Could not read this Excel file. Try saving it as \"CSV UTF-8\".';
 }

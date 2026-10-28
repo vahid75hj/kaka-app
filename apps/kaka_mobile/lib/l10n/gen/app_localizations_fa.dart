@@ -908,14 +908,14 @@ class AppLocalizationsFa extends AppLocalizations {
   String get undo => 'برگردون';
 
   @override
-  String get importCsv => 'ورود از فایل CSV';
+  String get importCsv => 'ورود از CSV یا اکسل';
 
   @override
   String get importCsvHint => 'صورت‌حساب بانک، اکسل یا خروجی خود کاکا';
 
   @override
   String get importHint =>
-      'یه فایل CSV انتخاب کن (اکسل رو با «CSV UTF-8» ذخیره کن). کاکا ستون‌ها رو حدس می‌زنه؛ چکشون کن، پیش‌نمایش رو ببین، بعد وارد کن. ردیف‌هایی که قبلاً توی حساب هستن رد می‌شن و کل ورود قابل برگشته.';
+      'یه فایل CSV یا اکسل (.xlsx) انتخاب کن. کاکا ستون‌ها رو حدس می‌زنه؛ چکشون کن، پیش‌نمایش رو ببین، بعد وارد کن. ردیف‌هایی که قبلاً توی حساب هستن رد می‌شن و کل ورود قابل برگشته.';
 
   @override
   String get importChooseFile => 'انتخاب فایل';
@@ -1030,4 +1030,7 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get recurringDeleteConfirm => 'دیگه تکرار نشه؟ تراکنش‌های ثبت‌شده سر جاشون می‌مونن.';
+
+  @override
+  String get importBadXlsx => 'این فایل اکسل خونده نشد. با «CSV UTF-8» ذخیره‌اش کن و دوباره امتحان کن.';
 }

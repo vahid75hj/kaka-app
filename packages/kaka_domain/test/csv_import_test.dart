@@ -92,6 +92,10 @@ void main() {
     expect(p('2026-02-30'), isNull);
     expect(p('1405/07/31'), isNull);
     expect(p('yesterday'), isNull);
+    expect(p('46318'), DateTime(2026, 10, 23, 12)); // Excel serial
+    expect(p('46318.5'), DateTime(2026, 10, 23, 12));
+    expect(p('46318.75'), DateTime(2026, 10, 23, 18));
+    expect(p('12345'), isNull);
     expect(p('2026-10-23T10:00:00Z'), DateTime.utc(2026, 10, 23, 10).toLocal());
   });
 
