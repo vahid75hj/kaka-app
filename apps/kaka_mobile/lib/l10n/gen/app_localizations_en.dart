@@ -804,4 +804,35 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get smsBackgroundBody =>
       'Bank SMS from linked senders become drafts in the background, and you get a notification. Nothing is recorded until you confirm.';
+
+  @override
+  String get backupDueTitle => 'Time for a backup';
+
+  @override
+  String get backupDueBody => 'Kaka keeps everything only on this phone. Save an encrypted backup somewhere safe.';
+
+  @override
+  String get backupNow => 'Back up now';
+
+  @override
+  String get later => 'Later';
+
+  @override
+  String get backupReminder => 'Backup reminder';
+
+  @override
+  String get backupReminderOff => 'Off';
+
+  @override
+  String everyNDays(Object days) {
+    return 'Every $days days';
+  }
+
+  @override
+  String lastBackup(Object date) {
+    return 'Last backup: $date';
+  }
+
+  @override
+  String get neverBackedUp => 'No backup yet';
 }

@@ -9,7 +9,27 @@ import '../../core/widgets.dart';
 import '../../theme/kaka_colors.dart';
 import '../accounts/account_card.dart';
 import '../transactions/transaction_tile.dart';
+import '../backup/backup_actions.dart';
 import 'home_summary.dart';
+
+/// "Later" on the backup reminder hides it until the app restarts.
+class _Snooze extends Notifier<bool> {
+  @override
+  bool build() => false;
+  void snooze() => state = true;
+}
+
+final _backupSnoozedProvider = NotifierProvider<_Snooze, bool>(_Snooze.new);
+
+/// Earliest thing worth backing up: the first non-system account.
+final backupDueProvider = Provider<bool>((ref) {
+  final s = ref.watch(settingsProvider);
+  final first = (ref.watch(accountsProvider).value ?? const [])
+      .where((a) => !a.isSystem)
+      .map((a) => a.createdAt)
+      .fold<DateTime?>(null, (m, d) => m == null || d.isBefore(m) ? d : m);
+  return s.backupDue(DateTime.now(), firstActivity: first);
+});
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -77,6 +97,38 @@ class HomeScreen extends ConsumerWidget {
                         ),
                       ),
                       const Icon(Icons.chevron_right_rounded),
+                    ],
+                  ),
+                ),
+              ),
+            if (ref.watch(backupDueProvider) && !ref.watch(_backupSnoozedProvider))
+              Padding(
+                padding: const EdgeInsets.only(top: 14),
+                child: KCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.shield_outlined, color: c.accentText),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(l.backupDueTitle, style: const TextStyle(fontWeight: FontWeight.w700)),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Text(l.backupDueBody, style: TextStyle(color: c.textMuted, fontSize: 12.5, height: 1.5)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () => ref.read(_backupSnoozedProvider.notifier).snooze(),
+                            child: Text(l.later),
+                          ),
+                          FilledButton.tonal(onPressed: () => exportBackup(context, ref), child: Text(l.backupNow)),
+                        ],
+                      ),
                     ],
                   ),
                 ),

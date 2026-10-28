@@ -795,4 +795,35 @@ class AppLocalizationsFa extends AppLocalizations {
   @override
   String get smsBackgroundBody =>
       'پیامک‌های فرستنده‌های وصل‌شده در پس‌زمینه پیش‌نویس می‌شن و یه اعلان می‌گیری. تا تأیید نکنی چیزی ثبت نمی‌شه.';
+
+  @override
+  String get backupDueTitle => 'وقت پشتیبان‌گیریه';
+
+  @override
+  String get backupDueBody => 'کاکا همه‌چیز رو فقط روی همین گوشی نگه می‌داره. یه پشتیبان رمزدار جای امن نگه دار.';
+
+  @override
+  String get backupNow => 'الان پشتیبان بگیر';
+
+  @override
+  String get later => 'بعداً';
+
+  @override
+  String get backupReminder => 'یادآوری پشتیبان';
+
+  @override
+  String get backupReminderOff => 'خاموش';
+
+  @override
+  String everyNDays(Object days) {
+    return 'هر $days روز';
+  }
+
+  @override
+  String lastBackup(Object date) {
+    return 'آخرین پشتیبان: $date';
+  }
+
+  @override
+  String get neverBackedUp => 'هنوز پشتیبانی نگرفتی';
 }

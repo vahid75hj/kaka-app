@@ -342,5 +342,24 @@
     }
   },
   "smsBackgroundTitle": "Also when Kaka is closed",
-  "smsBackgroundBody": "Bank SMS from linked senders become drafts in the background, and you get a notification. Nothing is recorded until you confirm."
+  "smsBackgroundBody": "Bank SMS from linked senders become drafts in the background, and you get a notification. Nothing is recorded until you confirm.",
+  "backupDueTitle": "Time for a backup",
+  "backupDueBody": "Kaka keeps everything only on this phone. Save an encrypted backup somewhere safe.",
+  "backupNow": "Back up now",
+  "later": "Later",
+  "backupReminder": "Backup reminder",
+  "backupReminderOff": "Off",
+  "everyNDays": "Every {days} days",
+  "@everyNDays": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "lastBackup": "Last backup: {date}",
+  "@lastBackup": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "neverBackedUp": "No backup yet"
 }

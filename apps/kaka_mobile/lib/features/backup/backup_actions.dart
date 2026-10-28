@@ -26,7 +26,13 @@ Future<void> exportBackup(BuildContext context, WidgetRef ref) async {
     final file = File('${(await getTemporaryDirectory()).path}/kaka-$stamp.kaka');
     await file.writeAsBytes(bytes, flush: true);
     done();
-    await SharePlus.instance.share(ShareParams(files: [XFile(file.path, mimeType: 'application/octet-stream')]));
+    final result = await SharePlus.instance.share(
+      ShareParams(files: [XFile(file.path, mimeType: 'application/octet-stream')]),
+    );
+    // Android often reports `unavailable` even after a successful share; only a dismissal means "not saved".
+    if (result.status != ShareResultStatus.dismissed) {
+      await ref.read(settingsProvider.notifier).update((s) => s.copyWith(lastBackupAt: () => now));
+    }
   } catch (_) {
     done();
     if (context.mounted) _snack(context, l.errGeneric);

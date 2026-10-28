@@ -47,7 +47,7 @@ Phases: **MVP-1** = first usable APK · **MVP-2** = v0.1 feature-complete · **L
 - [x] Background SMS when the app is closed (opt-in): manifest receiver disabled by default, app-private pending queue, WorkManager → headless Dart `smsBackgroundMain` → drafts + notification; app drains leftovers on open — untested on a device
 - [x] "Learn a new bank" flow (diff 3–5 samples into a template)
 - [~] CI workflow written (`docs/ci/ci.yml`: format, analyze, package + catalog tests, app tests) — must be moved into `.github/workflows/` with a `workflow`-scoped token; old template workflows still fail
-- [x] Encrypted `.kaka` backup (Argon2id m=19 MiB t=2 + XChaCha20-Poly1305, header as AAD) via share sheet; restore via file picker — reminder still open
+- [x] Encrypted `.kaka` backup (Argon2id m=19 MiB t=2 + XChaCha20-Poly1305, header as AAD) via share sheet; restore via file picker + backup reminder (home card, every 7/14/30 days or off, last backup date)
 - [x] Exchange rates (manual, per date) and cross-currency exchange via `FX:<cur>` accounts — public rate source still open
 - [x] Net worth converted to base currency with rate date / "stale" label
 - [x] Gold & coins as assets (`asset_holdings`), valued by manual / latest price

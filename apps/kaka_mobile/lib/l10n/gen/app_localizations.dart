@@ -1579,6 +1579,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Bank SMS from linked senders become drafts in the background, and you get a notification. Nothing is recorded until you confirm.'**
   String get smsBackgroundBody;
+
+  /// No description provided for @backupDueTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Time for a backup'**
+  String get backupDueTitle;
+
+  /// No description provided for @backupDueBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Kaka keeps everything only on this phone. Save an encrypted backup somewhere safe.'**
+  String get backupDueBody;
+
+  /// No description provided for @backupNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Back up now'**
+  String get backupNow;
+
+  /// No description provided for @later.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get later;
+
+  /// No description provided for @backupReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup reminder'**
+  String get backupReminder;
+
+  /// No description provided for @backupReminderOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get backupReminderOff;
+
+  /// No description provided for @everyNDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Every {days} days'**
+  String everyNDays(Object days);
+
+  /// No description provided for @lastBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Last backup: {date}'**
+  String lastBackup(Object date);
+
+  /// No description provided for @neverBackedUp.
+  ///
+  /// In en, this message translates to:
+  /// **'No backup yet'**
+  String get neverBackedUp;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -24,6 +24,7 @@ class SettingsScreen extends ConsumerWidget {
     final l = context.l10n;
     final c = KakaColors.of(context);
     final s = ref.watch(settingsProvider);
+    final f = ref.watch(formatProvider);
     void update(AppSettings Function(AppSettings) f) => ref.read(settingsProvider.notifier).update(f);
 
     return Scaffold(
@@ -154,8 +155,25 @@ class SettingsScreen extends ConsumerWidget {
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.ios_share_rounded),
             title: Text(l.backupExport),
-            subtitle: Text(l.backupExportHint, style: TextStyle(color: c.textMuted, fontSize: 12)),
+            subtitle: Text(
+              '${l.backupExportHint}\n${s.lastBackupAt == null ? l.neverBackedUp : l.lastBackup(f.date(s.lastBackupAt!))}',
+              style: TextStyle(color: c.textMuted, fontSize: 12, height: 1.5),
+            ),
             onTap: () => exportBackup(context, ref),
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.notifications_active_outlined),
+            title: Text(l.backupReminder),
+            trailing: DropdownButton<int>(
+              value: const [0, 7, 14, 30].contains(s.backupReminderDays) ? s.backupReminderDays : 14,
+              underline: const SizedBox.shrink(),
+              items: [
+                for (final d in const [0, 7, 14, 30])
+                  DropdownMenuItem(value: d, child: Text(d == 0 ? l.backupReminderOff : f.digits(l.everyNDays('$d')))),
+              ],
+              onChanged: (d) => update((s) => s.copyWith(backupReminderDays: d)),
+            ),
           ),
           ListTile(
             contentPadding: EdgeInsets.zero,

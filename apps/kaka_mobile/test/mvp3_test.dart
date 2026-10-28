@@ -9,6 +9,7 @@ import 'package:kaka_mobile/app/providers.dart';
 import 'package:kaka_mobile/core/app_format.dart';
 import 'package:kaka_mobile/core/money_input.dart';
 import 'package:kaka_mobile/features/ai/ai_config.dart';
+import 'package:kaka_mobile/features/home/home_screen.dart';
 import 'package:kaka_mobile/features/queue/share_ingest.dart';
 import 'package:kaka_sms/kaka_sms.dart';
 
@@ -173,5 +174,31 @@ void main() {
     expect(res['status'], 'pending_user_approval');
     final d = (await container.read(draftServiceProvider).watchPending().first).single;
     expect((d.isTransfer, d.accountId, d.toAccountId, d.note, d.category), (true, a.id, b.id, 'عابربانک', null));
+  });
+
+  test('backup reminder: due once an account is 14+ days old and never backed up; a backup clears it', () async {
+    expect(container.read(backupDueProvider), isFalse, reason: 'nothing to back up yet');
+    await container
+        .read(accountRepositoryProvider)
+        .upsert(
+          Account(
+            id: 'old',
+            name: 'کیف',
+            type: AccountType.asset,
+            currency: Currency.irr,
+            createdAt: DateTime.now().subtract(const Duration(days: 20)),
+          ),
+        );
+    final sub = container.listen(accountsProvider, (_, _) {});
+    addTearDown(sub.close);
+    await container.read(accountsProvider.future);
+    await Future<void>.delayed(Duration.zero);
+    expect(container.read(backupDueProvider), isTrue);
+    await container.read(settingsProvider.notifier).update((s) => s.copyWith(lastBackupAt: DateTime.now));
+    expect(container.read(backupDueProvider), isFalse);
+    await container
+        .read(settingsProvider.notifier)
+        .update((s) => s.copyWith(backupReminderDays: 0, lastBackupAt: () => null));
+    expect(container.read(backupDueProvider), isFalse, reason: 'reminder off');
   });
 }
