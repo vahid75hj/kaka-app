@@ -4256,6 +4256,607 @@ class BudgetsCompanion extends UpdateCompanion<BudgetRow> {
   }
 }
 
+class $RecurringRulesTable extends RecurringRules with TableInfo<$RecurringRulesTable, RecurringRuleRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RecurringRulesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isExpenseMeta = const VerificationMeta('isExpense');
+  @override
+  late final GeneratedColumn<bool> isExpense = GeneratedColumn<bool>(
+    'is_expense',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("is_expense" IN (0, 1))'),
+  );
+  static const VerificationMeta _accountIdMeta = const VerificationMeta('accountId');
+  @override
+  late final GeneratedColumn<String> accountId = GeneratedColumn<String>(
+    'account_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _toAccountIdMeta = const VerificationMeta('toAccountId');
+  @override
+  late final GeneratedColumn<String> toAccountId = GeneratedColumn<String>(
+    'to_account_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _categoryMeta = const VerificationMeta('category');
+  @override
+  late final GeneratedColumn<String> category = GeneratedColumn<String>(
+    'category',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _amountMinorMeta = const VerificationMeta('amountMinor');
+  @override
+  late final GeneratedColumn<int> amountMinor = GeneratedColumn<int>(
+    'amount_minor',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _currencyMeta = const VerificationMeta('currency');
+  @override
+  late final GeneratedColumn<String> currency = GeneratedColumn<String>(
+    'currency',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _noteMeta = const VerificationMeta('note');
+  @override
+  late final GeneratedColumn<String> note = GeneratedColumn<String>(
+    'note',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _everyMeta = const VerificationMeta('every');
+  @override
+  late final GeneratedColumn<String> every = GeneratedColumn<String>(
+    'every',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _startMeta = const VerificationMeta('start');
+  @override
+  late final GeneratedColumn<DateTime> start = GeneratedColumn<DateTime>(
+    'start',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lastDoneMeta = const VerificationMeta('lastDone');
+  @override
+  late final GeneratedColumn<DateTime> lastDone = GeneratedColumn<DateTime>(
+    'last_done',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _activeMeta = const VerificationMeta('active');
+  @override
+  late final GeneratedColumn<bool> active = GeneratedColumn<bool>(
+    'active',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("active" IN (0, 1))'),
+    defaultValue: const Constant(true),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    isExpense,
+    accountId,
+    toAccountId,
+    category,
+    amountMinor,
+    currency,
+    note,
+    every,
+    start,
+    lastDone,
+    active,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'recurring_rules';
+  @override
+  VerificationContext validateIntegrity(Insertable<RecurringRuleRow> instance, {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('is_expense')) {
+      context.handle(_isExpenseMeta, isExpense.isAcceptableOrUnknown(data['is_expense']!, _isExpenseMeta));
+    } else if (isInserting) {
+      context.missing(_isExpenseMeta);
+    }
+    if (data.containsKey('account_id')) {
+      context.handle(_accountIdMeta, accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta));
+    } else if (isInserting) {
+      context.missing(_accountIdMeta);
+    }
+    if (data.containsKey('to_account_id')) {
+      context.handle(_toAccountIdMeta, toAccountId.isAcceptableOrUnknown(data['to_account_id']!, _toAccountIdMeta));
+    }
+    if (data.containsKey('category')) {
+      context.handle(_categoryMeta, category.isAcceptableOrUnknown(data['category']!, _categoryMeta));
+    }
+    if (data.containsKey('amount_minor')) {
+      context.handle(_amountMinorMeta, amountMinor.isAcceptableOrUnknown(data['amount_minor']!, _amountMinorMeta));
+    } else if (isInserting) {
+      context.missing(_amountMinorMeta);
+    }
+    if (data.containsKey('currency')) {
+      context.handle(_currencyMeta, currency.isAcceptableOrUnknown(data['currency']!, _currencyMeta));
+    } else if (isInserting) {
+      context.missing(_currencyMeta);
+    }
+    if (data.containsKey('note')) {
+      context.handle(_noteMeta, note.isAcceptableOrUnknown(data['note']!, _noteMeta));
+    }
+    if (data.containsKey('every')) {
+      context.handle(_everyMeta, every.isAcceptableOrUnknown(data['every']!, _everyMeta));
+    } else if (isInserting) {
+      context.missing(_everyMeta);
+    }
+    if (data.containsKey('start')) {
+      context.handle(_startMeta, start.isAcceptableOrUnknown(data['start']!, _startMeta));
+    } else if (isInserting) {
+      context.missing(_startMeta);
+    }
+    if (data.containsKey('last_done')) {
+      context.handle(_lastDoneMeta, lastDone.isAcceptableOrUnknown(data['last_done']!, _lastDoneMeta));
+    }
+    if (data.containsKey('active')) {
+      context.handle(_activeMeta, active.isAcceptableOrUnknown(data['active']!, _activeMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  RecurringRuleRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return RecurringRuleRow(
+      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      isExpense: attachedDatabase.typeMapping.read(DriftSqlType.bool, data['${effectivePrefix}is_expense'])!,
+      accountId: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}account_id'])!,
+      toAccountId: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}to_account_id']),
+      category: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}category']),
+      amountMinor: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}amount_minor'])!,
+      currency: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}currency'])!,
+      note: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}note'])!,
+      every: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}every'])!,
+      start: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}start'])!,
+      lastDone: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}last_done']),
+      active: attachedDatabase.typeMapping.read(DriftSqlType.bool, data['${effectivePrefix}active'])!,
+    );
+  }
+
+  @override
+  $RecurringRulesTable createAlias(String alias) {
+    return $RecurringRulesTable(attachedDatabase, alias);
+  }
+}
+
+class RecurringRuleRow extends DataClass implements Insertable<RecurringRuleRow> {
+  final String id;
+  final bool isExpense;
+  final String accountId;
+  final String? toAccountId;
+  final String? category;
+  final int amountMinor;
+  final String currency;
+  final String note;
+  final String every;
+  final DateTime start;
+  final DateTime? lastDone;
+  final bool active;
+  const RecurringRuleRow({
+    required this.id,
+    required this.isExpense,
+    required this.accountId,
+    this.toAccountId,
+    this.category,
+    required this.amountMinor,
+    required this.currency,
+    required this.note,
+    required this.every,
+    required this.start,
+    this.lastDone,
+    required this.active,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['is_expense'] = Variable<bool>(isExpense);
+    map['account_id'] = Variable<String>(accountId);
+    if (!nullToAbsent || toAccountId != null) {
+      map['to_account_id'] = Variable<String>(toAccountId);
+    }
+    if (!nullToAbsent || category != null) {
+      map['category'] = Variable<String>(category);
+    }
+    map['amount_minor'] = Variable<int>(amountMinor);
+    map['currency'] = Variable<String>(currency);
+    map['note'] = Variable<String>(note);
+    map['every'] = Variable<String>(every);
+    map['start'] = Variable<DateTime>(start);
+    if (!nullToAbsent || lastDone != null) {
+      map['last_done'] = Variable<DateTime>(lastDone);
+    }
+    map['active'] = Variable<bool>(active);
+    return map;
+  }
+
+  RecurringRulesCompanion toCompanion(bool nullToAbsent) {
+    return RecurringRulesCompanion(
+      id: Value(id),
+      isExpense: Value(isExpense),
+      accountId: Value(accountId),
+      toAccountId: toAccountId == null && nullToAbsent ? const Value.absent() : Value(toAccountId),
+      category: category == null && nullToAbsent ? const Value.absent() : Value(category),
+      amountMinor: Value(amountMinor),
+      currency: Value(currency),
+      note: Value(note),
+      every: Value(every),
+      start: Value(start),
+      lastDone: lastDone == null && nullToAbsent ? const Value.absent() : Value(lastDone),
+      active: Value(active),
+    );
+  }
+
+  factory RecurringRuleRow.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return RecurringRuleRow(
+      id: serializer.fromJson<String>(json['id']),
+      isExpense: serializer.fromJson<bool>(json['isExpense']),
+      accountId: serializer.fromJson<String>(json['accountId']),
+      toAccountId: serializer.fromJson<String?>(json['toAccountId']),
+      category: serializer.fromJson<String?>(json['category']),
+      amountMinor: serializer.fromJson<int>(json['amountMinor']),
+      currency: serializer.fromJson<String>(json['currency']),
+      note: serializer.fromJson<String>(json['note']),
+      every: serializer.fromJson<String>(json['every']),
+      start: serializer.fromJson<DateTime>(json['start']),
+      lastDone: serializer.fromJson<DateTime?>(json['lastDone']),
+      active: serializer.fromJson<bool>(json['active']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'isExpense': serializer.toJson<bool>(isExpense),
+      'accountId': serializer.toJson<String>(accountId),
+      'toAccountId': serializer.toJson<String?>(toAccountId),
+      'category': serializer.toJson<String?>(category),
+      'amountMinor': serializer.toJson<int>(amountMinor),
+      'currency': serializer.toJson<String>(currency),
+      'note': serializer.toJson<String>(note),
+      'every': serializer.toJson<String>(every),
+      'start': serializer.toJson<DateTime>(start),
+      'lastDone': serializer.toJson<DateTime?>(lastDone),
+      'active': serializer.toJson<bool>(active),
+    };
+  }
+
+  RecurringRuleRow copyWith({
+    String? id,
+    bool? isExpense,
+    String? accountId,
+    Value<String?> toAccountId = const Value.absent(),
+    Value<String?> category = const Value.absent(),
+    int? amountMinor,
+    String? currency,
+    String? note,
+    String? every,
+    DateTime? start,
+    Value<DateTime?> lastDone = const Value.absent(),
+    bool? active,
+  }) => RecurringRuleRow(
+    id: id ?? this.id,
+    isExpense: isExpense ?? this.isExpense,
+    accountId: accountId ?? this.accountId,
+    toAccountId: toAccountId.present ? toAccountId.value : this.toAccountId,
+    category: category.present ? category.value : this.category,
+    amountMinor: amountMinor ?? this.amountMinor,
+    currency: currency ?? this.currency,
+    note: note ?? this.note,
+    every: every ?? this.every,
+    start: start ?? this.start,
+    lastDone: lastDone.present ? lastDone.value : this.lastDone,
+    active: active ?? this.active,
+  );
+  RecurringRuleRow copyWithCompanion(RecurringRulesCompanion data) {
+    return RecurringRuleRow(
+      id: data.id.present ? data.id.value : this.id,
+      isExpense: data.isExpense.present ? data.isExpense.value : this.isExpense,
+      accountId: data.accountId.present ? data.accountId.value : this.accountId,
+      toAccountId: data.toAccountId.present ? data.toAccountId.value : this.toAccountId,
+      category: data.category.present ? data.category.value : this.category,
+      amountMinor: data.amountMinor.present ? data.amountMinor.value : this.amountMinor,
+      currency: data.currency.present ? data.currency.value : this.currency,
+      note: data.note.present ? data.note.value : this.note,
+      every: data.every.present ? data.every.value : this.every,
+      start: data.start.present ? data.start.value : this.start,
+      lastDone: data.lastDone.present ? data.lastDone.value : this.lastDone,
+      active: data.active.present ? data.active.value : this.active,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RecurringRuleRow(')
+          ..write('id: $id, ')
+          ..write('isExpense: $isExpense, ')
+          ..write('accountId: $accountId, ')
+          ..write('toAccountId: $toAccountId, ')
+          ..write('category: $category, ')
+          ..write('amountMinor: $amountMinor, ')
+          ..write('currency: $currency, ')
+          ..write('note: $note, ')
+          ..write('every: $every, ')
+          ..write('start: $start, ')
+          ..write('lastDone: $lastDone, ')
+          ..write('active: $active')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    isExpense,
+    accountId,
+    toAccountId,
+    category,
+    amountMinor,
+    currency,
+    note,
+    every,
+    start,
+    lastDone,
+    active,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RecurringRuleRow &&
+          other.id == this.id &&
+          other.isExpense == this.isExpense &&
+          other.accountId == this.accountId &&
+          other.toAccountId == this.toAccountId &&
+          other.category == this.category &&
+          other.amountMinor == this.amountMinor &&
+          other.currency == this.currency &&
+          other.note == this.note &&
+          other.every == this.every &&
+          other.start == this.start &&
+          other.lastDone == this.lastDone &&
+          other.active == this.active);
+}
+
+class RecurringRulesCompanion extends UpdateCompanion<RecurringRuleRow> {
+  final Value<String> id;
+  final Value<bool> isExpense;
+  final Value<String> accountId;
+  final Value<String?> toAccountId;
+  final Value<String?> category;
+  final Value<int> amountMinor;
+  final Value<String> currency;
+  final Value<String> note;
+  final Value<String> every;
+  final Value<DateTime> start;
+  final Value<DateTime?> lastDone;
+  final Value<bool> active;
+  final Value<int> rowid;
+  const RecurringRulesCompanion({
+    this.id = const Value.absent(),
+    this.isExpense = const Value.absent(),
+    this.accountId = const Value.absent(),
+    this.toAccountId = const Value.absent(),
+    this.category = const Value.absent(),
+    this.amountMinor = const Value.absent(),
+    this.currency = const Value.absent(),
+    this.note = const Value.absent(),
+    this.every = const Value.absent(),
+    this.start = const Value.absent(),
+    this.lastDone = const Value.absent(),
+    this.active = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  RecurringRulesCompanion.insert({
+    required String id,
+    required bool isExpense,
+    required String accountId,
+    this.toAccountId = const Value.absent(),
+    this.category = const Value.absent(),
+    required int amountMinor,
+    required String currency,
+    this.note = const Value.absent(),
+    required String every,
+    required DateTime start,
+    this.lastDone = const Value.absent(),
+    this.active = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       isExpense = Value(isExpense),
+       accountId = Value(accountId),
+       amountMinor = Value(amountMinor),
+       currency = Value(currency),
+       every = Value(every),
+       start = Value(start);
+  static Insertable<RecurringRuleRow> custom({
+    Expression<String>? id,
+    Expression<bool>? isExpense,
+    Expression<String>? accountId,
+    Expression<String>? toAccountId,
+    Expression<String>? category,
+    Expression<int>? amountMinor,
+    Expression<String>? currency,
+    Expression<String>? note,
+    Expression<String>? every,
+    Expression<DateTime>? start,
+    Expression<DateTime>? lastDone,
+    Expression<bool>? active,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (isExpense != null) 'is_expense': isExpense,
+      if (accountId != null) 'account_id': accountId,
+      if (toAccountId != null) 'to_account_id': toAccountId,
+      if (category != null) 'category': category,
+      if (amountMinor != null) 'amount_minor': amountMinor,
+      if (currency != null) 'currency': currency,
+      if (note != null) 'note': note,
+      if (every != null) 'every': every,
+      if (start != null) 'start': start,
+      if (lastDone != null) 'last_done': lastDone,
+      if (active != null) 'active': active,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  RecurringRulesCompanion copyWith({
+    Value<String>? id,
+    Value<bool>? isExpense,
+    Value<String>? accountId,
+    Value<String?>? toAccountId,
+    Value<String?>? category,
+    Value<int>? amountMinor,
+    Value<String>? currency,
+    Value<String>? note,
+    Value<String>? every,
+    Value<DateTime>? start,
+    Value<DateTime?>? lastDone,
+    Value<bool>? active,
+    Value<int>? rowid,
+  }) {
+    return RecurringRulesCompanion(
+      id: id ?? this.id,
+      isExpense: isExpense ?? this.isExpense,
+      accountId: accountId ?? this.accountId,
+      toAccountId: toAccountId ?? this.toAccountId,
+      category: category ?? this.category,
+      amountMinor: amountMinor ?? this.amountMinor,
+      currency: currency ?? this.currency,
+      note: note ?? this.note,
+      every: every ?? this.every,
+      start: start ?? this.start,
+      lastDone: lastDone ?? this.lastDone,
+      active: active ?? this.active,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (isExpense.present) {
+      map['is_expense'] = Variable<bool>(isExpense.value);
+    }
+    if (accountId.present) {
+      map['account_id'] = Variable<String>(accountId.value);
+    }
+    if (toAccountId.present) {
+      map['to_account_id'] = Variable<String>(toAccountId.value);
+    }
+    if (category.present) {
+      map['category'] = Variable<String>(category.value);
+    }
+    if (amountMinor.present) {
+      map['amount_minor'] = Variable<int>(amountMinor.value);
+    }
+    if (currency.present) {
+      map['currency'] = Variable<String>(currency.value);
+    }
+    if (note.present) {
+      map['note'] = Variable<String>(note.value);
+    }
+    if (every.present) {
+      map['every'] = Variable<String>(every.value);
+    }
+    if (start.present) {
+      map['start'] = Variable<DateTime>(start.value);
+    }
+    if (lastDone.present) {
+      map['last_done'] = Variable<DateTime>(lastDone.value);
+    }
+    if (active.present) {
+      map['active'] = Variable<bool>(active.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RecurringRulesCompanion(')
+          ..write('id: $id, ')
+          ..write('isExpense: $isExpense, ')
+          ..write('accountId: $accountId, ')
+          ..write('toAccountId: $toAccountId, ')
+          ..write('category: $category, ')
+          ..write('amountMinor: $amountMinor, ')
+          ..write('currency: $currency, ')
+          ..write('note: $note, ')
+          ..write('every: $every, ')
+          ..write('start: $start, ')
+          ..write('lastDone: $lastDone, ')
+          ..write('active: $active, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$KakaDatabase extends GeneratedDatabase {
   _$KakaDatabase(QueryExecutor e) : super(e);
   $KakaDatabaseManager get managers => $KakaDatabaseManager(this);
@@ -4271,6 +4872,7 @@ abstract class _$KakaDatabase extends GeneratedDatabase {
   late final $AssetPricesTable assetPrices = $AssetPricesTable(this);
   late final $CustomParsersTable customParsers = $CustomParsersTable(this);
   late final $BudgetsTable budgets = $BudgetsTable(this);
+  late final $RecurringRulesTable recurringRules = $RecurringRulesTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables => allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
@@ -4287,6 +4889,7 @@ abstract class _$KakaDatabase extends GeneratedDatabase {
     assetPrices,
     customParsers,
     budgets,
+    recurringRules,
   ];
 }
 
@@ -7074,6 +7677,270 @@ typedef $$BudgetsTableProcessedTableManager =
       BudgetRow,
       PrefetchHooks Function()
     >;
+typedef $$RecurringRulesTableCreateCompanionBuilder =
+    RecurringRulesCompanion Function({
+      required String id,
+      required bool isExpense,
+      required String accountId,
+      Value<String?> toAccountId,
+      Value<String?> category,
+      required int amountMinor,
+      required String currency,
+      Value<String> note,
+      required String every,
+      required DateTime start,
+      Value<DateTime?> lastDone,
+      Value<bool> active,
+      Value<int> rowid,
+    });
+typedef $$RecurringRulesTableUpdateCompanionBuilder =
+    RecurringRulesCompanion Function({
+      Value<String> id,
+      Value<bool> isExpense,
+      Value<String> accountId,
+      Value<String?> toAccountId,
+      Value<String?> category,
+      Value<int> amountMinor,
+      Value<String> currency,
+      Value<String> note,
+      Value<String> every,
+      Value<DateTime> start,
+      Value<DateTime?> lastDone,
+      Value<bool> active,
+      Value<int> rowid,
+    });
+
+class $$RecurringRulesTableFilterComposer extends Composer<_$KakaDatabase, $RecurringRulesTable> {
+  $$RecurringRulesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isExpense =>
+      $composableBuilder(column: $table.isExpense, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get accountId =>
+      $composableBuilder(column: $table.accountId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get toAccountId =>
+      $composableBuilder(column: $table.toAccountId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get amountMinor =>
+      $composableBuilder(column: $table.amountMinor, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get currency =>
+      $composableBuilder(column: $table.currency, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get note => $composableBuilder(column: $table.note, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get every =>
+      $composableBuilder(column: $table.every, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get start =>
+      $composableBuilder(column: $table.start, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get lastDone =>
+      $composableBuilder(column: $table.lastDone, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get active =>
+      $composableBuilder(column: $table.active, builder: (column) => ColumnFilters(column));
+}
+
+class $$RecurringRulesTableOrderingComposer extends Composer<_$KakaDatabase, $RecurringRulesTable> {
+  $$RecurringRulesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isExpense =>
+      $composableBuilder(column: $table.isExpense, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get accountId =>
+      $composableBuilder(column: $table.accountId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get toAccountId =>
+      $composableBuilder(column: $table.toAccountId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get amountMinor =>
+      $composableBuilder(column: $table.amountMinor, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get currency =>
+      $composableBuilder(column: $table.currency, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get note =>
+      $composableBuilder(column: $table.note, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get every =>
+      $composableBuilder(column: $table.every, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get start =>
+      $composableBuilder(column: $table.start, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get lastDone =>
+      $composableBuilder(column: $table.lastDone, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get active =>
+      $composableBuilder(column: $table.active, builder: (column) => ColumnOrderings(column));
+}
+
+class $$RecurringRulesTableAnnotationComposer extends Composer<_$KakaDatabase, $RecurringRulesTable> {
+  $$RecurringRulesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id => $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<bool> get isExpense => $composableBuilder(column: $table.isExpense, builder: (column) => column);
+
+  GeneratedColumn<String> get accountId => $composableBuilder(column: $table.accountId, builder: (column) => column);
+
+  GeneratedColumn<String> get toAccountId =>
+      $composableBuilder(column: $table.toAccountId, builder: (column) => column);
+
+  GeneratedColumn<String> get category => $composableBuilder(column: $table.category, builder: (column) => column);
+
+  GeneratedColumn<int> get amountMinor => $composableBuilder(column: $table.amountMinor, builder: (column) => column);
+
+  GeneratedColumn<String> get currency => $composableBuilder(column: $table.currency, builder: (column) => column);
+
+  GeneratedColumn<String> get note => $composableBuilder(column: $table.note, builder: (column) => column);
+
+  GeneratedColumn<String> get every => $composableBuilder(column: $table.every, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get start => $composableBuilder(column: $table.start, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastDone => $composableBuilder(column: $table.lastDone, builder: (column) => column);
+
+  GeneratedColumn<bool> get active => $composableBuilder(column: $table.active, builder: (column) => column);
+}
+
+class $$RecurringRulesTableTableManager
+    extends
+        RootTableManager<
+          _$KakaDatabase,
+          $RecurringRulesTable,
+          RecurringRuleRow,
+          $$RecurringRulesTableFilterComposer,
+          $$RecurringRulesTableOrderingComposer,
+          $$RecurringRulesTableAnnotationComposer,
+          $$RecurringRulesTableCreateCompanionBuilder,
+          $$RecurringRulesTableUpdateCompanionBuilder,
+          (RecurringRuleRow, BaseReferences<_$KakaDatabase, $RecurringRulesTable, RecurringRuleRow>),
+          RecurringRuleRow,
+          PrefetchHooks Function()
+        > {
+  $$RecurringRulesTableTableManager(_$KakaDatabase db, $RecurringRulesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () => $$RecurringRulesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () => $$RecurringRulesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () => $$RecurringRulesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<bool> isExpense = const Value.absent(),
+                Value<String> accountId = const Value.absent(),
+                Value<String?> toAccountId = const Value.absent(),
+                Value<String?> category = const Value.absent(),
+                Value<int> amountMinor = const Value.absent(),
+                Value<String> currency = const Value.absent(),
+                Value<String> note = const Value.absent(),
+                Value<String> every = const Value.absent(),
+                Value<DateTime> start = const Value.absent(),
+                Value<DateTime?> lastDone = const Value.absent(),
+                Value<bool> active = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => RecurringRulesCompanion(
+                id: id,
+                isExpense: isExpense,
+                accountId: accountId,
+                toAccountId: toAccountId,
+                category: category,
+                amountMinor: amountMinor,
+                currency: currency,
+                note: note,
+                every: every,
+                start: start,
+                lastDone: lastDone,
+                active: active,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required bool isExpense,
+                required String accountId,
+                Value<String?> toAccountId = const Value.absent(),
+                Value<String?> category = const Value.absent(),
+                required int amountMinor,
+                required String currency,
+                Value<String> note = const Value.absent(),
+                required String every,
+                required DateTime start,
+                Value<DateTime?> lastDone = const Value.absent(),
+                Value<bool> active = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => RecurringRulesCompanion.insert(
+                id: id,
+                isExpense: isExpense,
+                accountId: accountId,
+                toAccountId: toAccountId,
+                category: category,
+                amountMinor: amountMinor,
+                currency: currency,
+                note: note,
+                every: every,
+                start: start,
+                lastDone: lastDone,
+                active: active,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$RecurringRulesTable, RecurringRuleRow>(table),
+                  BaseReferences<_$KakaDatabase, $RecurringRulesTable, RecurringRuleRow>(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$RecurringRulesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$KakaDatabase,
+      $RecurringRulesTable,
+      RecurringRuleRow,
+      $$RecurringRulesTableFilterComposer,
+      $$RecurringRulesTableOrderingComposer,
+      $$RecurringRulesTableAnnotationComposer,
+      $$RecurringRulesTableCreateCompanionBuilder,
+      $$RecurringRulesTableUpdateCompanionBuilder,
+      (RecurringRuleRow, BaseReferences<_$KakaDatabase, $RecurringRulesTable, RecurringRuleRow>),
+      RecurringRuleRow,
+      PrefetchHooks Function()
+    >;
 
 class $KakaDatabaseManager {
   final _$KakaDatabase _db;
@@ -7090,4 +7957,5 @@ class $KakaDatabaseManager {
   $$AssetPricesTableTableManager get assetPrices => $$AssetPricesTableTableManager(_db, _db.assetPrices);
   $$CustomParsersTableTableManager get customParsers => $$CustomParsersTableTableManager(_db, _db.customParsers);
   $$BudgetsTableTableManager get budgets => $$BudgetsTableTableManager(_db, _db.budgets);
+  $$RecurringRulesTableTableManager get recurringRules => $$RecurringRulesTableTableManager(_db, _db.recurringRules);
 }

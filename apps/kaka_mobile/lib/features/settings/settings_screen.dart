@@ -70,6 +70,14 @@ class SettingsScreen extends ConsumerWidget {
           ),
           ListTile(
             contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.repeat_rounded),
+            title: Text(l.recurring),
+            subtitle: Text(l.recurringHint, style: TextStyle(color: c.textMuted, fontSize: 12)),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => context.push(Routes.recurring),
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.currency_exchange_rounded),
             title: Text(l.exchangeRates),
             trailing: const Icon(Icons.chevron_right_rounded),

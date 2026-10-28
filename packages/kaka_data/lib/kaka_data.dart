@@ -10,3 +10,4 @@ export 'src/backup.dart';
 export 'src/drift_sms_link_repository.dart';
 export 'src/drift_fx_asset_repositories.dart';
 export 'src/drift_budget_repository.dart';
+export 'src/drift_recurring_repository.dart';

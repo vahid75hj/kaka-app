@@ -64,6 +64,7 @@ void main() {
     await db.customStatement('ALTER TABLE drafts DROP COLUMN category');
     await db.customStatement('ALTER TABLE accounts DROP COLUMN icon');
     await db.customStatement('DROP TABLE budgets');
+    await db.customStatement('DROP TABLE recurring_rules');
     await db.customStatement('PRAGMA user_version = 3');
     await db.close();
 
@@ -114,6 +115,7 @@ void main() {
     await db.customStatement('ALTER TABLE drafts DROP COLUMN category');
     await db.customStatement('ALTER TABLE accounts DROP COLUMN icon');
     await db.customStatement('DROP TABLE budgets');
+    await db.customStatement('DROP TABLE recurring_rules');
     await db.customStatement(
       "INSERT INTO asset_movements (id, asset_type_id, quantity_milli, moved_at, note) VALUES ('old', 'gold18', 1500, 0, '')",
     );
@@ -168,5 +170,27 @@ void main() {
     // Budgets travel with backups.
     final snap = await LedgerSnapshot(db).export();
     expect((snap['tables'] as Map)['budgets'], hasLength(1));
+    final rules = DriftRecurringRepository(db);
+    await rules.upsert(
+      RecurringRule(
+        id: 'r',
+        isExpense: true,
+        accountId: 'c',
+        category: 'خرید',
+        amount: const Money(7, Currency.irr),
+        every: RecurrenceEvery.weekly,
+        start: DateTime(2026, 1, 1, 9),
+      ),
+    );
+    await rules.renameCategory('خرید', 'سوپرمارکت', isExpense: false);
+    expect((await rules.getAll()).single.category, 'خرید');
+    await rules.renameCategory('خرید', 'سوپرمارکت', isExpense: true);
+    final r = (await rules.getAll()).single;
+    expect(
+      (r.category, r.every, r.active, r.lastDone, r.start),
+      ('سوپرمارکت', RecurrenceEvery.weekly, true, null, DateTime(2026, 1, 1, 9)),
+    );
+    await rules.upsert(r.copyWith(lastDone: DateTime(2026, 1, 8, 9), active: false));
+    expect((await rules.getAll()).single.active, isFalse);
   });
 }

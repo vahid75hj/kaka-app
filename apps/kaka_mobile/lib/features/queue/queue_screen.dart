@@ -168,6 +168,7 @@ class _DraftCard extends ConsumerWidget {
                   text: toAccount == null ? account.name : '${account.name} → ${toAccount.name}',
                 ),
               if (draft.source == DraftSource.ai) _Tag(icon: Icons.auto_awesome_outlined, text: l.fromAi),
+              if (draft.source == DraftSource.recurring) _Tag(icon: Icons.repeat_rounded, text: l.recurringTag),
               if (account == null && draft.source == DraftSource.sms)
                 _Tag(icon: Icons.help_outline, text: l.smsNoAccount),
               if (draft.confidence != null)

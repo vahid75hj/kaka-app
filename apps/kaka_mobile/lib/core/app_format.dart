@@ -83,3 +83,19 @@ class AppFormat {
     return digits(DateFormat.yMMMM(settings.localeCode).format(now));
   }
 }
+
+/// Month stepping for repeating transactions in the user's calendar: "the 1st
+/// of every month" means 1 Farvardin, 1 Ordibehesht… for Jalali users.
+MonthAdder monthAdderFor(CalendarSystem calendar) {
+  if (calendar != CalendarSystem.jalali) return gregorianAddMonths;
+  return (a, n) {
+    final j = Jalali.fromDateTime(a);
+    var y = j.year, m = j.month + n;
+    y += ((m - 1) / 12).floor();
+    m = (m - 1) % 12 + 1;
+    final first = Jalali(y, m, 1);
+    final day = j.day > first.monthLength ? first.monthLength : j.day;
+    final g = Jalali(y, m, day).toDateTime();
+    return DateTime(g.year, g.month, g.day, a.hour, a.minute);
+  };
+}

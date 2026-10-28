@@ -173,3 +173,23 @@ class Budgets extends Table {
   @override
   Set<Column> get primaryKey => {id};
 }
+
+/// v5: repeating transactions; due ones are queued as drafts.
+@DataClassName('RecurringRuleRow')
+class RecurringRules extends Table {
+  TextColumn get id => text()();
+  BoolColumn get isExpense => boolean()();
+  TextColumn get accountId => text()();
+  TextColumn get toAccountId => text().nullable()();
+  TextColumn get category => text().nullable()();
+  IntColumn get amountMinor => integer()();
+  TextColumn get currency => text()();
+  TextColumn get note => text().withDefault(const Constant(''))();
+  TextColumn get every => text()();
+  DateTimeColumn get start => dateTime()();
+  DateTimeColumn get lastDone => dateTime().nullable()();
+  BoolColumn get active => boolean().withDefault(const Constant(true))();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}

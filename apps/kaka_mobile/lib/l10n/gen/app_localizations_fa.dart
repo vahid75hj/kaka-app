@@ -994,4 +994,40 @@ class AppLocalizationsFa extends AppLocalizations {
   String importDone(Object count) {
     return '$count تراکنش وارد شد';
   }
+
+  @override
+  String get recurringTag => 'تکراری';
+
+  @override
+  String get recurring => 'تکراری‌ها';
+
+  @override
+  String get recurringHint => 'اجاره، حقوق، اشتراک‌ها — موعدشون که برسه توی صف میان تا با یه لمس تأیید کنی';
+
+  @override
+  String get repeat => 'تکرار';
+
+  @override
+  String get repeatNever => 'تکرار نشه';
+
+  @override
+  String get repeatWeekly => 'هر هفته';
+
+  @override
+  String get repeatMonthly => 'هر ماه';
+
+  @override
+  String get noRecurring =>
+      'هنوز چیزی تکرار نمی‌شه. موقع ثبت تراکنش «تکرار» رو انتخاب کن — اجاره، حقوق، اشتراک — تا کاکا سر موعدش بذارتش توی صف.';
+
+  @override
+  String recurringNext(Object date) {
+    return 'بعدی: $date';
+  }
+
+  @override
+  String get recurringPaused => 'متوقف';
+
+  @override
+  String get recurringDeleteConfirm => 'دیگه تکرار نشه؟ تراکنش‌های ثبت‌شده سر جاشون می‌مونن.';
 }

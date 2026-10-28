@@ -1003,4 +1003,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String importDone(Object count) {
     return '$count transactions imported';
   }
+
+  @override
+  String get recurringTag => 'Repeats';
+
+  @override
+  String get recurring => 'Repeating';
+
+  @override
+  String get recurringHint => 'Rent, salary, subscriptions — due ones appear in the queue for a tap to confirm';
+
+  @override
+  String get repeat => 'Repeat';
+
+  @override
+  String get repeatNever => 'Never';
+
+  @override
+  String get repeatWeekly => 'Every week';
+
+  @override
+  String get repeatMonthly => 'Every month';
+
+  @override
+  String get noRecurring =>
+      'Nothing repeats yet. When adding a transaction, choose \"Repeat\" — rent, salary, subscriptions — and Kaka will put it in the queue on its day.';
+
+  @override
+  String recurringNext(Object date) {
+    return 'Next: $date';
+  }
+
+  @override
+  String get recurringPaused => 'Paused';
+
+  @override
+  String get recurringDeleteConfirm => 'Stop repeating this? Transactions already recorded stay.';
 }

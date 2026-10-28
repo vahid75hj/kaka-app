@@ -138,3 +138,17 @@ final budgetRepositoryProvider = Provider<DriftBudgetRepository>(
   (ref) => DriftBudgetRepository(ref.watch(databaseProvider)),
 );
 final budgetsProvider = StreamProvider<List<Budget>>((ref) => ref.watch(budgetRepositoryProvider).watchAll());
+
+final recurringRepositoryProvider = Provider<DriftRecurringRepository>(
+  (ref) => DriftRecurringRepository(ref.watch(databaseProvider)),
+);
+final recurringRulesProvider = StreamProvider<List<RecurringRule>>(
+  (ref) => ref.watch(recurringRepositoryProvider).watchAll(),
+);
+final recurringServiceProvider = Provider<RecurringService>(
+  (ref) => RecurringService(
+    ref.watch(recurringRepositoryProvider),
+    ref.watch(draftServiceProvider),
+    addMonths: monthAdderFor(ref.watch(settingsProvider.select((s) => s.calendar))),
+  ),
+);

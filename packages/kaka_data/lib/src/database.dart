@@ -22,6 +22,7 @@ part 'database.g.dart';
     AssetPrices,
     CustomParsers,
     Budgets,
+    RecurringRules,
   ],
 )
 class KakaDatabase extends _$KakaDatabase {
@@ -76,8 +77,13 @@ class KakaDatabase extends _$KakaDatabase {
         await _addIfMissing(m, drafts, drafts.toAccountId);
         await _addIfMissing(m, drafts, drafts.category);
         await _addIfMissing(m, accounts, accounts.icon);
-        final has = await customSelect("SELECT 1 FROM sqlite_master WHERE type='table' AND name='budgets'").get();
-        if (has.isEmpty) await m.createTable(budgets);
+        for (final TableInfo<Table, dynamic> t in [budgets, recurringRules]) {
+          final has = await customSelect(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name=?",
+            variables: [Variable(t.actualTableName)],
+          ).get();
+          if (has.isEmpty) await m.createTable(t);
+        }
       }
     },
   );

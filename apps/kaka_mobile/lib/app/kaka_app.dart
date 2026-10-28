@@ -20,10 +20,12 @@ class KakaApp extends ConsumerStatefulWidget {
   ConsumerState<KakaApp> createState() => _KakaAppState();
 }
 
-class _KakaAppState extends ConsumerState<KakaApp> {
+class _KakaAppState extends ConsumerState<KakaApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _runRecurring();
     SecureWindow.set(ref.read(settingsProvider).secureScreen);
     ShareInbox.listen(_onShared, onOpenQueue: _openQueue);
     ShareInbox.takeInitial().then((t) {
@@ -42,6 +44,27 @@ class _KakaAppState extends ConsumerState<KakaApp> {
     router.push(Routes.queue);
     final ctx = router.routerDelegate.navigatorKey.currentContext;
     if (ctx != null && ctx.mounted) showIngestResult(ctx, result);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _runRecurring();
+  }
+
+  /// Due repeating transactions → question queue (never straight to the ledger).
+  Future<void> _runRecurring() async {
+    if (!ref.read(settingsProvider).onboarded) return;
+    try {
+      await ref.read(recurringServiceProvider).run();
+    } catch (e) {
+      debugPrint('recurring: $e');
+    }
   }
 
   void _openQueue() {

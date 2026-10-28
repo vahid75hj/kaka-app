@@ -1921,6 +1921,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} transactions imported'**
   String importDone(Object count);
+
+  /// No description provided for @recurringTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeats'**
+  String get recurringTag;
+
+  /// No description provided for @recurring.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeating'**
+  String get recurring;
+
+  /// No description provided for @recurringHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Rent, salary, subscriptions — due ones appear in the queue for a tap to confirm'**
+  String get recurringHint;
+
+  /// No description provided for @repeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat'**
+  String get repeat;
+
+  /// No description provided for @repeatNever.
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get repeatNever;
+
+  /// No description provided for @repeatWeekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Every week'**
+  String get repeatWeekly;
+
+  /// No description provided for @repeatMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Every month'**
+  String get repeatMonthly;
+
+  /// No description provided for @noRecurring.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing repeats yet. When adding a transaction, choose \"Repeat\" — rent, salary, subscriptions — and Kaka will put it in the queue on its day.'**
+  String get noRecurring;
+
+  /// No description provided for @recurringNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next: {date}'**
+  String recurringNext(Object date);
+
+  /// No description provided for @recurringPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get recurringPaused;
+
+  /// No description provided for @recurringDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop repeating this? Transactions already recorded stay.'**
+  String get recurringDeleteConfirm;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

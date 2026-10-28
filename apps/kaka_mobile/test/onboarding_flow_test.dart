@@ -11,6 +11,8 @@ import 'package:kaka_data/kaka_data.dart';
 import 'package:kaka_domain/kaka_domain.dart';
 import 'package:kaka_mobile/app/kaka_app.dart';
 import 'package:kaka_mobile/app/providers.dart';
+import 'package:kaka_mobile/app/router.dart';
+import 'package:go_router/go_router.dart';
 
 void main() {
   late Directory dir;
@@ -137,6 +139,34 @@ void main() {
         final image = await boundary.toImage(pixelRatio: 1);
         final png = await image.toByteData(format: ui.ImageByteFormat.png);
         File(shot.replaceFirst('.png', '_budgets.png')).writeAsBytesSync(png!.buffer.asUint8List());
+      }
+
+      await DriftRecurringRepository(db).upsert(
+        RecurringRule(
+          id: 'rent',
+          isExpense: true,
+          accountId: cash.id,
+          category: 'اجاره‌ی خونه‌ی خیابان ولیعصر',
+          amount: const Money(1500000000, Currency.irr),
+          every: RecurrenceEvery.monthly,
+          start: DateTime(2026, 10, 23, 9),
+          lastDone: DateTime(2026, 10, 23, 9),
+          note: 'به آقای صاحب‌خونه',
+        ),
+      );
+      GoRouter.of(tester.element(find.byType(Scaffold).last)).push(Routes.recurring);
+      for (var i = 0; i < 10; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+        await tester.pump();
+      }
+      await tester.pumpAndSettle();
+      expect(find.textContaining('هر ماه · بعدی:'), findsOneWidget);
+      expect(tester.takeException(), isNull, reason: 'recurring list fits in RTL');
+      if (shot != null) {
+        final boundary = tester.renderObject<RenderRepaintBoundary>(find.byType(RepaintBoundary).first);
+        final image = await boundary.toImage(pixelRatio: 1);
+        final png = await image.toByteData(format: ui.ImageByteFormat.png);
+        File(shot.replaceFirst('.png', '_recurring.png')).writeAsBytesSync(png!.buffer.asUint8List());
       }
       await tester.pumpWidget(const SizedBox());
       await tester.pump(Duration.zero);

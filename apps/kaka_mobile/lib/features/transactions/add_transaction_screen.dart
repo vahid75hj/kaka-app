@@ -40,6 +40,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
   String? _error;
 
   Draft? _draft;
+  RecurrenceEvery? _repeat;
 
   @override
   void initState() {
@@ -164,6 +165,29 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
         await ledger.replace(_original!, record);
       } else {
         await record();
+        final every = _repeat;
+        if (every != null && _kind != TransactionKind.opening) {
+          final to = wallets.where((a) => a.id == _toAccountId).firstOrNull;
+          // Repeating exchanges would need a rate each time; only same-currency transfers repeat.
+          if (_kind != TransactionKind.transfer || (to != null && to.currency == from.currency)) {
+            await ref
+                .read(recurringRepositoryProvider)
+                .upsert(
+                  RecurringRule(
+                    id: Ids.next(),
+                    isExpense: _kind != TransactionKind.income,
+                    accountId: from.id,
+                    toAccountId: _kind == TransactionKind.transfer ? to!.id : null,
+                    category: _kind == TransactionKind.transfer ? null : (_category ?? l.catOther),
+                    amount: amount,
+                    note: _note.text,
+                    every: every,
+                    start: _date,
+                    lastDone: _date,
+                  ),
+                );
+          }
+        }
       }
       if (_draft != null) await ref.read(draftServiceProvider).confirm(_draft!.id);
       if (mounted) context.pop();
@@ -285,6 +309,22 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
             controller: _note,
             decoration: InputDecoration(labelText: l.note),
           ),
+          if (_original == null &&
+              _draft == null &&
+              (_kind != TransactionKind.transfer || to?.currency == from?.currency))
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: DropdownButtonFormField<RecurrenceEvery?>(
+                initialValue: _repeat,
+                decoration: InputDecoration(labelText: l.repeat, prefixIcon: const Icon(Icons.repeat_rounded)),
+                items: [
+                  DropdownMenuItem(value: null, child: Text(l.repeatNever)),
+                  DropdownMenuItem(value: RecurrenceEvery.weekly, child: Text(l.repeatWeekly)),
+                  DropdownMenuItem(value: RecurrenceEvery.monthly, child: Text(l.repeatMonthly)),
+                ],
+                onChanged: (v) => setState(() => _repeat = v),
+              ),
+            ),
           if (_error != null)
             Padding(
               padding: const EdgeInsets.only(top: 12),

@@ -468,5 +468,21 @@
     "placeholders": {
       "count": {}
     }
-  }
+  },
+  "recurringTag": "Repeats",
+  "recurring": "Repeating",
+  "recurringHint": "Rent, salary, subscriptions — due ones appear in the queue for a tap to confirm",
+  "repeat": "Repeat",
+  "repeatNever": "Never",
+  "repeatWeekly": "Every week",
+  "repeatMonthly": "Every month",
+  "noRecurring": "Nothing repeats yet. When adding a transaction, choose \"Repeat\" — rent, salary, subscriptions — and Kaka will put it in the queue on its day.",
+  "recurringNext": "Next: {date}",
+  "@recurringNext": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "recurringPaused": "Paused",
+  "recurringDeleteConfirm": "Stop repeating this? Transactions already recorded stay."
 }

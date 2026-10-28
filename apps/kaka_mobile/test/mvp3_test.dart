@@ -13,6 +13,7 @@ import 'package:kaka_mobile/features/budgets/budgets_screen.dart';
 import 'package:kaka_mobile/features/home/home_screen.dart';
 import 'package:kaka_mobile/features/queue/share_ingest.dart';
 import 'package:kaka_sms/kaka_sms.dart';
+import 'package:shamsi_date/shamsi_date.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -245,5 +246,48 @@ void main() {
     await ledger.renameCategory(AccountType.expense, 'غذا', 'خوراک');
     await repo.renameCategory('غذا', 'خوراک');
     expect((await repo.getAll()).single.category, 'خوراک');
+  });
+
+  test('recurring in the Jalali calendar: 31 Shahrivar → 30 Mehr → 29 Esfand (30 in leap 1403), queued once', () async {
+    final add = monthAdderFor(CalendarSystem.jalali);
+    final start = Jalali(1405, 6, 31).toDateTime().add(const Duration(hours: 9));
+    String j(DateTime d) =>
+        Jalali.fromDateTime(d).formatter.yyyy +
+        Jalali.fromDateTime(d).formatter.mm +
+        Jalali.fromDateTime(d).formatter.dd;
+    expect(j(add(start, 1)), '14050730');
+    expect(j(add(start, 6)), '14051229');
+    expect(j(add(Jalali(1403, 6, 31).toDateTime(), 6)), '14031230'); // 1403 is a leap year
+    expect(j(add(start, -6)), '14041229');
+    expect(add(start, 1).hour, 9);
+    expect(j(monthAdderFor(CalendarSystem.jalali)(Jalali(1405, 1, 1).toDateTime(), 12)), '14060101');
+
+    final ledger = container.read(ledgerProvider);
+    final cash = await ledger.createAccount(name: 'نقد', type: AccountType.asset, currency: Currency.irr);
+    final rules = container.read(recurringRepositoryProvider);
+    final first = Jalali(1405, 7, 1).toDateTime();
+    await rules.upsert(
+      RecurringRule(
+        id: 'rent',
+        isExpense: true,
+        accountId: cash.id,
+        category: 'اجاره',
+        amount: const Money(100, Currency.irr),
+        every: RecurrenceEvery.monthly,
+        start: first,
+        lastDone: first,
+      ),
+    );
+    final service = RecurringService(
+      rules,
+      container.read(draftServiceProvider),
+      addMonths: add,
+      clock: () => Jalali(1405, 9, 2).toDateTime(),
+    );
+    expect(await service.run(), 2); // 1 Aban, 1 Azar
+    expect(await service.run(), 0);
+    final pending = await container.read(draftServiceProvider).watchPending().first;
+    expect(pending.map((d) => j(d.occurredAt!)).toSet(), {'14050801', '14050901'});
+    expect(pending.every((d) => d.source == DraftSource.recurring && d.category == 'اجاره'), isTrue);
   });
 }

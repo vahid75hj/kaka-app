@@ -304,5 +304,16 @@
   "importMore": "و {count} تای دیگه",
   "importNothingNew": "چیز تازه‌ای برای وارد کردن نیست.",
   "importNow": "وارد کن ({count})",
-  "importDone": "{count} تراکنش وارد شد"
+  "importDone": "{count} تراکنش وارد شد",
+  "recurringTag": "تکراری",
+  "recurring": "تکراری‌ها",
+  "recurringHint": "اجاره، حقوق، اشتراک‌ها — موعدشون که برسه توی صف میان تا با یه لمس تأیید کنی",
+  "repeat": "تکرار",
+  "repeatNever": "تکرار نشه",
+  "repeatWeekly": "هر هفته",
+  "repeatMonthly": "هر ماه",
+  "noRecurring": "هنوز چیزی تکرار نمی‌شه. موقع ثبت تراکنش «تکرار» رو انتخاب کن — اجاره، حقوق، اشتراک — تا کاکا سر موعدش بذارتش توی صف.",
+  "recurringNext": "بعدی: {date}",
+  "recurringPaused": "متوقف",
+  "recurringDeleteConfirm": "دیگه تکرار نشه؟ تراکنش‌های ثبت‌شده سر جاشون می‌مونن."
 }

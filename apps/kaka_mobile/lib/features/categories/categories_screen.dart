@@ -132,6 +132,9 @@ Future<void> _edit(BuildContext context, WidgetRef ref, AccountType type, Catego
                   if (type == AccountType.expense) {
                     await ref.read(budgetRepositoryProvider).renameCategory(existing.name, controller.text.trim());
                   }
+                  await ref
+                      .read(recurringRepositoryProvider)
+                      .renameCategory(existing.name, controller.text.trim(), isExpense: type == AccountType.expense);
                 }
                 if (dialogContext.mounted) Navigator.pop(dialogContext);
               } catch (e) {

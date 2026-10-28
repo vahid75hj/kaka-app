@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 import '../money/money.dart';
 
 /// Where a draft came from. Drafts never touch the ledger until the user confirms.
-enum DraftSource { sms, share, ai, manual }
+enum DraftSource { sms, share, ai, manual, recurring }
 
 enum DraftStatus { pending, confirmed, discarded }
 

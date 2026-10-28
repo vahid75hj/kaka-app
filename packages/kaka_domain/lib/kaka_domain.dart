@@ -26,4 +26,5 @@ export 'src/report/net_worth.dart';
 export 'src/report/csv_export.dart';
 export 'src/report/budget.dart';
 export 'src/import/csv_import.dart';
+export 'src/recurring/recurring.dart';
 export 'src/ledger/transaction_query.dart';
