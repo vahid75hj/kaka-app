@@ -173,4 +173,58 @@ void main() {
       await db.close();
     });
   });
+
+  testWidgets('add form: "every month" saves the expense and a rule already done for today', (tester) async {
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 2.75;
+    addTearDown(tester.view.reset);
+    await tester.runAsync(() async {
+      final ledger = LedgerService(DriftAccountRepository(db), DriftTransactionRepository(db));
+      await ledger.createAccount(name: 'نقد', type: AccountType.asset, currency: Currency.irr);
+      await ledger.ensureCategory('اجاره', AccountType.expense, Currency.irr);
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            databaseProvider.overrideWithValue(db),
+            initialSettingsProvider.overrideWithValue(
+              AppSettings.defaultsFor('fa').copyWith(onboarded: true, hideGettingStarted: true),
+            ),
+          ],
+          child: const KakaApp(),
+        ),
+      );
+      Future<void> settle() async {
+        for (var i = 0; i < 10; i++) {
+          await Future<void>.delayed(const Duration(milliseconds: 50));
+          await tester.pump();
+        }
+        await tester.pumpAndSettle();
+      }
+
+      await settle();
+      GoRouter.of(tester.element(find.byType(Scaffold).last)).push(Routes.addTransaction);
+      await settle();
+      await tester.enterText(find.byType(TextField).first, '15000000');
+      await tester.tap(find.widgetWithText(ChoiceChip, 'اجاره'));
+      await settle();
+      final repeat = find.text('تکرار نشه');
+      final vertical = find.byWidgetPredicate((w) => w is Scrollable && w.axisDirection == AxisDirection.down).first;
+      await tester.scrollUntilVisible(repeat, 200, scrollable: vertical);
+      await tester.tap(repeat);
+      await settle();
+      await tester.tap(find.text('هر ماه').last);
+      await settle();
+      await tester.scrollUntilVisible(find.widgetWithText(FilledButton, 'ذخیره'), 200, scrollable: vertical);
+      await tester.tap(find.widgetWithText(FilledButton, 'ذخیره'));
+      await settle();
+      final rule = (await DriftRecurringRepository(db).getAll()).single;
+      expect((rule.category, rule.amount.minor, rule.every), ('اجاره', 150000000, RecurrenceEvery.monthly));
+      expect(rule.lastDone, rule.start, reason: 'today is recorded, not queued again');
+      final txns = await DriftTransactionRepository(db).watchRecent().first;
+      expect(txns.where((t) => t.kind == TransactionKind.expense), hasLength(1));
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump(Duration.zero);
+      await db.close();
+    });
+  });
 }
