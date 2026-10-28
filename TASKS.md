@@ -46,7 +46,7 @@ Phases: **MVP-1** = first usable APK · **MVP-2** = v0.1 feature-complete · **L
 - [x] Bank balance vs ledger mismatch hint on drafts
 - [ ] Background receiver when the app is closed (WorkManager / manifest receiver) — today missed SMS are picked up on next open
 - [x] "Learn a new bank" flow (diff 3–5 samples into a template)
-- [ ] CI step that runs every catalog entry's `tests`
+- [~] CI workflow written (`docs/ci/ci.yml`: format, analyze, package + catalog tests, app tests) — must be moved into `.github/workflows/` with a `workflow`-scoped token; old template workflows still fail
 - [x] Encrypted `.kaka` backup (Argon2id m=19 MiB t=2 + XChaCha20-Poly1305, header as AAD) via share sheet; restore via file picker — reminder still open
 - [x] Exchange rates (manual, per date) and cross-currency exchange via `FX:<cur>` accounts — public rate source still open
 - [x] Net worth converted to base currency with rate date / "stale" label
@@ -57,7 +57,7 @@ Phases: **MVP-1** = first usable APK · **MVP-2** = v0.1 feature-complete · **L
 - [ ] Asset buy/sell linked to cash accounts; AI transfer drafts (today saved as generic draft)
 - [x] Transaction search & filters (text, kind, account, date range) — edit-by-void-and-replace still open
 - [~] Release signing (dedicated release key via `android/key.properties`, falls back to debug) + split-per-ABI APKs on GitHub Releases — CI signing on tags and F-Droid metadata still open
-- [ ] `CONTRIBUTING.md` (add a bank / model / language), `SECURITY.md`, issue templates
+- [x] `CONTRIBUTING.md` (add a bank / model / language), `SECURITY.md`, issue templates
 
 ## Later (v0.2+)
 - [ ] On-device models: `flutter_gemma` runtime, download with mirrors + sha256, device fit check, probe
