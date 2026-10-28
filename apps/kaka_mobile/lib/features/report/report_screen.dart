@@ -36,7 +36,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
     final f = ref.watch(formatProvider);
     final fa = ref.watch(settingsProvider).isPersian;
     final end = f.addMonths(_month, 1);
-    final txns = ref.watch(transactionsProvider).value ?? const <LedgerTransaction>[];
+    final txns = ref.watch(allTransactionsProvider).value ?? const <LedgerTransaction>[];
     final accounts = {for (final a in ref.watch(accountsProvider).value ?? const <Account>[]) a.id: a};
     final report = MonthlyReport.build(txns, accounts, ref.watch(converterProvider), from: _month, to: end);
     final net = report.totalIncome - report.totalExpense;

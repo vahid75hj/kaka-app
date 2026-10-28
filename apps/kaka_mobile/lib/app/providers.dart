@@ -152,3 +152,8 @@ final recurringServiceProvider = Provider<RecurringService>(
     addMonths: monthAdderFor(ref.watch(settingsProvider.select((s) => s.calendar))),
   ),
 );
+
+/// Whole history, for screens that look at any past range (report). Auto-disposed when unused.
+final allTransactionsProvider = StreamProvider.autoDispose<List<LedgerTransaction>>(
+  (ref) => ref.watch(transactionRepositoryProvider).watchRecent(limit: 1 << 30),
+);
