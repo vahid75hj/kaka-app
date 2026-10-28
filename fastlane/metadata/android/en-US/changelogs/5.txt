@@ -1,0 +1,7 @@
+• Monthly budgets per category with pace warnings
+• Repeating transactions (weekly/monthly, Jalali-aware) queued for confirmation
+• CSV import from bank statements or spreadsheets, with duplicate skip and undo
+• Gold/coin buys and sells move money from your accounts
+• Opt-in background reading of bank SMS
+• Category icons, first-run checklist, backup reminder, new app icon
+• Fix: AI endpoints were unreachable in 0.4.0

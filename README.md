@@ -3,7 +3,7 @@
 > **حساب حسابه، کاکا برادر** — a free, open-source, offline personal-finance app.
 > Persian & English, Jalali & Gregorian, rial/toman and other currencies, real double-entry bookkeeping.
 
-**Status:** MVP-1 (v0.1.0-alpha). Android first. See [`TASKS.md`](TASKS.md) for what's done and what's next.
+**Status:** v0.5.0 pre-release — ledger, bank SMS (incl. opt-in background), budgets, repeating transactions, CSV import, rates & gold, encrypted backups, BYO-AI & MCP. Android first. See [`TASKS.md`](TASKS.md) for what's done and what's next.
 
 [فارسی ↓](#فارسی)
 
@@ -66,7 +66,7 @@ After changing tools: `cd packages/kaka_tools && dart run bin/export_schema.dart
 Encryption comes from `hooks: user_defines: sqlite3: source: sqlite3mc` in the root `pubspec.yaml`; the database refuses to open without it.
 
 ## Contributing
-Bank SMS templates are the most wanted contribution — please **mask card numbers, balances and names** before sharing any sample. Contribution guide coming in MVP-2.
+Bank SMS templates are the most wanted contribution — please **mask card numbers, balances and names** before sharing any sample. See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ---
 
