@@ -1699,6 +1699,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{done} of {total}'**
   String stepsDone(Object done, Object total);
+
+  /// No description provided for @budgets.
+  ///
+  /// In en, this message translates to:
+  /// **'Budgets'**
+  String get budgets;
+
+  /// No description provided for @addBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Add budget'**
+  String get addBudget;
+
+  /// No description provided for @editBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit budget'**
+  String get editBudget;
+
+  /// No description provided for @noBudgets.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a monthly limit for a category and Kaka shows how much is left — and warns when you are spending faster than the month is passing.'**
+  String get noBudgets;
+
+  /// No description provided for @monthlyLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly limit'**
+  String get monthlyLimit;
+
+  /// No description provided for @budgetSpentOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{spent} of {limit}'**
+  String budgetSpentOf(Object spent, Object limit);
+
+  /// No description provided for @budgetLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} left'**
+  String budgetLeft(Object amount);
+
+  /// No description provided for @budgetAhead.
+  ///
+  /// In en, this message translates to:
+  /// **'Spending ahead of the month · {amount} left'**
+  String budgetAhead(Object amount);
+
+  /// No description provided for @budgetOver.
+  ///
+  /// In en, this message translates to:
+  /// **'Over by {amount}'**
+  String budgetOver(Object amount);
+
+  /// No description provided for @budgetCurrencyChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Base currency changed — edit this budget to set a new limit.'**
+  String get budgetCurrencyChanged;
+
+  /// No description provided for @allCategoriesBudgeted.
+  ///
+  /// In en, this message translates to:
+  /// **'Every expense category already has a budget.'**
+  String get allCategoriesBudgeted;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

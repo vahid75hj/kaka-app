@@ -218,4 +218,45 @@ void main() {
     expect(accounts.items.values.where((a) => a.name == 'غذا').map((a) => a.icon), everyElement(isNull));
     expect(() => ledger.setCategoryIcon(AccountType.asset, 'w', 'x'), throwsA(isA<DomainException>()));
   });
+
+  test('budgets: spent from the monthly report, over / ahead-of-pace / ok, currency change tolerated', () {
+    const irr = Currency.irr;
+    final report = MonthlyReport(
+      base: irr,
+      income: const [],
+      expense: const [CategoryTotal('غذا', Money(900, irr)), CategoryTotal('خرید', Money(600, irr))],
+      skipped: 0,
+    );
+    final from = DateTime(2026, 10, 1), to = DateTime(2026, 11, 1);
+    final s = BudgetMath.of(
+      [
+        Budget(id: Budget.idFor('غذا'), category: 'غذا', limit: const Money(800, irr)),
+        Budget(id: Budget.idFor('خرید'), category: 'خرید', limit: const Money(1000, irr)),
+        Budget(id: Budget.idFor('سلامت'), category: 'سلامت', limit: const Money(500, irr)),
+        Budget(id: Budget.idFor('x'), category: 'x', limit: const Money(5, Currency.usd)),
+      ],
+      report,
+      from: from,
+      to: to,
+      now: DateTime(2026, 10, 10), // ~29% of the month gone
+    );
+    expect(s.map((x) => (x.budget.category, x.state)), [
+      ('غذا', BudgetState.over),
+      ('خرید', BudgetState.ahead),
+      ('سلامت', BudgetState.ok),
+      ('x', BudgetState.ok),
+    ]);
+    expect(s.first.remaining, const Money(-100, irr));
+    expect(s[2].spent, const Money(0, irr));
+    expect(s.last.spent, isNull);
+    // Late in the month 60% used is on pace.
+    final late = BudgetMath.of(
+      [Budget(id: 'b', category: 'خرید', limit: const Money(1000, irr))],
+      report,
+      from: from,
+      to: to,
+      now: DateTime(2026, 10, 28),
+    );
+    expect(late.single.state, BudgetState.ok);
+  });
 }

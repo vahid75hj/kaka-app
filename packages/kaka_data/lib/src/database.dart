@@ -21,6 +21,7 @@ part 'database.g.dart';
     AssetMovements,
     AssetPrices,
     CustomParsers,
+    Budgets,
   ],
 )
 class KakaDatabase extends _$KakaDatabase {
@@ -69,13 +70,14 @@ class KakaDatabase extends _$KakaDatabase {
           await m.createTable(t);
         }
       }
-      // Tables created above already have the v5 column.
       // v5 columns. Tables created by an earlier step already have them, so add only when missing.
       if (from < 5) {
         await _addIfMissing(m, assetMovements, assetMovements.transactionId);
         await _addIfMissing(m, drafts, drafts.toAccountId);
         await _addIfMissing(m, drafts, drafts.category);
         await _addIfMissing(m, accounts, accounts.icon);
+        final has = await customSelect("SELECT 1 FROM sqlite_master WHERE type='table' AND name='budgets'").get();
+        if (has.isEmpty) await m.createTable(budgets);
       }
     },
   );

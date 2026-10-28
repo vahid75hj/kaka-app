@@ -267,5 +267,16 @@
   "gsSms": "خواندن پیامک بانکی رو روشن کن (اختیاری)",
   "gsBackup": "یه پشتیبان رمزدار بگیر",
   "hide": "پنهان کن",
-  "stepsDone": "{done} از {total}"
+  "stepsDone": "{done} از {total}",
+  "budgets": "بودجه‌ها",
+  "addBudget": "بودجه بذار",
+  "editBudget": "ویرایش بودجه",
+  "noBudgets": "برای یه دسته سقف ماهانه بذار تا کاکا نشون بده چقدر مونده — و اگه زودتر از گذشت ماه داری خرج می‌کنی، خبرت کنه.",
+  "monthlyLimit": "سقف ماهانه",
+  "budgetSpentOf": "{spent} از {limit}",
+  "budgetLeft": "{amount} مونده",
+  "budgetAhead": "تندتر از گذشت ماه خرج شده · {amount} مونده",
+  "budgetOver": "{amount} بیشتر از سقف",
+  "budgetCurrencyChanged": "ارز پایه عوض شده — بودجه رو ویرایش کن و سقف تازه بذار.",
+  "allCategoriesBudgeted": "همه‌ی دسته‌های هزینه بودجه دارن."
 }

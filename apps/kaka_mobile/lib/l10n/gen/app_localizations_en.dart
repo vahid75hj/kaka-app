@@ -870,4 +870,46 @@ class AppLocalizationsEn extends AppLocalizations {
   String stepsDone(Object done, Object total) {
     return '$done of $total';
   }
+
+  @override
+  String get budgets => 'Budgets';
+
+  @override
+  String get addBudget => 'Add budget';
+
+  @override
+  String get editBudget => 'Edit budget';
+
+  @override
+  String get noBudgets =>
+      'Set a monthly limit for a category and Kaka shows how much is left — and warns when you are spending faster than the month is passing.';
+
+  @override
+  String get monthlyLimit => 'Monthly limit';
+
+  @override
+  String budgetSpentOf(Object spent, Object limit) {
+    return '$spent of $limit';
+  }
+
+  @override
+  String budgetLeft(Object amount) {
+    return '$amount left';
+  }
+
+  @override
+  String budgetAhead(Object amount) {
+    return 'Spending ahead of the month · $amount left';
+  }
+
+  @override
+  String budgetOver(Object amount) {
+    return 'Over by $amount';
+  }
+
+  @override
+  String get budgetCurrencyChanged => 'Base currency changed — edit this budget to set a new limit.';
+
+  @override
+  String get allCategoriesBudgeted => 'Every expense category already has a budget.';
 }

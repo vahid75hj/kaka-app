@@ -129,6 +129,9 @@ Future<void> _edit(BuildContext context, WidgetRef ref, AccountType type, Catego
                   await ledger.addCategory(controller.text, type, ref.read(settingsProvider).baseUnit.currency);
                 } else {
                   await ledger.renameCategory(type, existing.name, controller.text);
+                  if (type == AccountType.expense) {
+                    await ref.read(budgetRepositoryProvider).renameCategory(existing.name, controller.text.trim());
+                  }
                 }
                 if (dialogContext.mounted) Navigator.pop(dialogContext);
               } catch (e) {

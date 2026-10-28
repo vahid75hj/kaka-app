@@ -861,4 +861,46 @@ class AppLocalizationsFa extends AppLocalizations {
   String stepsDone(Object done, Object total) {
     return '$done از $total';
   }
+
+  @override
+  String get budgets => 'بودجه‌ها';
+
+  @override
+  String get addBudget => 'بودجه بذار';
+
+  @override
+  String get editBudget => 'ویرایش بودجه';
+
+  @override
+  String get noBudgets =>
+      'برای یه دسته سقف ماهانه بذار تا کاکا نشون بده چقدر مونده — و اگه زودتر از گذشت ماه داری خرج می‌کنی، خبرت کنه.';
+
+  @override
+  String get monthlyLimit => 'سقف ماهانه';
+
+  @override
+  String budgetSpentOf(Object spent, Object limit) {
+    return '$spent از $limit';
+  }
+
+  @override
+  String budgetLeft(Object amount) {
+    return '$amount مونده';
+  }
+
+  @override
+  String budgetAhead(Object amount) {
+    return 'تندتر از گذشت ماه خرج شده · $amount مونده';
+  }
+
+  @override
+  String budgetOver(Object amount) {
+    return '$amount بیشتر از سقف';
+  }
+
+  @override
+  String get budgetCurrencyChanged => 'ارز پایه عوض شده — بودجه رو ویرایش کن و سقف تازه بذار.';
+
+  @override
+  String get allCategoriesBudgeted => 'همه‌ی دسته‌های هزینه بودجه دارن.';
 }

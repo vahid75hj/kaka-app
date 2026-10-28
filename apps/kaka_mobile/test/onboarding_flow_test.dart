@@ -80,4 +80,67 @@ void main() {
       await db.close();
     });
   });
+
+  testWidgets('budgets: home card and screen render in RTL without overflow', (tester) async {
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 2.75;
+    addTearDown(tester.view.reset);
+    await tester.runAsync(() async {
+      final shot = Platform.environment['KAKA_SHOT'];
+      if (shot != null) {
+        for (final w in ['Regular', 'Bold', 'ExtraBold']) {
+          final loader = FontLoader('Vazirmatn')
+            ..addFont(File('assets/fonts/Vazirmatn-$w.ttf').readAsBytes().then(ByteData.sublistView));
+          await loader.load();
+        }
+      }
+      final ledger = LedgerService(DriftAccountRepository(db), DriftTransactionRepository(db));
+      final cash = await ledger.createAccount(
+        name: 'نقد',
+        type: AccountType.asset,
+        currency: Currency.irr,
+        openingBalance: const Money(50000000, Currency.irr),
+      );
+      for (final (name, spent, limit) in [('غذا', 9000000, 8000000), ('حمل‌ونقل', 1000000, 5000000)]) {
+        final cat = await ledger.ensureCategory(name, AccountType.expense, Currency.irr);
+        await ledger.recordExpense(from: cash, category: cat, amount: Money(spent, Currency.irr));
+        await DriftBudgetRepository(db)
+            .upsert(Budget(id: Budget.idFor(name), category: name, limit: Money(limit, Currency.irr)));
+      }
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            databaseProvider.overrideWithValue(db),
+            initialSettingsProvider.overrideWithValue(
+              AppSettings.defaultsFor('fa').copyWith(onboarded: true, hideGettingStarted: true),
+            ),
+          ],
+          child: const KakaApp(),
+        ),
+      );
+      for (var i = 0; i < 20; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+        await tester.pump();
+      }
+      await tester.pumpAndSettle();
+      expect(find.textContaining('بیشتر از سقف'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      await tester.ensureVisible(find.widgetWithText(ActionChip, 'بودجه‌ها'));
+      await tester.tap(find.widgetWithText(ActionChip, 'بودجه‌ها'));
+      await tester.pumpAndSettle();
+      expect(find.text('۸۰۰٬۰۰۰ تومان'), findsNothing); // limit is shown inside "spent of limit"
+      expect(find.textContaining('مونده'), findsOneWidget);
+      expect(tester.takeException(), isNull, reason: 'no layout overflow in RTL');
+      if (shot != null) {
+        final boundary = tester.renderObject<RenderRepaintBoundary>(find.byType(RepaintBoundary).first);
+        final image = await boundary.toImage(pixelRatio: 1);
+        final png = await image.toByteData(format: ui.ImageByteFormat.png);
+        File(shot.replaceFirst('.png', '_budgets.png')).writeAsBytesSync(png!.buffer.asUint8List());
+      }
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump(Duration.zero);
+      await db.close();
+    });
+  });
 }

@@ -378,5 +378,37 @@
       "done": {},
       "total": {}
     }
-  }
+  },
+  "budgets": "Budgets",
+  "addBudget": "Add budget",
+  "editBudget": "Edit budget",
+  "noBudgets": "Set a monthly limit for a category and Kaka shows how much is left — and warns when you are spending faster than the month is passing.",
+  "monthlyLimit": "Monthly limit",
+  "budgetSpentOf": "{spent} of {limit}",
+  "@budgetSpentOf": {
+    "placeholders": {
+      "spent": {},
+      "limit": {}
+    }
+  },
+  "budgetLeft": "{amount} left",
+  "@budgetLeft": {
+    "placeholders": {
+      "amount": {}
+    }
+  },
+  "budgetAhead": "Spending ahead of the month · {amount} left",
+  "@budgetAhead": {
+    "placeholders": {
+      "amount": {}
+    }
+  },
+  "budgetOver": "Over by {amount}",
+  "@budgetOver": {
+    "placeholders": {
+      "amount": {}
+    }
+  },
+  "budgetCurrencyChanged": "Base currency changed — edit this budget to set a new limit.",
+  "allCategoriesBudgeted": "Every expense category already has a budget."
 }

@@ -161,3 +161,15 @@ class CustomParsers extends Table {
   @override
   Set<Column> get primaryKey => {id};
 }
+
+/// v5: monthly spending limit per expense category name, in the base currency.
+@DataClassName('BudgetRow')
+class Budgets extends Table {
+  TextColumn get id => text()();
+  TextColumn get category => text()();
+  IntColumn get limitMinor => integer()();
+  TextColumn get currency => text()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}

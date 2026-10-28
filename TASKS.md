@@ -63,6 +63,8 @@ Phases: **MVP-1** = first usable APK · **MVP-2** = v0.1 feature-complete · **L
 
 - [x] UX: empty states with actions (queue, transactions, rates), first-run "getting started" checklist (RTL-checked)
 
+- [x] Monthly budgets per expense category (base currency, pace warning, home card, follows renames, in backups; schema v5)
+
 ## Later (v0.2+)
 - [~] On-device models: catalog (3 open Qwen models, real sha256/sizes), resumable mirror-aware sha256-verified downloader, device fit check — runtime adapter (`flutter_edge_ai`, ex-flutter_gemma) pending device testing, see `docs/on-device-models.md`
 - [ ] Fill `model_catalog/catalog.v1.json` after on-device benchmark

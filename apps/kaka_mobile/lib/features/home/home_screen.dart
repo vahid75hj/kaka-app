@@ -5,6 +5,7 @@ import 'package:kaka_domain/kaka_domain.dart';
 
 import '../../app/providers.dart';
 import '../../app/router.dart';
+import '../budgets/budgets_screen.dart';
 import '../../core/l10n_x.dart';
 import '../../core/widgets.dart';
 import '../../theme/kaka_colors.dart';
@@ -57,6 +58,7 @@ class HomeScreen extends ConsumerWidget {
     final f = ref.watch(formatProvider);
     final summary = ref.watch(homeSummaryProvider);
     final recent = ref.watch(transactionViewsProvider((opening: l.opening, asset: l.goldAndCoins))).take(5).toList();
+    final budgets = ref.watch(budgetStatusesProvider);
     final now = DateTime.now();
     final pending = ref.watch(pendingDraftsProvider).value?.length ?? 0;
 
@@ -189,6 +191,11 @@ class HomeScreen extends ConsumerWidget {
                   onPressed: () => context.push(Routes.report),
                 ),
                 ActionChip(
+                  avatar: const Icon(Icons.pie_chart_outline_rounded, size: 18),
+                  label: Text(l.budgets),
+                  onPressed: () => context.push(Routes.budgets),
+                ),
+                ActionChip(
                   avatar: const Icon(Icons.diamond_outlined, size: 18),
                   label: Text(l.assets),
                   onPressed: () => context.push(Routes.assets),
@@ -205,6 +212,19 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ],
             ),
+            if (budgets.isNotEmpty) ...[
+              SectionHeader(l.budgets, action: l.seeAll, onAction: () => context.push(Routes.budgets)),
+              KCard(
+                child: Column(
+                  children: [
+                    for (var i = 0; i < budgets.length && i < 3; i++) ...[
+                      if (i > 0) const SizedBox(height: 12),
+                      BudgetBar(budgets[i], compact: true),
+                    ],
+                  ],
+                ),
+              ),
+            ],
             SectionHeader(l.accounts, action: l.seeAll, onAction: () => context.go(Routes.accounts)),
             SizedBox(
               height: 112,

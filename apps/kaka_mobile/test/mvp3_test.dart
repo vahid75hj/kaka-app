@@ -9,6 +9,7 @@ import 'package:kaka_mobile/app/providers.dart';
 import 'package:kaka_mobile/core/app_format.dart';
 import 'package:kaka_mobile/core/money_input.dart';
 import 'package:kaka_mobile/features/ai/ai_config.dart';
+import 'package:kaka_mobile/features/budgets/budgets_screen.dart';
 import 'package:kaka_mobile/features/home/home_screen.dart';
 import 'package:kaka_mobile/features/queue/share_ingest.dart';
 import 'package:kaka_sms/kaka_sms.dart';
@@ -218,5 +219,31 @@ void main() {
     for (final bad in ['http://api.example.com/v1', 'http://8.8.8.8:11434', 'http://172.32.0.1']) {
       expect(isInsecureEndpoint(bad), isTrue, reason: bad);
     }
+  });
+
+  test('budgets: this month spending in toman, edit text round-trips, rename follows', () async {
+    final ledger = container.read(ledgerProvider);
+    final f = container.read(formatProvider);
+    final cash = await ledger.createAccount(name: 'نقد', type: AccountType.asset, currency: Currency.irr);
+    final food = await ledger.ensureCategory('غذا', AccountType.expense, Currency.irr);
+    await ledger.recordExpense(from: cash, category: food, amount: const Money(6000000, Currency.irr));
+    final limit = parseUserMoney(f, '۱۰۰٬۰۰۰', Currency.irr); // toman
+    expect(limit.minor, 1000000);
+    final repo = container.read(budgetRepositoryProvider);
+    await repo.upsert(Budget(id: Budget.idFor('غذا'), category: 'غذا', limit: limit));
+    // Editing shows the number in the user's unit; it must parse back to the same limit.
+    expect(parseUserMoney(f, f.number(limit), Currency.irr), limit);
+
+    final sub = container.listen(budgetStatusesProvider, (_, _) {});
+    addTearDown(sub.close);
+    await container.read(budgetsProvider.future);
+    await container.read(transactionsProvider.future);
+    await container.read(accountsProvider.future);
+    final s = container.read(budgetStatusesProvider).single;
+    expect((s.spent?.minor, s.state), (6000000, BudgetState.over));
+
+    await ledger.renameCategory(AccountType.expense, 'غذا', 'خوراک');
+    await repo.renameCategory('غذا', 'خوراک');
+    expect((await repo.getAll()).single.category, 'خوراک');
   });
 }

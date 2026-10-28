@@ -63,6 +63,13 @@ class SettingsScreen extends ConsumerWidget {
           ),
           ListTile(
             contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.pie_chart_outline_rounded),
+            title: Text(l.budgets),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => context.push(Routes.budgets),
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.currency_exchange_rounded),
             title: Text(l.exchangeRates),
             trailing: const Icon(Icons.chevron_right_rounded),

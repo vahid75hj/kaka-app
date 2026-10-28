@@ -63,6 +63,7 @@ void main() {
     await db.customStatement('ALTER TABLE drafts DROP COLUMN to_account_id');
     await db.customStatement('ALTER TABLE drafts DROP COLUMN category');
     await db.customStatement('ALTER TABLE accounts DROP COLUMN icon');
+    await db.customStatement('DROP TABLE budgets');
     await db.customStatement('PRAGMA user_version = 3');
     await db.close();
 
@@ -112,6 +113,7 @@ void main() {
     await db.customStatement('ALTER TABLE drafts DROP COLUMN to_account_id');
     await db.customStatement('ALTER TABLE drafts DROP COLUMN category');
     await db.customStatement('ALTER TABLE accounts DROP COLUMN icon');
+    await db.customStatement('DROP TABLE budgets');
     await db.customStatement(
       "INSERT INTO asset_movements (id, asset_type_id, quantity_milli, moved_at, note) VALUES ('old', 'gold18', 1500, 0, '')",
     );
@@ -155,5 +157,16 @@ void main() {
       ),
     );
     expect((await accounts.findById('c'))!.icon, 'food');
+    final budgets = DriftBudgetRepository(db);
+    await budgets.upsert(Budget(id: Budget.idFor('غذا'), category: 'غذا', limit: const Money(100, Currency.irr)));
+    await budgets.upsert(Budget(id: Budget.idFor('خرید'), category: 'خرید', limit: const Money(50, Currency.irr)));
+    await budgets.renameCategory('غذا', 'رستوران');
+    expect({for (final b in await budgets.getAll()) b.category: b.limit.minor}, {'رستوران': 100, 'خرید': 50});
+    // Merging into a name that already has a budget keeps the target's.
+    await budgets.renameCategory('رستوران', 'خرید');
+    expect({for (final b in await budgets.getAll()) b.category: b.limit.minor}, {'خرید': 50});
+    // Budgets travel with backups.
+    final snap = await LedgerSnapshot(db).export();
+    expect((snap['tables'] as Map)['budgets'], hasLength(1));
   });
 }

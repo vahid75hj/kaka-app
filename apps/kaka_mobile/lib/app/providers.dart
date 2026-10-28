@@ -133,3 +133,8 @@ final netWorthProvider = Provider<NetWorth>(
     ref.watch(converterProvider),
   ),
 );
+
+final budgetRepositoryProvider = Provider<DriftBudgetRepository>(
+  (ref) => DriftBudgetRepository(ref.watch(databaseProvider)),
+);
+final budgetsProvider = StreamProvider<List<Budget>>((ref) => ref.watch(budgetRepositoryProvider).watchAll());
