@@ -69,6 +69,12 @@ final toolRunnerProvider = Provider<ToolRunner>((ref) {
     accounts: ref.watch(accountRepositoryProvider),
     transactions: ref.watch(transactionRepositoryProvider),
     ledger: ref.watch(ledgerProvider),
+    budgets: ref.watch(budgetRepositoryProvider),
+    currentMonth: (now) {
+      final f = ref.read(formatProvider);
+      final from = f.startOfMonth(now);
+      return (from: from, to: f.addMonths(from, 1));
+    },
     onDraft: (draft) async {
       final a = draft.arguments;
       final account = await ref.read(accountRepositoryProvider).findById(a['account_id']! as String);

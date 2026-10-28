@@ -4,8 +4,8 @@ A **read-only** [MCP](https://modelcontextprotocol.io) server (stdio) that lets 
 answer questions about your money from an encrypted Kaka backup (`.kaka`, made with Settings → Back up).
 
 - It decrypts the backup into a RAM-only database. Nothing is written to disk and nothing is sent anywhere by the server.
-- It offers the same read tools as the in-app AI: `list_accounts`, `get_balance`, `list_transactions` and
-  `summarize_spending`. `add_transaction` is not offered.
+- It offers the same read tools as the in-app AI: `list_accounts`, `get_balance`, `list_transactions`,
+  `summarize_spending` and `list_budgets`. `add_transaction` is not offered.
 - Card, account and IBAN numbers are masked in every result.
 
 ## Use

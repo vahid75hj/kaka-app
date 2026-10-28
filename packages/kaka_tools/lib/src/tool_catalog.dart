@@ -55,6 +55,18 @@ const kakaTools = <ToolSpec>[
     },
   ),
   ToolSpec(
+    name: 'list_budgets',
+    description:
+        'Monthly spending limits per expense category with what was spent in the range '
+        '(default: the current calendar month) and what is left. Spent counts only the budget currency.',
+    access: ToolAccess.read,
+    inputSchema: {
+      'type': 'object',
+      'properties': {'from': _date, 'to': _date},
+      'additionalProperties': false,
+    },
+  ),
+  ToolSpec(
     name: 'add_transaction',
     description: 'Propose a new expense, income or transfer. Nothing is recorded until the user approves it in Kaka.',
     access: ToolAccess.writeDraft,

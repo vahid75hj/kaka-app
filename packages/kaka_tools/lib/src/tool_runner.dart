@@ -11,7 +11,22 @@ class TransactionDraft {
 /// Executes Kaka tools against the domain. Read tools return JSON-ready maps;
 /// write tools only produce drafts handed to [onDraft].
 class ToolRunner {
-  ToolRunner({required this.accounts, required this.transactions, required this.ledger, required this.onDraft});
+  ToolRunner({
+    required this.accounts,
+    required this.transactions,
+    required this.ledger,
+    required this.onDraft,
+    this.budgets,
+    this.currentMonth,
+    DateTime Function()? clock,
+  }) : _now = clock ?? DateTime.now;
+
+  /// The user's calendar month containing a date (Jalali in the app); Gregorian when null.
+  final ({DateTime from, DateTime to}) Function(DateTime now)? currentMonth;
+
+  /// Optional: without it `list_budgets` returns an empty list.
+  final BudgetRepository? budgets;
+  final DateTime Function() _now;
 
   final AccountRepository accounts;
   final TransactionRepository transactions;
@@ -26,6 +41,7 @@ class ToolRunner {
         'get_balance' => await _getBalance(args['account_id'] as String?),
         'list_transactions' => await _listTransactions(args),
         'summarize_spending' => await _summarize(args),
+        'list_budgets' => await _listBudgets(args),
         'add_transaction' => await _addDraft(args),
         _ => _error('unknown_tool', name),
       };
@@ -94,6 +110,45 @@ class ToolRunner {
       if (out.length >= limit) break;
     }
     return {'transactions': out};
+  }
+
+  Future<Map<String, Object?>> _listBudgets(Map<String, Object?> args) async {
+    final now = _now();
+    final month =
+        currentMonth?.call(now) ?? (from: DateTime(now.year, now.month), to: DateTime(now.year, now.month + 1));
+    final from = _date(args['from']) ?? month.from;
+    final to =
+        _date(args['to'])?.add(const Duration(days: 1)) ??
+        (args['from'] == null ? month.to : DateTime(from.year, from.month + 1));
+    final list = await budgets?.getAll() ?? const <Budget>[];
+    final byId = {for (final a in await accounts.getAll()) a.id: a};
+    final spent = <String, int>{};
+    for (final t in await transactions.watchRecent(limit: 100000).first) {
+      if (t.isVoided || t.occurredAt.isBefore(from) || !t.occurredAt.isBefore(to)) continue;
+      for (final p in t.postings) {
+        final a = byId[p.accountId];
+        if (a?.type != AccountType.expense) continue;
+        final k = '${a!.name}|${p.amount.currency.code}';
+        spent[k] = (spent[k] ?? 0) + p.amount.minor;
+      }
+    }
+    return {
+      'from': from.toIso8601String().substring(0, 10),
+      'to': to.subtract(const Duration(days: 1)).toIso8601String().substring(0, 10),
+      'budgets': [
+        for (final b in list)
+          () {
+            final s = Money(spent['${b.category}|${b.limit.currency.code}'] ?? 0, b.limit.currency);
+            return {
+              'category': b.category,
+              'limit': money(b.limit),
+              'spent': money(s),
+              'remaining': money(b.limit - s),
+              'over': s.minor > b.limit.minor,
+            };
+          }(),
+      ],
+    };
   }
 
   Future<Map<String, Object?>> _summarize(Map<String, Object?> args) async {

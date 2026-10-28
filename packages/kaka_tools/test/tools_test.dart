@@ -37,6 +37,18 @@ class _Txns implements TransactionRepository {
   }
 }
 
+class _Budgets implements BudgetRepository {
+  final items = <Budget>[];
+  @override
+  Future<void> delete(String id) async => items.removeWhere((b) => b.id == id);
+  @override
+  Future<List<Budget>> getAll() async => items;
+  @override
+  Future<void> upsert(Budget b) async => items.add(b);
+  @override
+  Stream<List<Budget>> watchAll() => Stream.value(items);
+}
+
 void main() {
   test('schema file is in sync with the Dart catalog', () {
     final file = jsonDecode(File('schema/tools.v1.json').readAsStringSync()) as Map;
@@ -111,5 +123,38 @@ void main() {
       (await runner('add_transaction', {'kind': 'opening', 'amount': '1', 'account_id': bank.id}))['error'],
       containsPair('code', 'bad_kind'),
     );
+  });
+
+  test('list_budgets: spent in the budget currency for the month, over flag', () async {
+    final accounts = _Accounts();
+    final txns = _Txns();
+    final ledger = LedgerService(accounts, txns, clock: () => DateTime(2026, 10, 20));
+    final budgets = _Budgets();
+    final runner = ToolRunner(
+      accounts: accounts,
+      transactions: txns,
+      ledger: ledger,
+      onDraft: (_) async {},
+      budgets: budgets,
+      clock: () => DateTime(2026, 10, 25),
+    );
+    final bank = await ledger.createAccount(name: 'Bank', type: AccountType.asset, currency: Currency.usd);
+    final food = await ledger.createAccount(name: 'Food', type: AccountType.expense, currency: Currency.usd);
+    await ledger.recordExpense(from: bank, category: food, amount: const Money(1500, Currency.usd));
+    await ledger.recordExpense(
+      from: bank,
+      category: food,
+      amount: const Money(900, Currency.usd),
+      at: DateTime(2026, 9, 30),
+    );
+    await budgets.upsert(Budget(id: Budget.idFor('Food'), category: 'Food', limit: const Money(1000, Currency.usd)));
+    final r = await runner('list_budgets', {});
+    expect((r['from'], r['to']), ('2026-10-01', '2026-10-31'));
+    final b = (r['budgets'] as List).single as Map;
+    expect((b['spent'] as Map)['amount_minor'], 1500);
+    expect((b['remaining'] as Map)['amount_minor'], -500);
+    expect(b['over'], isTrue);
+    final sept = await runner('list_budgets', {'from': '2026-09-01', 'to': '2026-09-30'});
+    expect(((sept['budgets'] as List).single as Map)['over'], isFalse);
   });
 }
