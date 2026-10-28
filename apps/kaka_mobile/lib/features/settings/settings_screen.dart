@@ -54,6 +54,7 @@ class SettingsScreen extends ConsumerWidget {
             subtitle: Text(l.shareTip, style: TextStyle(color: c.textMuted, fontSize: 12)),
             onTap: () => showPasteSmsDialog(context, ref),
           ),
+          SectionHeader(l.settingsPlanning),
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.bar_chart_rounded),
@@ -90,6 +91,7 @@ class SettingsScreen extends ConsumerWidget {
             trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () => context.push(Routes.assets),
           ),
+          SectionHeader(l.settingsTools),
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.upload_file_rounded),

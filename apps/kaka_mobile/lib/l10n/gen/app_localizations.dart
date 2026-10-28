@@ -1999,6 +1999,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Coming up'**
   String get comingUp;
+
+  /// No description provided for @settingsPlanning.
+  ///
+  /// In en, this message translates to:
+  /// **'Planning'**
+  String get settingsPlanning;
+
+  /// No description provided for @settingsTools.
+  ///
+  /// In en, this message translates to:
+  /// **'Import & AI'**
+  String get settingsTools;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

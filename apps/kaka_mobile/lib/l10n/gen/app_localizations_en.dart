@@ -1045,4 +1045,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get comingUp => 'Coming up';
+
+  @override
+  String get settingsPlanning => 'Planning';
+
+  @override
+  String get settingsTools => 'Import & AI';
 }

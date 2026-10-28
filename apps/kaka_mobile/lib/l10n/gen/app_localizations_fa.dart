@@ -1036,4 +1036,10 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get comingUp => 'به‌زودی';
+
+  @override
+  String get settingsPlanning => 'برنامه‌ریزی';
+
+  @override
+  String get settingsTools => 'ورود داده و هوش مصنوعی';
 }
