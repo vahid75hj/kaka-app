@@ -8,6 +8,7 @@ import '../features/assets/assets_screen.dart';
 import '../features/fx/rates_screen.dart';
 import '../features/report/report_screen.dart';
 import '../features/budgets/budgets_screen.dart';
+import '../features/import/import_screen.dart';
 import '../features/sms/learn_bank_screen.dart';
 import '../features/accounts/accounts_screen.dart';
 import '../features/categories/categories_screen.dart';
@@ -37,6 +38,7 @@ abstract final class Routes {
   static const assets = '/assets';
   static const report = '/report';
   static const budgets = '/budgets';
+  static const importCsv = '/import';
   static const learnBank = '/sms/learn';
   static const aiSettings = '/ai';
   static const chat = '/chat';
@@ -89,6 +91,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: Routes.assets, builder: (_, _) => const AssetsScreen()),
       GoRoute(path: Routes.report, builder: (_, _) => const ReportScreen()),
       GoRoute(path: Routes.budgets, builder: (_, _) => const BudgetsScreen()),
+      GoRoute(path: Routes.importCsv, builder: (_, _) => const ImportScreen()),
       GoRoute(path: Routes.learnBank, builder: (_, _) => const LearnBankScreen()),
       GoRoute(path: Routes.aiSettings, builder: (_, _) => const AiSettingsScreen()),
       GoRoute(path: Routes.chat, builder: (_, _) => const ChatScreen()),

@@ -84,6 +84,14 @@ class SettingsScreen extends ConsumerWidget {
           ),
           ListTile(
             contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.upload_file_rounded),
+            title: Text(l.importCsv),
+            subtitle: Text(l.importCsvHint, style: TextStyle(color: c.textMuted, fontSize: 12)),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => context.push(Routes.importCsv),
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.auto_awesome_outlined),
             title: Text(l.aiSettings),
             subtitle: Text(l.aiSettingsHint, style: TextStyle(color: c.textMuted, fontSize: 12)),

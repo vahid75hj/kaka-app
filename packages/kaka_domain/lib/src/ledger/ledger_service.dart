@@ -1,3 +1,4 @@
+import '../import/csv_import.dart';
 import '../failures.dart';
 import '../ids.dart';
 import '../money/currency.dart';
@@ -240,6 +241,30 @@ class LedgerService {
     if (type != AccountType.income && type != AccountType.expense) {
       throw const DomainException('category.bad_type');
     }
+  }
+
+  /// Records imported rows on [account] as income/expense; rows without a
+  /// category land in [fallbackCategory]. Returns the new transaction ids so
+  /// the whole import can be undone.
+  Future<List<String>> importRows(Account account, List<ImportRow> rows, {required String fallbackCategory}) async {
+    if (!account.type.isBalanceSheet || account.isSystem) throw const DomainException('ledger.not_money_account');
+    final categories = <String, Account>{};
+    final all = {for (final a in await _accounts.getAll()) a.id: a};
+    final ids = <String>[];
+    for (final r in rows) {
+      final type = importKind(r);
+      final name = (r.category ?? '').trim().isEmpty ? fallbackCategory : r.category!.trim();
+      final category = categories['${type.name}|$name'] ??= await ensureCategory(name, type, account.currency);
+      all[category.id] = category;
+      final amount = Money(r.minor.abs(), account.currency);
+      final txn = type == AccountType.expense
+          ? TransactionFactory.expense(from: account, category: category, amount: amount, at: r.date, note: r.note)
+          : TransactionFactory.income(to: account, category: category, amount: amount, at: r.date, note: r.note);
+      LedgerRules.validate(txn, all);
+      await _transactions.insert(txn);
+      ids.add(txn.id);
+    }
+    return ids;
   }
 
   Future<void> _record(LedgerTransaction txn) async {

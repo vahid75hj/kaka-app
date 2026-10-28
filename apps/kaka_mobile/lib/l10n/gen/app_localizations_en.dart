@@ -912,4 +912,95 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get allCategoriesBudgeted => 'Every expense category already has a budget.';
+
+  @override
+  String get undo => 'Undo';
+
+  @override
+  String get importCsv => 'Import CSV';
+
+  @override
+  String get importCsvHint => 'Bank statement, spreadsheet or Kaka export';
+
+  @override
+  String get importHint =>
+      'Pick a CSV file (save Excel sheets as \"CSV UTF-8\"). Kaka guesses the columns; check them, see the preview, then import. Rows already in the account are skipped, and you can undo the whole import.';
+
+  @override
+  String get importChooseFile => 'Choose file';
+
+  @override
+  String get importEmpty => 'This file has no data rows.';
+
+  @override
+  String get importNotUtf8 => 'Could not read the file as UTF-8. In Excel use Save As → \"CSV UTF-8\".';
+
+  @override
+  String get importNeedAccount => 'Add an account first.';
+
+  @override
+  String get importInto => 'Import into';
+
+  @override
+  String get importAmountsInToman => 'Amounts are in toman';
+
+  @override
+  String get importAmountsInTomanHint => 'Bank statements are usually in rial; Kaka exports are in rial.';
+
+  @override
+  String get importColumns => 'Columns';
+
+  @override
+  String get importNone => '—';
+
+  @override
+  String get importSignedAmount => 'Amount (negative = spent)';
+
+  @override
+  String get importDebit => 'Money out';
+
+  @override
+  String get importCredit => 'Money in';
+
+  @override
+  String get importMappingHint => 'Choose a date column and either an amount column or money out / money in.';
+
+  @override
+  String get importPreview => 'Preview';
+
+  @override
+  String importSummary(Object count, Object dupes) {
+    return '$count new · $dupes already in the account';
+  }
+
+  @override
+  String importBadLines(Object lines, Object count) {
+    return 'Unreadable lines: $lines ($count total)';
+  }
+
+  @override
+  String importSkippedKinds(Object count) {
+    return '$count transfer/exchange/opening/voided rows skipped';
+  }
+
+  @override
+  String get importFallbackCategory => 'Imported';
+
+  @override
+  String importMore(Object count) {
+    return 'and $count more';
+  }
+
+  @override
+  String get importNothingNew => 'Nothing new to import.';
+
+  @override
+  String importNow(Object count) {
+    return 'Import $count';
+  }
+
+  @override
+  String importDone(Object count) {
+    return '$count transactions imported';
+  }
 }

@@ -903,4 +903,95 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get allCategoriesBudgeted => 'همه‌ی دسته‌های هزینه بودجه دارن.';
+
+  @override
+  String get undo => 'برگردون';
+
+  @override
+  String get importCsv => 'ورود از فایل CSV';
+
+  @override
+  String get importCsvHint => 'صورت‌حساب بانک، اکسل یا خروجی خود کاکا';
+
+  @override
+  String get importHint =>
+      'یه فایل CSV انتخاب کن (اکسل رو با «CSV UTF-8» ذخیره کن). کاکا ستون‌ها رو حدس می‌زنه؛ چکشون کن، پیش‌نمایش رو ببین، بعد وارد کن. ردیف‌هایی که قبلاً توی حساب هستن رد می‌شن و کل ورود قابل برگشته.';
+
+  @override
+  String get importChooseFile => 'انتخاب فایل';
+
+  @override
+  String get importEmpty => 'این فایل ردیف داده نداره.';
+
+  @override
+  String get importNotUtf8 => 'فایل به‌صورت UTF-8 خونده نشد. توی اکسل از Save As گزینه‌ی «CSV UTF-8» رو بزن.';
+
+  @override
+  String get importNeedAccount => 'اول یه حساب بساز.';
+
+  @override
+  String get importInto => 'وارد کن به';
+
+  @override
+  String get importAmountsInToman => 'مبلغ‌ها به تومانه';
+
+  @override
+  String get importAmountsInTomanHint => 'صورت‌حساب بانک‌ها معمولاً ریالیه؛ خروجی کاکا هم ریالیه.';
+
+  @override
+  String get importColumns => 'ستون‌ها';
+
+  @override
+  String get importNone => '—';
+
+  @override
+  String get importSignedAmount => 'مبلغ (منفی = خرج)';
+
+  @override
+  String get importDebit => 'برداشت';
+
+  @override
+  String get importCredit => 'واریز';
+
+  @override
+  String get importMappingHint => 'ستون تاریخ و یا ستون مبلغ یا برداشت/واریز رو انتخاب کن.';
+
+  @override
+  String get importPreview => 'پیش‌نمایش';
+
+  @override
+  String importSummary(Object count, Object dupes) {
+    return '$count ردیف تازه · $dupes تا قبلاً توی حساب بوده';
+  }
+
+  @override
+  String importBadLines(Object lines, Object count) {
+    return 'ردیف‌های ناخوانا: $lines (در کل $count)';
+  }
+
+  @override
+  String importSkippedKinds(Object count) {
+    return '$count ردیف انتقال/تبدیل/موجودی اول/باطل‌شده رد شد';
+  }
+
+  @override
+  String get importFallbackCategory => 'وارد شده';
+
+  @override
+  String importMore(Object count) {
+    return 'و $count تای دیگه';
+  }
+
+  @override
+  String get importNothingNew => 'چیز تازه‌ای برای وارد کردن نیست.';
+
+  @override
+  String importNow(Object count) {
+    return 'وارد کن ($count)';
+  }
+
+  @override
+  String importDone(Object count) {
+    return '$count تراکنش وارد شد';
+  }
 }

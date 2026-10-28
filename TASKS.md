@@ -65,13 +65,15 @@ Phases: **MVP-1** = first usable APK · **MVP-2** = v0.1 feature-complete · **L
 
 - [x] Monthly budgets per expense category (base currency, pace warning, home card, follows renames, in backups; schema v5)
 
+- [x] CSV import: bank statements (fa/en headers, debit/credit or signed amount, Jalali dates, Persian digits, rial/toman), Kaka export round-trip, duplicate skip, preview, undo
+
 ## Later (v0.2+)
 - [~] On-device models: catalog (3 open Qwen models, real sha256/sizes), resumable mirror-aware sha256-verified downloader, device fit check — runtime adapter (`flutter_edge_ai`, ex-flutter_gemma) pending device testing, see `docs/on-device-models.md`
 - [ ] Fill `model_catalog/catalog.v1.json` after on-device benchmark
 - [x] `tools/kaka_mcp`: read-only desktop MCP server (stdio) over `.kaka` backups (RAM-only, masked, password via env/file)
 - [ ] Google Sheets mirror + Inbox tab (`drive.file`), `kaka-mcp --sheet`
 - [ ] Persian eval set + CI eval on Ollama
-- [ ] llama.cpp (GGUF) runtime, Android AppFunctions, iOS/desktop, budgets, CSV/Excel import, LAN/QR transfer
+- [ ] llama.cpp (GGUF) runtime, Android AppFunctions, iOS/desktop, Excel (.xlsx) import, LAN/QR transfer
 
 ## Spikes / open questions
 - [ ] Sheets API reachability from Iran (with/without VPN)

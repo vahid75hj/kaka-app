@@ -410,5 +410,63 @@
     }
   },
   "budgetCurrencyChanged": "Base currency changed — edit this budget to set a new limit.",
-  "allCategoriesBudgeted": "Every expense category already has a budget."
+  "allCategoriesBudgeted": "Every expense category already has a budget.",
+  "undo": "Undo",
+  "importCsv": "Import CSV",
+  "importCsvHint": "Bank statement, spreadsheet or Kaka export",
+  "importHint": "Pick a CSV file (save Excel sheets as \"CSV UTF-8\"). Kaka guesses the columns; check them, see the preview, then import. Rows already in the account are skipped, and you can undo the whole import.",
+  "importChooseFile": "Choose file",
+  "importEmpty": "This file has no data rows.",
+  "importNotUtf8": "Could not read the file as UTF-8. In Excel use Save As → \"CSV UTF-8\".",
+  "importNeedAccount": "Add an account first.",
+  "importInto": "Import into",
+  "importAmountsInToman": "Amounts are in toman",
+  "importAmountsInTomanHint": "Bank statements are usually in rial; Kaka exports are in rial.",
+  "importColumns": "Columns",
+  "importNone": "—",
+  "importSignedAmount": "Amount (negative = spent)",
+  "importDebit": "Money out",
+  "importCredit": "Money in",
+  "importMappingHint": "Choose a date column and either an amount column or money out / money in.",
+  "importPreview": "Preview",
+  "importSummary": "{count} new · {dupes} already in the account",
+  "@importSummary": {
+    "placeholders": {
+      "count": {},
+      "dupes": {}
+    }
+  },
+  "importBadLines": "Unreadable lines: {lines} ({count} total)",
+  "@importBadLines": {
+    "placeholders": {
+      "lines": {},
+      "count": {}
+    }
+  },
+  "importSkippedKinds": "{count} transfer/exchange/opening/voided rows skipped",
+  "@importSkippedKinds": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "importFallbackCategory": "Imported",
+  "importMore": "and {count} more",
+  "@importMore": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "importNothingNew": "Nothing new to import.",
+  "importNow": "Import {count}",
+  "@importNow": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "importDone": "{count} transactions imported",
+  "@importDone": {
+    "placeholders": {
+      "count": {}
+    }
+  }
 }

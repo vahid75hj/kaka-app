@@ -1765,6 +1765,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Every expense category already has a budget.'**
   String get allCategoriesBudgeted;
+
+  /// No description provided for @undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo;
+
+  /// No description provided for @importCsv.
+  ///
+  /// In en, this message translates to:
+  /// **'Import CSV'**
+  String get importCsv;
+
+  /// No description provided for @importCsvHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank statement, spreadsheet or Kaka export'**
+  String get importCsvHint;
+
+  /// No description provided for @importHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a CSV file (save Excel sheets as \"CSV UTF-8\"). Kaka guesses the columns; check them, see the preview, then import. Rows already in the account are skipped, and you can undo the whole import.'**
+  String get importHint;
+
+  /// No description provided for @importChooseFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose file'**
+  String get importChooseFile;
+
+  /// No description provided for @importEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'This file has no data rows.'**
+  String get importEmpty;
+
+  /// No description provided for @importNotUtf8.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not read the file as UTF-8. In Excel use Save As → \"CSV UTF-8\".'**
+  String get importNotUtf8;
+
+  /// No description provided for @importNeedAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an account first.'**
+  String get importNeedAccount;
+
+  /// No description provided for @importInto.
+  ///
+  /// In en, this message translates to:
+  /// **'Import into'**
+  String get importInto;
+
+  /// No description provided for @importAmountsInToman.
+  ///
+  /// In en, this message translates to:
+  /// **'Amounts are in toman'**
+  String get importAmountsInToman;
+
+  /// No description provided for @importAmountsInTomanHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank statements are usually in rial; Kaka exports are in rial.'**
+  String get importAmountsInTomanHint;
+
+  /// No description provided for @importColumns.
+  ///
+  /// In en, this message translates to:
+  /// **'Columns'**
+  String get importColumns;
+
+  /// No description provided for @importNone.
+  ///
+  /// In en, this message translates to:
+  /// **'—'**
+  String get importNone;
+
+  /// No description provided for @importSignedAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount (negative = spent)'**
+  String get importSignedAmount;
+
+  /// No description provided for @importDebit.
+  ///
+  /// In en, this message translates to:
+  /// **'Money out'**
+  String get importDebit;
+
+  /// No description provided for @importCredit.
+  ///
+  /// In en, this message translates to:
+  /// **'Money in'**
+  String get importCredit;
+
+  /// No description provided for @importMappingHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a date column and either an amount column or money out / money in.'**
+  String get importMappingHint;
+
+  /// No description provided for @importPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get importPreview;
+
+  /// No description provided for @importSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} new · {dupes} already in the account'**
+  String importSummary(Object count, Object dupes);
+
+  /// No description provided for @importBadLines.
+  ///
+  /// In en, this message translates to:
+  /// **'Unreadable lines: {lines} ({count} total)'**
+  String importBadLines(Object lines, Object count);
+
+  /// No description provided for @importSkippedKinds.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} transfer/exchange/opening/voided rows skipped'**
+  String importSkippedKinds(Object count);
+
+  /// No description provided for @importFallbackCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported'**
+  String get importFallbackCategory;
+
+  /// No description provided for @importMore.
+  ///
+  /// In en, this message translates to:
+  /// **'and {count} more'**
+  String importMore(Object count);
+
+  /// No description provided for @importNothingNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing new to import.'**
+  String get importNothingNew;
+
+  /// No description provided for @importNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Import {count}'**
+  String importNow(Object count);
+
+  /// No description provided for @importDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} transactions imported'**
+  String importDone(Object count);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
