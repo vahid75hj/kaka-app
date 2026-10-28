@@ -51,7 +51,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
     final accounts = ref.watch(accountsProvider).value ?? const <Account>[];
     final byId = {for (final a in accounts) a.id: a};
     final views = ref
-        .watch(transactionViewsProvider((opening: l.opening, asset: l.goldAndCoins)))
+        .watch(transactionViewsProvider((opening: l.opening, asset: l.goldAndCoins, all: !_query.isEmpty)))
         .where((v) => _query.matches(v.txn, byId))
         .toList();
     final pickable = accounts.where((a) => !a.isSystem && a.type != AccountType.equity).toList();

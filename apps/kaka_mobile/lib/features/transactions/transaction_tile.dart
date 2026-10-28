@@ -111,12 +111,15 @@ final accountsByIdProvider = Provider<Map<String, Account>>(
 );
 
 /// Builds tiles for [txns] once accounts are known.
-final transactionViewsProvider = Provider.family<List<TransactionView>, ({String opening, String asset})>((
+final transactionViewsProvider = Provider.family<List<TransactionView>, ({String opening, String asset, bool all})>((
   ref,
   labels,
 ) {
   final accounts = {for (final a in ref.watch(accountsProvider).value ?? const <Account>[]) a.id: a};
-  final txns = ref.watch(transactionsProvider).value ?? const <LedgerTransaction>[];
+  // `all`: whole history (search/filters); otherwise the capped recent list.
+  final recent = ref.watch(transactionsProvider).value ?? const <LedgerTransaction>[];
+  // While the full history loads, show the recent list instead of flashing empty.
+  final txns = labels.all ? (ref.watch(allTransactionsProvider).value ?? recent) : recent;
   if (accounts.isEmpty) return const [];
   return [
     for (final t in txns) TransactionView.of(t, accounts, openingLabel: labels.opening, assetLabel: labels.asset),
