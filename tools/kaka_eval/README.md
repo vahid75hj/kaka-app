@@ -1,7 +1,7 @@
 # kaka-eval
 
 Persian tool-calling eval for the AI backends Kaka can use (Ollama or any OpenAI-compatible endpoint).
-30 cases (`data/fa_v1.json`): adding expenses/income/transfers from colloquial Persian (toman vs rial,
+31 cases (`data/fa_v1.json`): adding expenses/income/transfers from colloquial Persian (toman vs rial,
 «۸۵ تومن» = 85 thousand toman), reading balances, spending, budgets, search, and questions that must
 **not** create drafts. Each case runs against a fresh in-memory ledger through the real tools, with the
 same system prompt as the app (`KakaPrompt`).

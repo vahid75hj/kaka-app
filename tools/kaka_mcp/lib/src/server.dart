@@ -30,6 +30,7 @@ class BackupLedger {
       transactions: txns,
       ledger: LedgerService(accounts, txns),
       budgets: DriftBudgetRepository(db),
+      recurring: DriftRecurringRepository(db),
       // Read-only: a backup is a snapshot, so suggestions have nowhere to go.
       onDraft: (_) async => throw const DomainException('read_only'),
     );

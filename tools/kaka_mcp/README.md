@@ -5,7 +5,7 @@ answer questions about your money from an encrypted Kaka backup (`.kaka`, made w
 
 - It decrypts the backup into a RAM-only database. Nothing is written to disk and nothing is sent anywhere by the server.
 - It offers the same read tools as the in-app AI: `list_accounts`, `get_balance`, `list_transactions`,
-  `summarize_spending` and `list_budgets`. `add_transaction` is not offered.
+  `summarize_spending`, `list_budgets` and `list_recurring`. `add_transaction` is not offered.
 - Card, account and IBAN numbers are masked in every result.
 
 ## Use

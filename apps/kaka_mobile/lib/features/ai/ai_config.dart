@@ -1,3 +1,5 @@
+import '../../core/app_format.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kaka_ai/kaka_ai.dart';
@@ -70,6 +72,8 @@ final toolRunnerProvider = Provider<ToolRunner>((ref) {
     transactions: ref.watch(transactionRepositoryProvider),
     ledger: ref.watch(ledgerProvider),
     budgets: ref.watch(budgetRepositoryProvider),
+    recurring: ref.watch(recurringRepositoryProvider),
+    addMonths: monthAdderFor(ref.watch(settingsProvider).calendar),
     currentMonth: (now) {
       final f = ref.read(formatProvider);
       final from = f.startOfMonth(now);

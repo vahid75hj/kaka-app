@@ -1,3 +1,4 @@
+import 'masking.dart';
 import 'package:kaka_domain/kaka_domain.dart';
 
 import 'tool_catalog.dart';
@@ -18,8 +19,16 @@ class ToolRunner {
     required this.onDraft,
     this.budgets,
     this.currentMonth,
+    this.recurring,
+    this.addMonths = gregorianAddMonths,
     DateTime Function()? clock,
   }) : _now = clock ?? DateTime.now;
+
+  /// Optional: without it `list_recurring` returns an empty list.
+  final RecurringRepository? recurring;
+
+  /// Month stepping for "next date" (Jalali in the app).
+  final MonthAdder addMonths;
 
   /// The user's calendar month containing a date (Jalali in the app); Gregorian when null.
   final ({DateTime from, DateTime to}) Function(DateTime now)? currentMonth;
@@ -42,6 +51,7 @@ class ToolRunner {
         'list_transactions' => await _listTransactions(args),
         'summarize_spending' => await _summarize(args),
         'list_budgets' => await _listBudgets(args),
+        'list_recurring' => await _listRecurring(),
         'add_transaction' => await _addDraft(args),
         _ => _error('unknown_tool', name),
       };
@@ -110,6 +120,26 @@ class ToolRunner {
       if (out.length >= limit) break;
     }
     return {'transactions': out};
+  }
+
+  Future<Map<String, Object?>> _listRecurring() async {
+    final names = {for (final a in await accounts.getAll()) a.id: a.name};
+    return {
+      'recurring': [
+        for (final r in await recurring?.getAll() ?? const <RecurringRule>[])
+          {
+            'kind': r.isTransfer ? 'transfer' : (r.isExpense ? 'expense' : 'income'),
+            'amount': money(r.amount),
+            'account': names[r.accountId],
+            if (r.isTransfer) 'to_account': names[r.toAccountId],
+            if (r.category != null) 'category': r.category,
+            if (r.note.isNotEmpty) 'note': Masking.text(r.note),
+            'every': r.every.name,
+            'next': Recurrence.next(r, addMonths).toIso8601String().substring(0, 10),
+            'active': r.active,
+          },
+      ],
+    };
   }
 
   Future<Map<String, Object?>> _listBudgets(Map<String, Object?> args) async {

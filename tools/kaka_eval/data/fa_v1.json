@@ -29,6 +29,7 @@
     {"id": "read_txn_account", "prompt": "تراکنش‌های کیف پولم رو بگو", "tool": "list_transactions", "args": {"account": "کیف پول"}, "forbid": ["add_transaction"]},
     {"id": "read_budget", "prompt": "از بودجه‌ی غذام چقدر مونده؟", "tool": "list_budgets", "forbid": ["add_transaction"]},
     {"id": "read_budget_over", "prompt": "از بودجه‌ام زدم بیرون؟", "tool": "list_budgets", "forbid": ["add_transaction"]},
+    {"id": "read_recurring", "prompt": "هزینه‌های ثابت ماهانه‌ام چیان؟", "tool": "list_recurring", "forbid": ["add_transaction"]},
     {"id": "read_income", "prompt": "حقوق این ماهم کی اومد؟", "tool": "list_transactions", "forbid": ["add_transaction"]},
 
     {"id": "no_write_greeting", "prompt": "سلام! خوبی؟", "forbid": ["add_transaction"]},

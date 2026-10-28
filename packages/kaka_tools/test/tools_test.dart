@@ -157,4 +157,47 @@ void main() {
     final sept = await runner('list_budgets', {'from': '2026-09-01', 'to': '2026-09-30'});
     expect(((sept['budgets'] as List).single as Map)['over'], isFalse);
   });
+
+  test('list_recurring: next date, kind, masked note', () async {
+    final accounts = _Accounts();
+    final txns = _Txns();
+    final ledger = LedgerService(accounts, txns);
+    final bank = await ledger.createAccount(name: 'Bank', type: AccountType.asset, currency: Currency.usd);
+    final rules = _Rules();
+    await rules.upsert(
+      RecurringRule(
+        id: 'r',
+        isExpense: true,
+        accountId: bank.id,
+        category: 'Rent',
+        amount: const Money(50000, Currency.usd),
+        every: RecurrenceEvery.monthly,
+        start: DateTime(2026, 1, 31),
+        lastDone: DateTime(2026, 1, 31),
+        note: 'to 6037991234567890',
+      ),
+    );
+    final runner = ToolRunner(
+      accounts: accounts,
+      transactions: txns,
+      ledger: ledger,
+      onDraft: (_) async {},
+      recurring: rules,
+    );
+    final r = ((await runner('list_recurring', {}))['recurring'] as List).single as Map;
+    expect((r['kind'], r['account'], r['next'], r['every']), ('expense', 'Bank', '2026-02-28', 'monthly'));
+    expect(r['note'], isNot(contains('1234567890')));
+  });
+}
+
+class _Rules implements RecurringRepository {
+  final items = <RecurringRule>[];
+  @override
+  Future<void> delete(String id) async => items.removeWhere((r) => r.id == id);
+  @override
+  Future<List<RecurringRule>> getAll() async => items;
+  @override
+  Future<void> upsert(RecurringRule r) async => items.add(r);
+  @override
+  Stream<List<RecurringRule>> watchAll() => Stream.value(items);
 }

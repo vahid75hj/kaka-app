@@ -67,12 +67,27 @@ class EvalFixture {
     final budgets = DriftBudgetRepository(db);
     await budgets.upsert(Budget(id: Budget.idFor('غذا'), category: 'غذا', limit: const Money(5000000, Currency.irr)));
 
+    final recurring = DriftRecurringRepository(db);
+    await recurring.upsert(
+      RecurringRule(
+        id: 'rent',
+        isExpense: true,
+        accountId: mellat.id,
+        category: 'اجاره',
+        amount: const Money(150000000, Currency.irr),
+        every: RecurrenceEvery.monthly,
+        start: DateTime(2026, 10, 23, 9),
+        lastDone: DateTime(2026, 10, 23, 9),
+      ),
+    );
+
     late final EvalFixture fixture;
     final runner = ToolRunner(
       accounts: accounts,
       transactions: txns,
       ledger: ledger,
       budgets: budgets,
+      recurring: recurring,
       clock: () => evalToday,
       onDraft: (d) async => fixture.drafts.add(d),
     );

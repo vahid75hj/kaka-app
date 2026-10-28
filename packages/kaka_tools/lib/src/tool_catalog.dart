@@ -67,6 +67,14 @@ const kakaTools = <ToolSpec>[
     },
   ),
   ToolSpec(
+    name: 'list_recurring',
+    description:
+        'Repeating transactions the user set up (rent, salary, subscriptions): amount, account, category, '
+        'weekly/monthly, the next date and whether it is paused. Use it for fixed monthly costs.',
+    access: ToolAccess.read,
+    inputSchema: {'type': 'object', 'properties': {}, 'additionalProperties': false},
+  ),
+  ToolSpec(
     name: 'add_transaction',
     description: 'Propose a new expense, income or transfer. Nothing is recorded until the user approves it in Kaka.',
     access: ToolAccess.writeDraft,
