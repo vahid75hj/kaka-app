@@ -183,7 +183,7 @@ object SmsBackground {
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
         val n = NotificationCompat.Builder(ctx, NOTIFY_CHANNEL)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat_kaka)
             .setContentTitle(title)
             .setContentText(body)
             // Amounts never appear on the lock screen.

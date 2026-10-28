@@ -1,0 +1,38 @@
+# Draft recipe for fdroiddata (metadata/app.kaka.yml). Not submitted yet.
+Categories:
+  - Money
+License: MIT
+AuthorName: Vahid
+SourceCode: https://github.com/vahid75hj/kaka-app
+IssueTracker: https://github.com/vahid75hj/kaka-app/issues
+Changelog: https://github.com/vahid75hj/kaka-app/releases
+
+AutoName: Kaka
+
+RepoType: git
+Repo: https://github.com/vahid75hj/kaka-app.git
+
+Builds:
+  - versionName: 0.5.0
+    versionCode: 5
+    commit: v0.5.0
+    subdir: apps/kaka_mobile
+    output: build/app/outputs/flutter-apk/app-release.apk
+    srclibs:
+      - flutter@stable
+    rm:
+      - apps/kaka_mobile/ios
+    prebuild:
+      - export PUB_CACHE=$(pwd)/.pub-cache
+      - $$flutter$$/bin/flutter config --no-analytics
+      - $$flutter$$/bin/flutter pub get
+    scanignore:
+      - apps/kaka_mobile/.pub-cache
+    build:
+      - export PUB_CACHE=$(pwd)/.pub-cache
+      - $$flutter$$/bin/flutter build apk --release
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags ^v[0-9.]+$
+CurrentVersion: 0.5.0
+CurrentVersionCode: 5

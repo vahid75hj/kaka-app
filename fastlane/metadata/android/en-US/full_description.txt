@@ -1,0 +1,10 @@
+<p><b>Kaka</b> is a free, open-source personal-finance app that works completely offline. It has no account, no server, no ads and no telemetry.</p>
+<ul>
+<li><b>Private by design:</b> your ledger is stored encrypted on the phone (SQLite3MultipleCiphers, with the key in the Android Keystore). Backups are encrypted files that you share yourself (Argon2id + XChaCha20-Poly1305).</li>
+<li><b>Real double-entry bookkeeping:</b> amounts are kept as integers, never floats. Accounts, categories with icons, transfers, and cross-currency exchanges.</li>
+<li><b>Persian and English:</b> Jalali and Gregorian calendars, Persian digits, and rial with toman as its display unit.</li>
+<li><b>Bank SMS:</b> share or paste an SMS, or opt in to automatic reading of senders you link (optionally while Kaka is closed). Every SMS becomes a draft that you confirm. You can teach Kaka a new bank from 3–5 samples.</li>
+<li><b>Net worth:</b> exchange rates that you enter, gold and coins valued at your prices, and a monthly report with CSV export.</li>
+<li><b>Bring your own AI (optional):</b> any OpenAI-compatible endpoint or a local Ollama server. Card numbers and IBANs are masked, and AI can only suggest drafts.</li>
+</ul>
+<p>Kaka only uses the network if you set up an AI endpoint yourself.</p>

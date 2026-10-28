@@ -57,7 +57,8 @@ Phases: **MVP-1** = first usable APK · **MVP-2** = v0.1 feature-complete · **L
 - [x] Asset buy/sell can pay from / receive into an account (`asset` kind via `Assets:<cur>`), history + void together (schema v5)
 - [x] AI transfer drafts: real from → to transfer drafts + suggested category (drafts v5 columns), tool validates target / currency / system accounts
 - [x] Transaction search & filters (text, kind, account, date range) — edit-by-void-and-replace still open
-- [~] Release signing (dedicated release key via `android/key.properties`, falls back to debug) + split-per-ABI APKs on GitHub Releases — CI signing on tags and F-Droid metadata still open
+- [x] Release signing + split-per-ABI APKs on GitHub Releases; F-Droid fastlane metadata (fa/en) + draft fdroiddata recipe (`docs/fdroid`) — CI signing on tags still open
+- [x] Real app icon (adaptive + monochrome, notification icon)
 - [x] `CONTRIBUTING.md` (add a bank / model / language), `SECURITY.md`, issue templates
 
 ## Later (v0.2+)
