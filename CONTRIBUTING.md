@@ -3,6 +3,8 @@
 Kaka is offline-first and privacy-first. Contributions must not add network calls, analytics or
 trackers. The only optional network use is the user's own AI endpoint.
 
+Run `./tool/check.sh` before pushing (format, analyze, every test suite).
+
 ## Setup
 
 ```sh

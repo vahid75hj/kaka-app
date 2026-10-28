@@ -112,9 +112,19 @@ class BudgetBar extends ConsumerWidget {
                 style: const TextStyle(fontWeight: FontWeight.w700),
               ),
             ),
-            AmountText(
-              s.spent == null ? f.money(s.budget.limit) : l.budgetSpentOf(f.number(s.spent!), f.money(s.budget.limit)),
-              style: const TextStyle(fontSize: 13),
+            const SizedBox(width: 8),
+            Flexible(
+              flex: 2,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: AlignmentDirectional.centerEnd,
+                child: AmountText(
+                  s.spent == null
+                      ? f.money(s.budget.limit)
+                      : l.budgetSpentOf(f.number(s.spent!), f.money(s.budget.limit)),
+                  style: const TextStyle(fontSize: 13),
+                ),
+              ),
             ),
           ],
         ),
