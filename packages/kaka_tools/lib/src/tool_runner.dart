@@ -120,8 +120,22 @@ class ToolRunner {
   }
 
   Future<Map<String, Object?>> _addDraft(Map<String, Object?> args) async {
-    final account = await accounts.findById(args['account_id'] as String? ?? '');
-    if (account == null) return _error('unknown_account', args['account_id'] as String?);
+    final visible = {for (final a in await _visible()) a.id: a};
+    final account = visible[args['account_id'] as String? ?? ''];
+    if (account == null || account.archived || !account.type.isBalanceSheet) {
+      return _error('unknown_account', args['account_id'] as String?);
+    }
+    final kind = args['kind'] as String? ?? 'expense';
+    if (!const {'expense', 'income', 'transfer'}.contains(kind)) return _error('bad_kind', kind);
+    if (kind == 'transfer') {
+      final to = visible[args['to_account_id'] as String? ?? ''];
+      if (to == null || to.archived || !to.type.isBalanceSheet) {
+        return _error('unknown_to_account', args['to_account_id'] as String?);
+      }
+      if (to.id == account.id) return _error('same_account');
+      // Exchanges need the received amount too; the user records those by hand.
+      if (to.currency != account.currency) return _error('cross_currency_transfer', 'record exchanges in Kaka');
+    }
     // Validate the amount now so the model gets immediate feedback.
     AmountParser.parse(args['amount'] as String? ?? '', DisplayUnit.of(account.currency));
     await onDraft(TransactionDraft(Map.of(args)));

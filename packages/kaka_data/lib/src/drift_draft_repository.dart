@@ -47,6 +47,8 @@ class DriftDraftRepository implements DraftRepository {
           balanceMinor: Value(d.balance?.minor),
           sender: Value(d.sender),
           confidence: Value(d.confidence),
+          toAccountId: Value(d.toAccountId),
+          category: Value(d.category),
         ),
       );
 
@@ -67,5 +69,7 @@ class DriftDraftRepository implements DraftRepository {
     balance: r.balanceMinor == null ? null : Money(r.balanceMinor!, Currency.byCode(r.currency)),
     sender: r.sender,
     confidence: r.confidence,
+    toAccountId: r.toAccountId,
+    category: r.category,
   );
 }

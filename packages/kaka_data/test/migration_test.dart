@@ -59,6 +59,9 @@ void main() {
     for (final t in ['fx_rates', 'asset_movements', 'asset_prices', 'asset_types', 'custom_parsers']) {
       await db.customStatement('DROP TABLE $t');
     }
+    // A real v3 file has no v5 columns either.
+    await db.customStatement('ALTER TABLE drafts DROP COLUMN to_account_id');
+    await db.customStatement('ALTER TABLE drafts DROP COLUMN category');
     await db.customStatement('PRAGMA user_version = 3');
     await db.close();
 
@@ -98,13 +101,15 @@ void main() {
     expect((snap['tables'] as Map).keys, containsAll(['fx_rates', 'asset_movements', 'custom_parsers']));
   });
 
-  test('v4 database (Kaka 0.4.0) upgrades to v5: movements keep rows, gain transaction_id', () async {
+  test('v4 database (Kaka 0.4.0) upgrades to v5: asset movement transaction_id, transfer drafts', () async {
     final dir = Directory.systemTemp.createTempSync('kaka_mig5');
     addTearDown(() => dir.deleteSync(recursive: true));
     final file = File('${dir.path}/l.db');
     var db = KakaDatabase.open(file, key: 'k');
     await DriftAssetRepository(db).ensureBuiltIns();
     await db.customStatement('ALTER TABLE asset_movements DROP COLUMN transaction_id');
+    await db.customStatement('ALTER TABLE drafts DROP COLUMN to_account_id');
+    await db.customStatement('ALTER TABLE drafts DROP COLUMN category');
     await db.customStatement(
       "INSERT INTO asset_movements (id, asset_type_id, quantity_milli, moved_at, note) VALUES ('old', 'gold18', 1500, 0, '')",
     );
@@ -121,5 +126,20 @@ void main() {
     expect(all['old']!.quantityMilli, 1500);
     expect(all['old']!.transactionId, isNull);
     expect(all['new']!.transactionId, 't1');
+    final drafts = DriftDraftRepository(db);
+    await drafts.upsert(
+      Draft(
+        id: 'd',
+        source: DraftSource.ai,
+        isExpense: true,
+        amount: const Money(5, Currency.irr),
+        createdAt: DateTime(2026),
+        accountId: 'a',
+        toAccountId: 'b',
+        category: 'x',
+      ),
+    );
+    final d = (await drafts.findById('d'))!;
+    expect((d.isTransfer, d.toAccountId, d.category), (true, 'b', 'x'));
   });
 }

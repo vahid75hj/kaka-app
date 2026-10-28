@@ -84,5 +84,32 @@ void main() {
 
     final bad = await runner('add_transaction', {'kind': 'expense', 'amount': 'lots', 'account_id': bank.id});
     expect(bad['error'], containsPair('code', 'amount.invalid'));
+
+    // Transfers: target must be another visible money account in the same currency.
+    final cash = await ledger.createAccount(name: 'Cash', type: AccountType.asset, currency: Currency.usd);
+    final rial = await ledger.createAccount(name: 'Rial', type: AccountType.asset, currency: Currency.irr);
+    Future<Object?> transfer(String? to) async =>
+        ((await runner('add_transaction', {
+              'kind': 'transfer',
+              'amount': '1',
+              'account_id': bank.id,
+              'to_account_id': ?to,
+            }))['error']
+            as Map?)?['code'];
+    expect(await transfer(null), 'unknown_to_account');
+    expect(await transfer(food.id), 'unknown_to_account');
+    expect(await transfer(bank.id), 'same_account');
+    expect(await transfer(rial.id), 'cross_currency_transfer');
+    expect(await transfer(cash.id), isNull);
+    expect(drafts.last.arguments['to_account_id'], cash.id);
+    final system = await ledger.fxAccount(Currency.usd);
+    expect(
+      (await runner('add_transaction', {'kind': 'expense', 'amount': '1', 'account_id': system.id}))['error'],
+      containsPair('code', 'unknown_account'),
+    );
+    expect(
+      (await runner('add_transaction', {'kind': 'opening', 'amount': '1', 'account_id': bank.id}))['error'],
+      containsPair('code', 'bad_kind'),
+    );
   });
 }

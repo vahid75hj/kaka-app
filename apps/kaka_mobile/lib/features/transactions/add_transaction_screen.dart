@@ -88,7 +88,11 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     final f = ref.read(formatProvider);
     setState(() {
       _draft = d;
-      _kind = d.isExpense ? TransactionKind.expense : TransactionKind.income;
+      _kind = d.isTransfer
+          ? TransactionKind.transfer
+          : (d.isExpense ? TransactionKind.expense : TransactionKind.income);
+      if (d.isTransfer) _toAccountId = d.toAccountId;
+      if (d.category != null && d.category!.isNotEmpty) _category = d.category;
       _amount.text = exactAmountText(d.amount, f.unitFor(d.amount.currency));
       _date = d.occurredAt ?? d.createdAt;
       _note.text = d.note;

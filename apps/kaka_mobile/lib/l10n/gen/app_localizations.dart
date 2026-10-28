@@ -1555,6 +1555,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Estimate: {amount}'**
   String estimateFromPrice(Object amount);
+
+  /// No description provided for @fromAi.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested by AI'**
+  String get fromAi;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

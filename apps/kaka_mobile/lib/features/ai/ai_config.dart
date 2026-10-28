@@ -63,16 +63,15 @@ final toolRunnerProvider = Provider<ToolRunner>((ref) {
             Draft(
               id: Ids.next(),
               source: DraftSource.ai,
+              // A transfer leaves [accountId] and lands in [toAccountId].
               isExpense: kind != 'income',
               amount: amount,
               createdAt: DateTime.now(),
               occurredAt: a['date'] == null ? null : DateTime.tryParse(a['date']! as String),
-              note: [
-                if (kind == 'transfer') '↔',
-                if (a['category'] != null) a['category']! as String,
-                if (a['note'] != null) a['note']! as String,
-              ].join(' · '),
+              note: (a['note'] as String? ?? '').trim(),
+              category: kind == 'transfer' ? null : (a['category'] as String?)?.trim(),
               accountId: account.id,
+              toAccountId: kind == 'transfer' ? a['to_account_id'] as String? : null,
             ),
           );
     },

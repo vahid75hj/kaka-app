@@ -27,6 +27,8 @@ class Draft {
     this.balance,
     this.sender,
     this.confidence,
+    this.toAccountId,
+    this.category,
   });
 
   final String id;
@@ -56,6 +58,14 @@ class Draft {
   /// Parser confidence 0..1 (`null` for non-SMS drafts).
   final double? confidence;
 
+  /// Set for a suggested transfer: money moves from [accountId] to this account.
+  final String? toAccountId;
+
+  /// Suggested category name (AI drafts); the user can change it.
+  final String? category;
+
+  bool get isTransfer => toAccountId != null;
+
   /// Same purchase seen twice (SMS + share) collapses to one draft.
   final String? dedupKey;
   final DraftStatus status;
@@ -77,6 +87,8 @@ class Draft {
     balance: balance,
     sender: sender,
     confidence: confidence,
+    toAccountId: toAccountId,
+    category: category,
   );
 }
 

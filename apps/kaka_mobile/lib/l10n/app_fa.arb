@@ -243,5 +243,6 @@
   "assetHistory": "سابقه",
   "assetVoidBody": "این مورد باطل بشه؟ پولِ مرتبط هم برمی‌گرده.",
   "goldAndCoins": "طلا و سکه",
-  "estimateFromPrice": "تخمین: {amount}"
+  "estimateFromPrice": "تخمین: {amount}",
+  "fromAi": "پیشنهاد هوش مصنوعی"
 }

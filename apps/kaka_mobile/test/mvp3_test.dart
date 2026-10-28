@@ -158,4 +158,20 @@ void main() {
     expect(after.firstWhere((b) => b.account.id == wallet.id).balance.minor, 10000000);
     expect((await assets.watchMovements().first).single.voidedAt, isNotNull);
   });
+
+  test('AI transfer becomes a real transfer draft (from → to), not an expense', () async {
+    final ledger = container.read(ledgerProvider);
+    final a = await ledger.createAccount(name: 'ملت', type: AccountType.asset, currency: Currency.irr);
+    final b = await ledger.createAccount(name: 'نقد', type: AccountType.asset, currency: Currency.irr);
+    final res = await maskedTool(container.read(toolRunnerProvider), 'add_transaction', {
+      'kind': 'transfer',
+      'amount': '20000',
+      'account_id': a.id,
+      'to_account_id': b.id,
+      'note': 'عابربانک',
+    });
+    expect(res['status'], 'pending_user_approval');
+    final d = (await container.read(draftServiceProvider).watchPending().first).single;
+    expect((d.isTransfer, d.accountId, d.toAccountId, d.note, d.category), (true, a.id, b.id, 'عابربانک', null));
+  });
 }

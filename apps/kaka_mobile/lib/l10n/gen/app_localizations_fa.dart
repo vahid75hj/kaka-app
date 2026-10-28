@@ -780,4 +780,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String estimateFromPrice(Object amount) {
     return 'تخمین: $amount';
   }
+
+  @override
+  String get fromAi => 'پیشنهاد هوش مصنوعی';
 }

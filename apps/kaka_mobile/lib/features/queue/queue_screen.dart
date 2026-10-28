@@ -105,6 +105,7 @@ class _DraftCard extends ConsumerWidget {
     final signed = draft.isExpense ? -draft.amount : draft.amount;
     final accounts = ref.watch(accountsProvider).value ?? const <Account>[];
     final account = accounts.where((a) => a.id == draft.accountId).firstOrNull;
+    final toAccount = accounts.where((a) => a.id == draft.toAccountId).firstOrNull;
     // Optional sanity check: the bank's reported balance vs. Kaka's balance after this draft.
     String? mismatch;
     final bank = draft.balance;
@@ -125,7 +126,9 @@ class _DraftCard extends ConsumerWidget {
           Row(
             children: [
               Icon(
-                draft.isExpense ? Icons.north_east_rounded : Icons.south_west_rounded,
+                draft.isTransfer
+                    ? Icons.swap_horiz_rounded
+                    : (draft.isExpense ? Icons.north_east_rounded : Icons.south_west_rounded),
                 color: c.accentText,
                 size: 20,
               ),
@@ -133,14 +136,18 @@ class _DraftCard extends ConsumerWidget {
               Expanded(
                 child: Text(
                   [
-                    draft.isExpense ? l.expense : l.income,
+                    draft.isTransfer ? l.transfer : (draft.isExpense ? l.expense : l.income),
+                    if (draft.category != null && draft.category!.isNotEmpty) draft.category!,
                     if (draft.note.isNotEmpty) draft.note,
                     if (draft.accountRef != null) f.digits(_shortRef(draft.accountRef!)),
                   ].join(' · '),
                   style: const TextStyle(fontWeight: FontWeight.w700),
                 ),
               ),
-              AmountText(f.money(signed, signed: !draft.isExpense), color: draft.isExpense ? c.text : c.positive),
+              AmountText(
+                f.money(draft.isTransfer ? draft.amount : signed, signed: !draft.isExpense && !draft.isTransfer),
+                color: draft.isTransfer ? c.textMuted : (draft.isExpense ? c.text : c.positive),
+              ),
             ],
           ),
           if (draft.rawText.isNotEmpty) ...[
@@ -157,7 +164,12 @@ class _DraftCard extends ConsumerWidget {
             spacing: 8,
             runSpacing: 4,
             children: [
-              if (account != null) _Tag(icon: Icons.account_balance_wallet_outlined, text: account.name),
+              if (account != null)
+                _Tag(
+                  icon: Icons.account_balance_wallet_outlined,
+                  text: toAccount == null ? account.name : '${account.name} → ${toAccount.name}',
+                ),
+              if (draft.source == DraftSource.ai) _Tag(icon: Icons.auto_awesome_outlined, text: l.fromAi),
               if (account == null && draft.source == DraftSource.sms)
                 _Tag(icon: Icons.help_outline, text: l.smsNoAccount),
               if (draft.confidence != null)

@@ -1340,6 +1340,24 @@ class $DraftsTable extends Drafts with TableInfo<$DraftsTable, DraftRow> {
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _toAccountIdMeta = const VerificationMeta('toAccountId');
+  @override
+  late final GeneratedColumn<String> toAccountId = GeneratedColumn<String>(
+    'to_account_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _categoryMeta = const VerificationMeta('category');
+  @override
+  late final GeneratedColumn<String> category = GeneratedColumn<String>(
+    'category',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1359,6 +1377,8 @@ class $DraftsTable extends Drafts with TableInfo<$DraftsTable, DraftRow> {
     balanceMinor,
     sender,
     confidence,
+    toAccountId,
+    category,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1434,6 +1454,12 @@ class $DraftsTable extends Drafts with TableInfo<$DraftsTable, DraftRow> {
     if (data.containsKey('confidence')) {
       context.handle(_confidenceMeta, confidence.isAcceptableOrUnknown(data['confidence']!, _confidenceMeta));
     }
+    if (data.containsKey('to_account_id')) {
+      context.handle(_toAccountIdMeta, toAccountId.isAcceptableOrUnknown(data['to_account_id']!, _toAccountIdMeta));
+    }
+    if (data.containsKey('category')) {
+      context.handle(_categoryMeta, category.isAcceptableOrUnknown(data['category']!, _categoryMeta));
+    }
     return context;
   }
 
@@ -1460,6 +1486,8 @@ class $DraftsTable extends Drafts with TableInfo<$DraftsTable, DraftRow> {
       balanceMinor: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}balance_minor']),
       sender: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}sender']),
       confidence: attachedDatabase.typeMapping.read(DriftSqlType.double, data['${effectivePrefix}confidence']),
+      toAccountId: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}to_account_id']),
+      category: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}category']),
     );
   }
 
@@ -1487,6 +1515,8 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
   final int? balanceMinor;
   final String? sender;
   final double? confidence;
+  final String? toAccountId;
+  final String? category;
   const DraftRow({
     required this.id,
     required this.source,
@@ -1505,6 +1535,8 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
     this.balanceMinor,
     this.sender,
     this.confidence,
+    this.toAccountId,
+    this.category,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1542,6 +1574,12 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
     if (!nullToAbsent || confidence != null) {
       map['confidence'] = Variable<double>(confidence);
     }
+    if (!nullToAbsent || toAccountId != null) {
+      map['to_account_id'] = Variable<String>(toAccountId);
+    }
+    if (!nullToAbsent || category != null) {
+      map['category'] = Variable<String>(category);
+    }
     return map;
   }
 
@@ -1564,6 +1602,8 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
       balanceMinor: balanceMinor == null && nullToAbsent ? const Value.absent() : Value(balanceMinor),
       sender: sender == null && nullToAbsent ? const Value.absent() : Value(sender),
       confidence: confidence == null && nullToAbsent ? const Value.absent() : Value(confidence),
+      toAccountId: toAccountId == null && nullToAbsent ? const Value.absent() : Value(toAccountId),
+      category: category == null && nullToAbsent ? const Value.absent() : Value(category),
     );
   }
 
@@ -1587,6 +1627,8 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
       balanceMinor: serializer.fromJson<int?>(json['balanceMinor']),
       sender: serializer.fromJson<String?>(json['sender']),
       confidence: serializer.fromJson<double?>(json['confidence']),
+      toAccountId: serializer.fromJson<String?>(json['toAccountId']),
+      category: serializer.fromJson<String?>(json['category']),
     );
   }
   @override
@@ -1610,6 +1652,8 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
       'balanceMinor': serializer.toJson<int?>(balanceMinor),
       'sender': serializer.toJson<String?>(sender),
       'confidence': serializer.toJson<double?>(confidence),
+      'toAccountId': serializer.toJson<String?>(toAccountId),
+      'category': serializer.toJson<String?>(category),
     };
   }
 
@@ -1631,6 +1675,8 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
     Value<int?> balanceMinor = const Value.absent(),
     Value<String?> sender = const Value.absent(),
     Value<double?> confidence = const Value.absent(),
+    Value<String?> toAccountId = const Value.absent(),
+    Value<String?> category = const Value.absent(),
   }) => DraftRow(
     id: id ?? this.id,
     source: source ?? this.source,
@@ -1649,6 +1695,8 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
     balanceMinor: balanceMinor.present ? balanceMinor.value : this.balanceMinor,
     sender: sender.present ? sender.value : this.sender,
     confidence: confidence.present ? confidence.value : this.confidence,
+    toAccountId: toAccountId.present ? toAccountId.value : this.toAccountId,
+    category: category.present ? category.value : this.category,
   );
   DraftRow copyWithCompanion(DraftsCompanion data) {
     return DraftRow(
@@ -1669,6 +1717,8 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
       balanceMinor: data.balanceMinor.present ? data.balanceMinor.value : this.balanceMinor,
       sender: data.sender.present ? data.sender.value : this.sender,
       confidence: data.confidence.present ? data.confidence.value : this.confidence,
+      toAccountId: data.toAccountId.present ? data.toAccountId.value : this.toAccountId,
+      category: data.category.present ? data.category.value : this.category,
     );
   }
 
@@ -1691,7 +1741,9 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
           ..write('accountId: $accountId, ')
           ..write('balanceMinor: $balanceMinor, ')
           ..write('sender: $sender, ')
-          ..write('confidence: $confidence')
+          ..write('confidence: $confidence, ')
+          ..write('toAccountId: $toAccountId, ')
+          ..write('category: $category')
           ..write(')'))
         .toString();
   }
@@ -1715,6 +1767,8 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
     balanceMinor,
     sender,
     confidence,
+    toAccountId,
+    category,
   );
   @override
   bool operator ==(Object other) =>
@@ -1736,7 +1790,9 @@ class DraftRow extends DataClass implements Insertable<DraftRow> {
           other.accountId == this.accountId &&
           other.balanceMinor == this.balanceMinor &&
           other.sender == this.sender &&
-          other.confidence == this.confidence);
+          other.confidence == this.confidence &&
+          other.toAccountId == this.toAccountId &&
+          other.category == this.category);
 }
 
 class DraftsCompanion extends UpdateCompanion<DraftRow> {
@@ -1757,6 +1813,8 @@ class DraftsCompanion extends UpdateCompanion<DraftRow> {
   final Value<int?> balanceMinor;
   final Value<String?> sender;
   final Value<double?> confidence;
+  final Value<String?> toAccountId;
+  final Value<String?> category;
   final Value<int> rowid;
   const DraftsCompanion({
     this.id = const Value.absent(),
@@ -1776,6 +1834,8 @@ class DraftsCompanion extends UpdateCompanion<DraftRow> {
     this.balanceMinor = const Value.absent(),
     this.sender = const Value.absent(),
     this.confidence = const Value.absent(),
+    this.toAccountId = const Value.absent(),
+    this.category = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   DraftsCompanion.insert({
@@ -1796,6 +1856,8 @@ class DraftsCompanion extends UpdateCompanion<DraftRow> {
     this.balanceMinor = const Value.absent(),
     this.sender = const Value.absent(),
     this.confidence = const Value.absent(),
+    this.toAccountId = const Value.absent(),
+    this.category = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        source = Value(source),
@@ -1822,6 +1884,8 @@ class DraftsCompanion extends UpdateCompanion<DraftRow> {
     Expression<int>? balanceMinor,
     Expression<String>? sender,
     Expression<double>? confidence,
+    Expression<String>? toAccountId,
+    Expression<String>? category,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1842,6 +1906,8 @@ class DraftsCompanion extends UpdateCompanion<DraftRow> {
       if (balanceMinor != null) 'balance_minor': balanceMinor,
       if (sender != null) 'sender': sender,
       if (confidence != null) 'confidence': confidence,
+      if (toAccountId != null) 'to_account_id': toAccountId,
+      if (category != null) 'category': category,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1864,6 +1930,8 @@ class DraftsCompanion extends UpdateCompanion<DraftRow> {
     Value<int?>? balanceMinor,
     Value<String?>? sender,
     Value<double?>? confidence,
+    Value<String?>? toAccountId,
+    Value<String?>? category,
     Value<int>? rowid,
   }) {
     return DraftsCompanion(
@@ -1884,6 +1952,8 @@ class DraftsCompanion extends UpdateCompanion<DraftRow> {
       balanceMinor: balanceMinor ?? this.balanceMinor,
       sender: sender ?? this.sender,
       confidence: confidence ?? this.confidence,
+      toAccountId: toAccountId ?? this.toAccountId,
+      category: category ?? this.category,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1942,6 +2012,12 @@ class DraftsCompanion extends UpdateCompanion<DraftRow> {
     if (confidence.present) {
       map['confidence'] = Variable<double>(confidence.value);
     }
+    if (toAccountId.present) {
+      map['to_account_id'] = Variable<String>(toAccountId.value);
+    }
+    if (category.present) {
+      map['category'] = Variable<String>(category.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1968,6 +2044,8 @@ class DraftsCompanion extends UpdateCompanion<DraftRow> {
           ..write('balanceMinor: $balanceMinor, ')
           ..write('sender: $sender, ')
           ..write('confidence: $confidence, ')
+          ..write('toAccountId: $toAccountId, ')
+          ..write('category: $category, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -4856,6 +4934,8 @@ typedef $$DraftsTableCreateCompanionBuilder =
       Value<int?> balanceMinor,
       Value<String?> sender,
       Value<double?> confidence,
+      Value<String?> toAccountId,
+      Value<String?> category,
       Value<int> rowid,
     });
 typedef $$DraftsTableUpdateCompanionBuilder =
@@ -4877,6 +4957,8 @@ typedef $$DraftsTableUpdateCompanionBuilder =
       Value<int?> balanceMinor,
       Value<String?> sender,
       Value<double?> confidence,
+      Value<String?> toAccountId,
+      Value<String?> category,
       Value<int> rowid,
     });
 
@@ -4936,6 +5018,12 @@ class $$DraftsTableFilterComposer extends Composer<_$KakaDatabase, $DraftsTable>
 
   ColumnFilters<double> get confidence =>
       $composableBuilder(column: $table.confidence, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get toAccountId =>
+      $composableBuilder(column: $table.toAccountId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => ColumnFilters(column));
 }
 
 class $$DraftsTableOrderingComposer extends Composer<_$KakaDatabase, $DraftsTable> {
@@ -4995,6 +5083,12 @@ class $$DraftsTableOrderingComposer extends Composer<_$KakaDatabase, $DraftsTabl
 
   ColumnOrderings<double> get confidence =>
       $composableBuilder(column: $table.confidence, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get toAccountId =>
+      $composableBuilder(column: $table.toAccountId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => ColumnOrderings(column));
 }
 
 class $$DraftsTableAnnotationComposer extends Composer<_$KakaDatabase, $DraftsTable> {
@@ -5039,6 +5133,11 @@ class $$DraftsTableAnnotationComposer extends Composer<_$KakaDatabase, $DraftsTa
   GeneratedColumn<String> get sender => $composableBuilder(column: $table.sender, builder: (column) => column);
 
   GeneratedColumn<double> get confidence => $composableBuilder(column: $table.confidence, builder: (column) => column);
+
+  GeneratedColumn<String> get toAccountId =>
+      $composableBuilder(column: $table.toAccountId, builder: (column) => column);
+
+  GeneratedColumn<String> get category => $composableBuilder(column: $table.category, builder: (column) => column);
 }
 
 class $$DraftsTableTableManager
@@ -5083,6 +5182,8 @@ class $$DraftsTableTableManager
                 Value<int?> balanceMinor = const Value.absent(),
                 Value<String?> sender = const Value.absent(),
                 Value<double?> confidence = const Value.absent(),
+                Value<String?> toAccountId = const Value.absent(),
+                Value<String?> category = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => DraftsCompanion(
                 id: id,
@@ -5102,6 +5203,8 @@ class $$DraftsTableTableManager
                 balanceMinor: balanceMinor,
                 sender: sender,
                 confidence: confidence,
+                toAccountId: toAccountId,
+                category: category,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -5123,6 +5226,8 @@ class $$DraftsTableTableManager
                 Value<int?> balanceMinor = const Value.absent(),
                 Value<String?> sender = const Value.absent(),
                 Value<double?> confidence = const Value.absent(),
+                Value<String?> toAccountId = const Value.absent(),
+                Value<String?> category = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => DraftsCompanion.insert(
                 id: id,
@@ -5142,6 +5247,8 @@ class $$DraftsTableTableManager
                 balanceMinor: balanceMinor,
                 sender: sender,
                 confidence: confidence,
+                toAccountId: toAccountId,
+                category: category,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

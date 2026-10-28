@@ -789,4 +789,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String estimateFromPrice(Object amount) {
     return 'Estimate: $amount';
   }
+
+  @override
+  String get fromAi => 'Suggested by AI';
 }

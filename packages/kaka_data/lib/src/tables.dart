@@ -71,6 +71,9 @@ class Drafts extends Table {
   IntColumn get balanceMinor => integer().nullable()();
   TextColumn get sender => text().nullable()();
   RealColumn get confidence => real().nullable()();
+  // v5
+  TextColumn get toAccountId => text().nullable()();
+  TextColumn get category => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};

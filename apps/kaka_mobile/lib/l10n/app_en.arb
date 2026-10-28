@@ -333,5 +333,6 @@
     "placeholders": {
       "amount": {}
     }
-  }
+  },
+  "fromAi": "Suggested by AI"
 }

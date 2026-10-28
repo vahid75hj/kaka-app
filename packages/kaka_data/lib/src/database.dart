@@ -66,7 +66,18 @@ class KakaDatabase extends _$KakaDatabase {
         }
       }
       // Tables created above already have the v5 column.
-      if (from == 4) await m.addColumn(assetMovements, assetMovements.transactionId);
+      // v5 columns. Tables created by an earlier step already have them, so add only when missing.
+      if (from < 5) {
+        await _addIfMissing(m, assetMovements, assetMovements.transactionId);
+        await _addIfMissing(m, drafts, drafts.toAccountId);
+        await _addIfMissing(m, drafts, drafts.category);
+      }
     },
   );
+
+  Future<void> _addIfMissing(Migrator m, TableInfo<Table, dynamic> table, GeneratedColumn<Object> column) async {
+    final cols = await customSelect('PRAGMA table_info("${table.actualTableName}")').get();
+    if (cols.any((r) => r.read<String>('name') == column.name)) return;
+    await m.addColumn(table, column);
+  }
 }
