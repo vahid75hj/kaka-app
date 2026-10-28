@@ -25,9 +25,12 @@ class _KakaAppState extends ConsumerState<KakaApp> {
   void initState() {
     super.initState();
     SecureWindow.set(ref.read(settingsProvider).secureScreen);
-    ShareInbox.listen(_onShared);
+    ShareInbox.listen(_onShared, onOpenQueue: _openQueue);
     ShareInbox.takeInitial().then((t) {
       if (t != null) _onShared(t);
+    });
+    ShareInbox.takeOpenQueue().then((open) {
+      if (open) _openQueue();
     });
   }
 
@@ -39,6 +42,10 @@ class _KakaAppState extends ConsumerState<KakaApp> {
     router.push(Routes.queue);
     final ctx = router.routerDelegate.navigatorKey.currentContext;
     if (ctx != null && ctx.mounted) showIngestResult(ctx, result);
+  }
+
+  void _openQueue() {
+    if (ref.read(settingsProvider).onboarded) ref.read(routerProvider).push(Routes.queue);
   }
 
   @override

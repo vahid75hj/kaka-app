@@ -28,6 +28,9 @@ class AppSettings {
     this.aiProvider = 'none',
     this.aiBaseUrl = '',
     this.aiModel = '',
+    this.smsBackground = false,
+    this.lastBackupAt,
+    this.backupReminderDays = 14,
   });
 
   factory AppSettings.defaultsFor(String localeCode) {
@@ -69,6 +72,23 @@ class AppSettings {
   final String aiBaseUrl;
   final String aiModel;
 
+  /// Also read linked bank SMS while Kaka is closed (manifest receiver + worker).
+  final bool smsBackground;
+
+  /// When the last encrypted backup was shared; drives the reminder.
+  final DateTime? lastBackupAt;
+
+  /// Remind to back up after this many days (0 = never).
+  final int backupReminderDays;
+
+  /// Whether a backup reminder is due at [now]: there is data worth saving and
+  /// the last backup is older than [backupReminderDays] (or never happened).
+  bool backupDue(DateTime now, {required DateTime? firstActivity}) {
+    if (backupReminderDays <= 0 || firstActivity == null) return false;
+    final since = lastBackupAt ?? firstActivity;
+    return now.difference(since).inDays >= backupReminderDays;
+  }
+
   bool get isPersian => localeCode == 'fa';
 
   AppSettings copyWith({
@@ -87,6 +107,9 @@ class AppSettings {
     String? aiProvider,
     String? aiBaseUrl,
     String? aiModel,
+    bool? smsBackground,
+    DateTime? Function()? lastBackupAt,
+    int? backupReminderDays,
   }) => AppSettings(
     localeCode: localeCode ?? this.localeCode,
     calendar: calendar ?? this.calendar,
@@ -103,6 +126,9 @@ class AppSettings {
     aiProvider: aiProvider ?? this.aiProvider,
     aiBaseUrl: aiBaseUrl ?? this.aiBaseUrl,
     aiModel: aiModel ?? this.aiModel,
+    smsBackground: smsBackground ?? this.smsBackground,
+    lastBackupAt: lastBackupAt != null ? lastBackupAt() : this.lastBackupAt,
+    backupReminderDays: backupReminderDays ?? this.backupReminderDays,
   );
 
   Map<String, Object?> toJson() => {
@@ -121,6 +147,9 @@ class AppSettings {
     'ai_provider': aiProvider,
     'ai_base_url': aiBaseUrl,
     'ai_model': aiModel,
+    'sms_background': smsBackground,
+    'last_backup_at': lastBackupAt?.toUtc().toIso8601String(),
+    'backup_reminder_days': backupReminderDays,
   };
 
   factory AppSettings.fromJson(Map<String, Object?> j) => AppSettings(
@@ -139,5 +168,8 @@ class AppSettings {
     aiProvider: j['ai_provider'] as String? ?? 'none',
     aiBaseUrl: j['ai_base_url'] as String? ?? '',
     aiModel: j['ai_model'] as String? ?? '',
+    smsBackground: j['sms_background'] as bool? ?? false,
+    lastBackupAt: j['last_backup_at'] == null ? null : DateTime.parse(j['last_backup_at'] as String).toLocal(),
+    backupReminderDays: j['backup_reminder_days'] as int? ?? 14,
   );
 }

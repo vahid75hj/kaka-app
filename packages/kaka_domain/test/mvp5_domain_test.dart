@@ -185,4 +185,25 @@ void main() {
     final other = opening.postings.firstWhere((p) => p.accountId != usd.id).accountId;
     expect(accounts.items[other]!.name, 'Opening balances USD');
   });
+
+  test('settings: new keys round-trip; old JSON gets safe defaults; backup reminder', () {
+    final s = AppSettings.defaultsFor(
+      'fa',
+    ).copyWith(smsBackground: true, lastBackupAt: () => DateTime(2026, 10, 1), backupReminderDays: 7);
+    final back = AppSettings.fromJson(s.toJson());
+    expect((back.smsBackground, back.lastBackupAt, back.backupReminderDays), (true, DateTime(2026, 10, 1), 7));
+    final old = AppSettings.defaultsFor('en').toJson()
+      ..remove('sms_background')
+      ..remove('last_backup_at')
+      ..remove('backup_reminder_days');
+    final o = AppSettings.fromJson(old);
+    expect((o.smsBackground, o.lastBackupAt, o.backupReminderDays), (false, null, 14));
+
+    expect(o.backupDue(DateTime(2026, 10, 20), firstActivity: null), isFalse, reason: 'no data yet');
+    expect(o.backupDue(DateTime(2026, 10, 20), firstActivity: DateTime(2026, 10, 10)), isFalse);
+    expect(o.backupDue(DateTime(2026, 10, 24), firstActivity: DateTime(2026, 10, 10)), isTrue);
+    expect(back.backupDue(DateTime(2026, 10, 7), firstActivity: DateTime(2026, 9, 1)), isFalse);
+    expect(back.backupDue(DateTime(2026, 10, 8), firstActivity: DateTime(2026, 9, 1)), isTrue);
+    expect(back.copyWith(backupReminderDays: 0).backupDue(DateTime(2027), firstActivity: DateTime(2026)), isFalse);
+  });
 }

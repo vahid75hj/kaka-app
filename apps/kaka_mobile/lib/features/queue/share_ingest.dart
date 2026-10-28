@@ -38,10 +38,22 @@ abstract final class ShareInbox {
     }
   }
 
-  /// Text shared while the app is already running.
-  static void listen(void Function(String text) onText) {
+  /// Whether the app was opened from the "new bank SMS" notification (consumed once).
+  static Future<bool> takeOpenQueue() async {
+    try {
+      return await _channel.invokeMethod<bool>('takeOpenQueue') ?? false;
+    } on MissingPluginException {
+      return false;
+    } on PlatformException {
+      return false;
+    }
+  }
+
+  /// Text shared (or the notification tapped) while the app is already running.
+  static void listen(void Function(String text) onText, {void Function()? onOpenQueue}) {
     _channel.setMethodCallHandler((call) async {
       if (call.method == 'sharedText' && call.arguments is String) onText(call.arguments as String);
+      if (call.method == 'openQueue') onOpenQueue?.call();
     });
   }
 }

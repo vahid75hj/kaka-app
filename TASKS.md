@@ -44,7 +44,7 @@ Phases: **MVP-1** = first usable APK · **MVP-2** = v0.1 feature-complete · **L
 - [x] Opt-in automatic SMS reading (READ_SMS/RECEIVE_SMS asked only when enabled): 30-day first scan, incremental scan on resume, live receiver while the app runs; off = no reading, receiver stopped
 - [x] Sender ↔ account linking (sender default account + account-number links, suffix and dashed-form matching); only linked senders are read
 - [x] Bank balance vs ledger mismatch hint on drafts
-- [ ] Background receiver when the app is closed (WorkManager / manifest receiver) — today missed SMS are picked up on next open
+- [x] Background SMS when the app is closed (opt-in): manifest receiver disabled by default, app-private pending queue, WorkManager → headless Dart `smsBackgroundMain` → drafts + notification; app drains leftovers on open — untested on a device
 - [x] "Learn a new bank" flow (diff 3–5 samples into a template)
 - [~] CI workflow written (`docs/ci/ci.yml`: format, analyze, package + catalog tests, app tests) — must be moved into `.github/workflows/` with a `workflow`-scoped token; old template workflows still fail
 - [x] Encrypted `.kaka` backup (Argon2id m=19 MiB t=2 + XChaCha20-Poly1305, header as AAD) via share sheet; restore via file picker — reminder still open

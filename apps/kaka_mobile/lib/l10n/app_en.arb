@@ -334,5 +334,13 @@
       "amount": {}
     }
   },
-  "fromAi": "Suggested by AI"
+  "fromAi": "Suggested by AI",
+  "bgSmsBody": "{count} new bank SMS to review",
+  "@bgSmsBody": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "smsBackgroundTitle": "Also when Kaka is closed",
+  "smsBackgroundBody": "Bank SMS from linked senders become drafts in the background, and you get a notification. Nothing is recorded until you confirm."
 }

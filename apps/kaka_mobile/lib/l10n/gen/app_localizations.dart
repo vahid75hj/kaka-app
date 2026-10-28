@@ -1561,6 +1561,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Suggested by AI'**
   String get fromAi;
+
+  /// No description provided for @bgSmsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} new bank SMS to review'**
+  String bgSmsBody(Object count);
+
+  /// No description provided for @smsBackgroundTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Also when Kaka is closed'**
+  String get smsBackgroundTitle;
+
+  /// No description provided for @smsBackgroundBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank SMS from linked senders become drafts in the background, and you get a notification. Nothing is recorded until you confirm.'**
+  String get smsBackgroundBody;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

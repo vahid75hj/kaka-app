@@ -100,6 +100,14 @@ class SettingsScreen extends ConsumerWidget {
             },
           ),
           if (s.smsAutoRead)
+            SwitchListTile(
+              contentPadding: const EdgeInsetsDirectional.only(start: 40),
+              title: Text(l.smsBackgroundTitle),
+              subtitle: Text(l.smsBackgroundBody, style: TextStyle(color: c.textMuted, fontSize: 12, height: 1.5)),
+              value: s.smsBackground,
+              onChanged: (on) => ref.read(smsAutoReaderProvider).setBackground(on),
+            ),
+          if (s.smsAutoRead)
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: const Icon(Icons.link_rounded),

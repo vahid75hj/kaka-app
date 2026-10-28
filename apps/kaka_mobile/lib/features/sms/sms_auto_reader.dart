@@ -28,7 +28,8 @@ class SmsAutoReader {
 
   Future<void> disable() async {
     await _platform.stopListening();
-    await _ref.read(settingsProvider.notifier).update((s) => s.copyWith(smsAutoRead: false));
+    await _platform.setBackground(false);
+    await _ref.read(settingsProvider.notifier).update((s) => s.copyWith(smsAutoRead: false, smsBackground: false));
   }
 
   /// Called at start-up and on resume: (re)attach the receiver and scan what was missed.
@@ -40,7 +41,31 @@ class SmsAutoReader {
       return 0;
     }
     await _platform.startListening(_onLive);
-    return scan();
+    // Keep the manifest receiver in sync (e.g. after a restore) and store what it caught.
+    await _platform.setBackground(_ref.read(settingsProvider).smsBackground);
+    return await drainPending() + await scan();
+  }
+
+  /// Opt-in reading while Kaka is closed. Notification permission is asked but optional.
+  Future<bool> setBackground(bool on) async {
+    if (on && !_ref.read(settingsProvider).smsAutoRead) return false;
+    if (on) await _platform.requestNotifications();
+    final enabled = await _platform.setBackground(on);
+    await _ref.read(settingsProvider.notifier).update((s) => s.copyWith(smsBackground: on && enabled));
+    return enabled;
+  }
+
+  /// Ingests SMS the background receiver stored, then acknowledges them.
+  Future<int> drainPending() async {
+    final pending = await _platform.takePending();
+    if (pending.isEmpty) return 0;
+    final service = await _ref.read(smsIngestServiceProvider.future);
+    var added = 0;
+    for (final m in pending) {
+      if (await service.ingest(m, source: DraftSource.sms, onlyLinkedSenders: true) == IngestResult.added) added++;
+    }
+    await _platform.ackPending(pending.length);
+    return added;
   }
 
   /// Ingests inbox SMS from linked senders since the last scan.

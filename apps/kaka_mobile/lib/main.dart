@@ -8,6 +8,11 @@ import 'package:kaka_domain/kaka_domain.dart';
 import 'app/bootstrap.dart';
 import 'app/kaka_app.dart';
 import 'app/providers.dart';
+import 'features/sms/sms_background.dart';
+
+/// Headless entry point started by `SmsWorker` (Android) when a bank SMS arrives while Kaka is closed.
+@pragma('vm:entry-point')
+Future<void> smsBackgroundMain() => runSmsBackground();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

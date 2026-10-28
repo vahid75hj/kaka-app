@@ -783,4 +783,16 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get fromAi => 'پیشنهاد هوش مصنوعی';
+
+  @override
+  String bgSmsBody(Object count) {
+    return '$count پیامک بانکی تازه برای بررسی';
+  }
+
+  @override
+  String get smsBackgroundTitle => 'حتی وقتی کاکا بسته است';
+
+  @override
+  String get smsBackgroundBody =>
+      'پیامک‌های فرستنده‌های وصل‌شده در پس‌زمینه پیش‌نویس می‌شن و یه اعلان می‌گیری. تا تأیید نکنی چیزی ثبت نمی‌شه.';
 }

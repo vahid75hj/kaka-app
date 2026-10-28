@@ -792,4 +792,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fromAi => 'Suggested by AI';
+
+  @override
+  String bgSmsBody(Object count) {
+    return '$count new bank SMS to review';
+  }
+
+  @override
+  String get smsBackgroundTitle => 'Also when Kaka is closed';
+
+  @override
+  String get smsBackgroundBody =>
+      'Bank SMS from linked senders become drafts in the background, and you get a notification. Nothing is recorded until you confirm.';
 }

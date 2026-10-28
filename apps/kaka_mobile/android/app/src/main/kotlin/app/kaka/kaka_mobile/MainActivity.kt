@@ -14,6 +14,7 @@ import io.flutter.plugin.common.MethodChannel
 class MainActivity : FlutterFragmentActivity() {
     private var channel: MethodChannel? = null
     private var pending: String? = null
+    private var openQueue = false
     private var sms: SmsBridge? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -33,13 +34,14 @@ class MainActivity : FlutterFragmentActivity() {
             }
         }
         pending = extractText(intent)
+        openQueue = intent?.getStringExtra("open") == "queue"
         channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "app.kaka/share").apply {
             setMethodCallHandler { call, result ->
-                if (call.method == "takeSharedText") {
-                    result.success(pending)
-                    pending = null
-                } else {
-                    result.notImplemented()
+                when (call.method) {
+                    "takeSharedText" -> { result.success(pending); pending = null }
+                    // Opened from the "new bank SMS" notification.
+                    "takeOpenQueue" -> { result.success(openQueue); openQueue = false }
+                    else -> result.notImplemented()
                 }
             }
         }
@@ -59,6 +61,7 @@ class MainActivity : FlutterFragmentActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         extractText(intent)?.let { channel?.invokeMethod("sharedText", it) }
+        if (intent.getStringExtra("open") == "queue") channel?.invokeMethod("openQueue", null)
     }
 
     private fun extractText(intent: Intent?): String? {

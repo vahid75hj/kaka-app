@@ -23,6 +23,11 @@ import io.flutter.plugin.common.MethodChannel
 class SmsBridge(private val activity: Activity, messenger: BinaryMessenger) {
     companion object {
         const val REQUEST_CODE = 4711
+        const val NOTIFY_REQUEST_CODE = 4712
+
+        /** True while the in-app receiver runs; the manifest receiver then stays quiet. */
+        @Volatile
+        var liveActive = false
         private val PERMISSIONS = arrayOf(Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS)
     }
 
@@ -41,6 +46,13 @@ class SmsBridge(private val activity: Activity, messenger: BinaryMessenger) {
                 }
                 "startListening" -> { startListening(); result.success(hasPermission()) }
                 "stopListening" -> { stopListening(); result.success(null) }
+                "setBackground" -> {
+                    SmsBackground.setEnabled(activity, call.arguments == true && hasPermission())
+                    result.success(SmsBackground.isEnabled(activity))
+                }
+                "requestNotifications" -> requestNotifications(result)
+                "takePending" -> result.success(PendingSms.peek(activity))
+                "ackPending" -> { PendingSms.ack(activity, (call.arguments as Number).toInt()); result.success(null) }
                 else -> result.notImplemented()
             }
         }
@@ -57,7 +69,21 @@ class SmsBridge(private val activity: Activity, messenger: BinaryMessenger) {
         ActivityCompat.requestPermissions(activity, PERMISSIONS, REQUEST_CODE)
     }
 
+    private var pendingNotify: MethodChannel.Result? = null
+
+    private fun requestNotifications(result: MethodChannel.Result) {
+        if (SmsBackground.canNotify(activity) || Build.VERSION.SDK_INT < 33) return result.success(true)
+        pendingNotify?.success(false)
+        pendingNotify = result
+        ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.POST_NOTIFICATIONS), NOTIFY_REQUEST_CODE)
+    }
+
     fun onPermissionResult(requestCode: Int) {
+        if (requestCode == NOTIFY_REQUEST_CODE) {
+            pendingNotify?.success(SmsBackground.canNotify(activity))
+            pendingNotify = null
+            return
+        }
         if (requestCode != REQUEST_CODE) return
         pendingPermission?.success(hasPermission())
         pendingPermission = null
@@ -139,10 +165,12 @@ class SmsBridge(private val activity: Activity, messenger: BinaryMessenger) {
             activity.registerReceiver(r, filter)
         }
         receiver = r
+        liveActive = true
     }
 
     fun stopListening() {
         receiver?.let { runCatching { activity.unregisterReceiver(it) } }
         receiver = null
+        liveActive = false
     }
 }

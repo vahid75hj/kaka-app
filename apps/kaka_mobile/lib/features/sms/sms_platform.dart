@@ -52,6 +52,37 @@ class SmsPlatform {
     }
   }
 
+  /// Enables/disables the manifest receiver for reading while Kaka is closed. Returns the new state.
+  Future<bool> setBackground(bool on) async {
+    try {
+      return await _channel.invokeMethod<bool>('setBackground', on) ?? false;
+    } on MissingPluginException {
+      return false;
+    }
+  }
+
+  Future<bool> requestNotifications() => _bool('requestNotifications');
+
+  /// SMS caught by the background receiver and not yet stored as drafts.
+  Future<List<IncomingSms>> takePending() async {
+    try {
+      final rows = await _channel.invokeListMethod<Map<Object?, Object?>>('takePending');
+      return [for (final r in rows ?? const <Map<Object?, Object?>>[]) _toSms(r.cast<String, Object?>())];
+    } on MissingPluginException {
+      return const [];
+    }
+  }
+
+  Future<void> ackPending(int count) async {
+    try {
+      await _channel.invokeMethod<Object?>('ackPending', count);
+    } on MissingPluginException {
+      // Not on Android.
+    }
+  }
+
+  static IncomingSms toSms(Map<String, Object?> m) => _toSms(m);
+
   static IncomingSms _toSms(Map<String, Object?> m) => IncomingSms(
     sender: m['sender'] as String?,
     body: m['body']! as String,
