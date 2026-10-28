@@ -110,6 +110,63 @@ void main() {
       await db.close();
     });
   });
+
+  testWidgets('import screen fits a 320dp phone in English dark mode', (tester) async {
+    tester.view.physicalSize = const Size(640, 1200);
+    tester.view.devicePixelRatio = 2;
+    addTearDown(tester.view.reset);
+    final dir = Directory.systemTemp.createTempSync('kaka_import_en');
+    addTearDown(() => dir.deleteSync(recursive: true));
+    final db = KakaDatabase.open(File('${dir.path}/l.db'), key: 'k');
+    await tester.runAsync(() async {
+      final ledger = LedgerService(DriftAccountRepository(db), DriftTransactionRepository(db));
+      await ledger.createAccount(
+        name: 'A very long bank account name',
+        type: AccountType.asset,
+        currency: Currency.irr,
+      );
+      final container = ProviderContainer(
+        overrides: [
+          databaseProvider.overrideWithValue(db),
+          initialSettingsProvider.overrideWithValue(AppSettings.defaultsFor('en').copyWith(onboarded: true)),
+        ],
+      );
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            locale: const Locale('en'),
+            supportedLocales: AppLocalizations.supportedLocales,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            theme: KakaTheme.build(Brightness.dark, AppSettings.defaultsFor('en').accent),
+            home: const ImportScreen(
+              initialText: 'Transaction date,Description,Withdrawal amount,Deposit amount\n2026-10-01,Groceries at a shop with a long name,120000,\n',
+            ),
+          ),
+        ),
+      );
+      for (var i = 0; i < 10; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+        await tester.pump();
+      }
+      await tester.pumpAndSettle();
+      for (var i = 0; i < 6; i++) {
+        await tester.drag(find.byType(ListView), const Offset(0, -300));
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+      }
+      expect(find.text('Import 1'), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+      container.dispose();
+      await tester.pump(Duration.zero);
+      await db.close();
+    });
+  });
 }
 
 Widget _host(BuildContext context) => Center(
