@@ -1,0 +1,2 @@
+• Fix: Kaka could fail to open (Android backup restored an encrypted ledger without its key). Android backup is now off; use the .kaka backup.
+• If Kaka ever cannot start, it shows the error with a Copy button instead of closing

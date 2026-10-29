@@ -20,3 +20,27 @@ Future<KakaDatabase> openLedger() async {
   final dir = await getApplicationSupportDirectory();
   return KakaDatabase.open(File('${dir.path}/kaka.ledger'), key: key);
 }
+
+/// Last resort from the startup error screen: moves an unreadable ledger
+/// aside (never deletes it) and forgets its key, so Kaka can start fresh.
+Future<String?> moveLedgerAside() async {
+  final dir = await getApplicationSupportDirectory();
+  final f = File('${dir.path}/kaka.ledger');
+  String? moved;
+  if (f.existsSync()) {
+    moved = '${f.path}.unreadable-${DateTime.now().millisecondsSinceEpoch}';
+    f.renameSync(moved);
+  }
+  for (final side in ['-wal', '-shm', '-journal']) {
+    final s = File('${f.path}$side');
+    if (s.existsSync()) s.deleteSync();
+  }
+  try {
+    await const FlutterSecureStorage().delete(key: 'kaka.db.key.v1');
+  } catch (_) {
+    try {
+      await const FlutterSecureStorage().deleteAll();
+    } catch (_) {}
+  }
+  return moved;
+}
