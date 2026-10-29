@@ -120,7 +120,10 @@ object PendingSms {
             } catch (_: Exception) {
             }
             legacy.delete()
-            if (result.length() > 0) write(ctx, result)
+            try {
+                if (result.length() > 0) write(ctx, result)
+            } catch (_: Exception) {
+            }
         }
         return result
     }
@@ -144,8 +147,12 @@ class SmsReceiver : BroadcastReceiver() {
             )
         }
         if (items.isEmpty()) return
-        PendingSms.add(context, items)
-        SmsBackground.schedule(context)
+        try {
+            PendingSms.add(context, items)
+            SmsBackground.schedule(context)
+        } catch (e: Throwable) {
+            android.util.Log.e("Kaka", "background SMS store failed", e)
+        }
     }
 }
 

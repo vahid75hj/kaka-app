@@ -28,9 +28,10 @@ Future<void> main() async {
 /// screen with a copyable message instead of leaving the app stuck/closed.
 Future<void> _start() async {
   try {
-    final db = await openLedger();
+    final db = await openLedger().timeout(const Duration(seconds: 20));
     final settings =
-        await DriftSettingsStore(db).load() ?? AppSettings.defaultsFor(PlatformDispatcher.instance.locale.languageCode);
+        await DriftSettingsStore(db).load().timeout(const Duration(seconds: 20)) ??
+        AppSettings.defaultsFor(PlatformDispatcher.instance.locale.languageCode);
     runApp(
       ProviderScope(
         overrides: [databaseProvider.overrideWithValue(db), initialSettingsProvider.overrideWithValue(settings)],

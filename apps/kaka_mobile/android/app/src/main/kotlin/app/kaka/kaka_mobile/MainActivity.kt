@@ -1,6 +1,8 @@
 package app.kaka.kaka_mobile
 
 import android.content.Intent
+import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -17,9 +19,25 @@ class MainActivity : FlutterFragmentActivity() {
     private var openQueue = false
     private var sms: SmsBridge? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        // A crash on the previous launch: show it (plain Android screen) instead of crashing again.
+        if (KakaApplication.crashFile(this).exists()) {
+            super.onCreate(savedInstanceState)
+            startActivity(Intent(this, CrashActivity::class.java))
+            finish()
+            return
+        }
+        super.onCreate(savedInstanceState)
+    }
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        sms = SmsBridge(this, flutterEngine.dartExecutor.binaryMessenger)
+        sms = try {
+            SmsBridge(this, flutterEngine.dartExecutor.binaryMessenger)
+        } catch (e: Throwable) {
+            Log.e("Kaka", "SmsBridge init failed", e)
+            null
+        }
         // FLAG_SECURE toggle: hides Kaka from screenshots, recordings and the recent-apps preview.
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "app.kaka/window").setMethodCallHandler { call, result ->
             if (call.method == "setSecure") {

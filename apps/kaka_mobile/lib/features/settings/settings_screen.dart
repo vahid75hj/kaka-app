@@ -273,7 +273,7 @@ class SettingsScreen extends ConsumerWidget {
             onChanged: (d) => update((s) => s.copyWith(displayDecimals: d)),
           ),
           SectionHeader(l.about),
-          Text('${l.appName} 0.5.2 — ${l.aboutBody}', style: TextStyle(color: c.textMuted, height: 1.6)),
+          Text('${l.appName} 0.5.3 — ${l.aboutBody}', style: TextStyle(color: c.textMuted, height: 1.6)),
         ],
       ),
     );

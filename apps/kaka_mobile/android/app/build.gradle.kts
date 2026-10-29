@@ -36,6 +36,8 @@ android {
         // flag during build.
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        // Diagnostic builds: -Pkaka.noImpeller=true falls back to the Skia/GL renderer.
+        manifestPlaceholders["enableImpeller"] = if (project.hasProperty("kaka.noImpeller")) "false" else "true"
     }
 
     signingConfigs {
@@ -53,6 +55,11 @@ android {
 
     buildTypes {
         release {
+            // Diagnostic build: -Pkaka.noMinify=true turns R8 off to rule it out.
+            if (project.hasProperty("kaka.noMinify")) {
+                isMinifyEnabled = false
+                isShrinkResources = false
+            }
             signingConfig = if (keyProperties.isNotEmpty()) signingConfigs.getByName("release") else signingConfigs.getByName("debug")
         }
     }
