@@ -10,26 +10,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import android.provider.Telephony
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.Worker
-import androidx.work.WorkerParameters
-import io.flutter.FlutterInjector
-import io.flutter.embedding.engine.FlutterEngine
-import io.flutter.embedding.engine.dart.DartExecutor
-import io.flutter.plugin.common.MethodChannel
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
 
 /**
  * SMS that arrived while Kaka was closed, waiting for Dart to turn them into drafts.
@@ -156,60 +143,16 @@ class SmsReceiver : BroadcastReceiver() {
     }
 }
 
-/** Runs the Dart entry point `smsBackgroundMain` headless to ingest pending SMS. */
-class SmsWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, params) {
-    override fun doWork(): Result {
-        if (PendingSms.peek(applicationContext).isEmpty()) return Result.success()
-        val done = CountDownLatch(1)
-        val main = Handler(Looper.getMainLooper())
-        var engine: FlutterEngine? = null
-        main.post {
-            try {
-                val loader = FlutterInjector.instance().flutterLoader()
-                loader.startInitialization(applicationContext)
-                loader.ensureInitializationComplete(applicationContext, null)
-                val e = FlutterEngine(applicationContext)
-                engine = e
-                MethodChannel(e.dartExecutor.binaryMessenger, SmsBackground.CHANNEL).setMethodCallHandler { call, result ->
-                    when (call.method) {
-                        "takePending" -> result.success(PendingSms.peek(applicationContext))
-                        "done" -> {
-                            val count = call.argument<Int>("ack") ?: 0
-                            PendingSms.ack(applicationContext, count)
-                            val title = call.argument<String>("title")
-                            val body = call.argument<String>("body")
-                            if (title != null && body != null) SmsBackground.notify(applicationContext, title, body)
-                            result.success(null)
-                            done.countDown()
-                        }
-                        else -> result.notImplemented()
-                    }
-                }
-                e.dartExecutor.executeDartEntrypoint(
-                    DartExecutor.DartEntrypoint(loader.findAppBundlePath(), "smsBackgroundMain"),
-                )
-            } catch (_: Exception) {
-                done.countDown()
-            }
-        }
-        val finished = done.await(90, TimeUnit.SECONDS)
-        main.post { engine?.destroy() }
-        // Unacknowledged items stay pending: retried later, or picked up when the app opens.
-        return if (finished || runAttemptCount >= 3) Result.success() else Result.retry()
-    }
-}
-
 object SmsBackground {
-    const val CHANNEL = "app.kaka/sms_bg"
-    private const val NOTIFY_CHANNEL = "kaka_sms"
-    private const val WORK = "kaka-sms-ingest"
+        private const val NOTIFY_CHANNEL = "kaka_sms"
 
+    /**
+     * 0.5.4: no WorkManager (its startup initializer was the prime suspect for
+     * 0.5.0+ closing instantly on some Android 16 phones). The SMS stays
+     * encrypted in [PendingSms]; a notification asks to open Kaka, which ingests it.
+     */
     fun schedule(ctx: Context) {
-        WorkManager.getInstance(ctx).enqueueUniqueWork(
-            WORK,
-            ExistingWorkPolicy.APPEND_OR_REPLACE,
-            OneTimeWorkRequestBuilder<SmsWorker>().build(),
-        )
+        notify(ctx, "کاکا · Kaka", "پیامک بانکی جدید — برای بررسی باز کن / New bank SMS — open to review")
     }
 
     /** Turns the manifest receiver on/off. Off also drops anything not yet ingested. */

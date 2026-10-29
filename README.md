@@ -3,7 +3,7 @@
 > **حساب حسابه، کاکا برادر** — a free, open-source, offline personal-finance app.
 > Persian & English, Jalali & Gregorian, rial/toman and other currencies, real double-entry bookkeeping.
 
-**Status:** v0.5.3 pre-release — ledger, bank SMS (incl. opt-in background), budgets, repeating transactions, CSV import, rates & gold, encrypted backups, BYO-AI & MCP. Android first. See [`TASKS.md`](TASKS.md) for what's done and what's next.
+**Status:** v0.5.4 pre-release — ledger, bank SMS (incl. opt-in background), budgets, repeating transactions, CSV import, rates & gold, encrypted backups, BYO-AI & MCP. Android first. See [`TASKS.md`](TASKS.md) for what's done and what's next.
 
 [فارسی ↓](#فارسی)
 

@@ -1,0 +1,2 @@
+• Fix: Kaka closing instantly on open (since 0.5.0) on some Android 16 phones. Removed the WorkManager background component and the adaptive icon XML that 0.5.0 added at app start; the app now starts with the same Android components as 0.4.0.
+• Background bank SMS: stored encrypted and a notification asks you to open Kaka to review them
