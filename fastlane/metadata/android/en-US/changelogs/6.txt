@@ -1,0 +1,5 @@
+• Excel (.xlsx) import
+• Long-press a transaction to repeat it monthly or weekly
+• "Coming up" card for repeating transactions; budget limits in the monthly report
+• Bank SMS waiting in the background are now encrypted
+• Fixes: search, reports and import duplicate checks now cover your whole history; budget filter matches the category exactly

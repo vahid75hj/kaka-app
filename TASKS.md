@@ -74,6 +74,8 @@ Phases: **MVP-1** = first usable APK · **MVP-2** = v0.1 feature-complete · **L
 - [x] Excel (.xlsx) import (first sheet, shared strings, serial dates) through the CSV pipeline
 - [x] Pending background SMS encrypted at rest (Keystore AES-GCM)
 
+- [x] v0.5.1: xlsx import, repeat from transaction, coming-up card, budget limits in report, list_recurring tool, encrypted pending SMS, full-history fixes
+
 ## Later (v0.2+)
 - [~] On-device models: catalog (3 open Qwen models, real sha256/sizes), resumable mirror-aware sha256-verified downloader, device fit check — runtime adapter (`flutter_edge_ai`, ex-flutter_gemma) pending device testing, see `docs/on-device-models.md`
 - [ ] Fill `model_catalog/catalog.v1.json` after on-device benchmark
