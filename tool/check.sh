@@ -8,4 +8,5 @@ for p in packages/kaka_domain packages/kaka_data packages/kaka_sms packages/kaka
   (cd "$p" && dart test -r failures-only)
 done
 (cd apps/kaka_mobile && flutter test -r failures-only)
+(cd apps/kaka_mobile/android && ./gradlew -q :app:testDebugUnitTest)
 echo "all checks passed"

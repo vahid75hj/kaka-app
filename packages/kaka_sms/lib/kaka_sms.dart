@@ -4,6 +4,7 @@ library;
 export 'src/account_ref.dart';
 export 'src/parser_catalog.dart';
 export 'src/sms_date.dart';
+export 'src/sms_filter.dart';
 export 'src/sms_parser.dart';
 export 'src/sms_text.dart';
 export 'src/sms_ingest.dart';

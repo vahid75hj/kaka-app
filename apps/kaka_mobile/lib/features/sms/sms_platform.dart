@@ -61,6 +61,15 @@ class SmsPlatform {
     }
   }
 
+  /// Tells the background receiver which senders the user linked and the app language.
+  Future<void> setKnownSenders(List<String> senders, String lang) async {
+    try {
+      await _channel.invokeMethod<Object?>('setKnownSenders', {'senders': senders, 'lang': lang});
+    } on MissingPluginException {
+      // Not on Android.
+    }
+  }
+
   Future<bool> requestNotifications() => _bool('requestNotifications');
 
   /// SMS caught by the background receiver and not yet stored as drafts.

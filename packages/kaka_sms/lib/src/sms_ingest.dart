@@ -5,6 +5,7 @@ import 'package:kaka_domain/kaka_domain.dart';
 
 import 'account_ref.dart';
 import 'parser_catalog.dart';
+import 'sms_filter.dart';
 import 'sms_parser.dart';
 import 'sms_text.dart';
 
@@ -70,6 +71,8 @@ class SmsIngestService {
     if (onlyLinkedSenders) {
       final s = sms.sender == null ? null : SmsText.sender(sms.sender!);
       if (s == null || !SmsAccountMatcher.linkedSenders(all).contains(s)) return IngestResult.ignoredSender;
+      // Automatic reading: OTPs, ads and notices from a bank's number never become questions.
+      if (!SmsFilter.looksLikeTransaction(sms.body)) return IngestResult.unreadable;
     }
     final parsed = parser.parse(sms.body, sender: sms.sender, receivedAt: sms.receivedAt);
     if (parsed == null) return IngestResult.unreadable;

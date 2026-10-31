@@ -1,0 +1,3 @@
+• Background bank SMS: only real bank transactions are kept. OTP codes, ads, operator and personal messages are ignored and never notify.
+• One notification that updates: "N new transactions", cleared once you open Kaka
+• Automatic reading also skips OTPs and ads from your bank's own number

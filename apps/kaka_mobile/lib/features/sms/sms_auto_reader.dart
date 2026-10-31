@@ -43,6 +43,7 @@ class SmsAutoReader {
     await _platform.startListening(_onLive);
     // Keep the manifest receiver in sync (e.g. after a restore) and store what it caught.
     await _platform.setBackground(_ref.read(settingsProvider).smsBackground);
+    await syncKnownSenders();
     return await drainPending() + await scan();
   }
 
@@ -51,8 +52,18 @@ class SmsAutoReader {
     if (on && !_ref.read(settingsProvider).smsAutoRead) return false;
     if (on) await _platform.requestNotifications();
     final enabled = await _platform.setBackground(on);
+    if (enabled) await syncKnownSenders();
     await _ref.read(settingsProvider.notifier).update((s) => s.copyWith(smsBackground: on && enabled));
     return enabled;
+  }
+
+  /// Linked senders → native, so the closed-app receiver trusts them.
+  Future<void> syncKnownSenders() async {
+    final links = await _ref.read(smsLinkRepositoryProvider).getAll();
+    await _platform.setKnownSenders(
+      SmsAccountMatcher.linkedSenders(links).toList(),
+      _ref.read(settingsProvider).localeCode,
+    );
   }
 
   /// Ingests SMS the background receiver stored, then acknowledges them.

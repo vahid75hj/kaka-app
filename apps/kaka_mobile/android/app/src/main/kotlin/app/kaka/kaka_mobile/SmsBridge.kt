@@ -51,6 +51,14 @@ class SmsBridge(private val activity: Activity, messenger: BinaryMessenger) {
                     result.success(SmsBackground.isEnabled(activity))
                 }
                 "requestNotifications" -> requestNotifications(result)
+                "setKnownSenders" -> {
+                    KnownSenders.set(
+                        activity,
+                        call.argument<List<String>>("senders") ?: emptyList(),
+                        call.argument<String>("lang") ?: "fa",
+                    )
+                    result.success(null)
+                }
                 "takePending" -> result.success(PendingSms.peek(activity))
                 "ackPending" -> { PendingSms.ack(activity, (call.arguments as Number).toInt()); result.success(null) }
                 else -> result.notImplemented()

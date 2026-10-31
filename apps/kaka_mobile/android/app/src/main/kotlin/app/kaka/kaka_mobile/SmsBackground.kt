@@ -52,7 +52,15 @@ object PendingSms {
         val arr = read(ctx)
         val rest = JSONArray()
         for (i in count until arr.length()) rest.put(arr.get(i))
-        if (rest.length() == 0) file(ctx).delete() else write(ctx, rest)
+        if (rest.length() == 0) {
+            file(ctx).delete()
+            try {
+                androidx.core.app.NotificationManagerCompat.from(ctx).cancel(7001)
+            } catch (_: Throwable) {
+            }
+        } else {
+            write(ctx, rest)
+        }
     }
 
     /** AES-256-GCM with a non-exportable Android Keystore key; file = 12-byte IV + ciphertext. */
@@ -133,9 +141,17 @@ class SmsReceiver : BroadcastReceiver() {
                 "date" to (msgs.firstOrNull()?.timestampMillis ?: System.currentTimeMillis()),
             )
         }
-        if (items.isEmpty()) return
+        // Only bank transactions: OTPs, ads, operator and personal messages are dropped unseen.
+        val wanted = items.filter {
+            try {
+                SmsFilter.shouldStore(it["body"] as String, KnownSenders.contains(context, it["sender"] as String))
+            } catch (_: Throwable) {
+                false
+            }
+        }
+        if (wanted.isEmpty()) return
         try {
-            PendingSms.add(context, items)
+            PendingSms.add(context, wanted)
             SmsBackground.schedule(context)
         } catch (e: Throwable) {
             android.util.Log.e("Kaka", "background SMS store failed", e)
@@ -151,8 +167,17 @@ object SmsBackground {
      * 0.5.0+ closing instantly on some Android 16 phones). The SMS stays
      * encrypted in [PendingSms]; a notification asks to open Kaka, which ingests it.
      */
+    /** One notification, updated in place: "N new transactions". */
     fun schedule(ctx: Context) {
-        notify(ctx, "کاکا · Kaka", "پیامک بانکی جدید — برای بررسی باز کن / New bank SMS — open to review")
+        val n = PendingSms.peek(ctx).size
+        if (n == 0) return
+        val fa = KnownSenders.lang(ctx) == "fa"
+        val count = if (fa) n.toString().map { if (it.isDigit()) '۰' + (it - '0') else it }.joinToString("") else n.toString()
+        notify(
+            ctx,
+            if (fa) "کاکا" else "Kaka",
+            if (fa) "$count تراکنش جدید — برای بررسی باز کن" else "$count new transaction${if (n == 1) "" else "s"} — open to review",
+        )
     }
 
     /** Turns the manifest receiver on/off. Off also drops anything not yet ingested. */
