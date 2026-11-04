@@ -610,5 +610,22 @@
     }
   },
   "tooOldTitle": "This ledger is from a test version",
-  "includeIlliquid": "Count property and vehicles in net worth"
+  "includeIlliquid": "Count property and vehicles in net worth",
+  "platforms": "Where assets are kept",
+  "newPlatform": "New place",
+  "platformsHint": "Exchanges, brokers, wallets, apps, a safe at home — name them as you like. Assets without a place stay under Not specified.",
+  "edit": "Edit",
+  "nothingHere": "Nothing here",
+  "platformName": "Name",
+  "errNothingToTransfer": "Nothing of this asset in the place you picked",
+  "transferAction": "Move between places",
+  "transferFrom": "From",
+  "transferTo": "To",
+  "quantitySent": "Quantity sent",
+  "networkFeeQty": "Network fee taken from it (optional)",
+  "networkFeeHint": "Cost stays the same; only the quantity shrinks.",
+  "allocation": "Allocation",
+  "byPlatform": "By place",
+  "byType": "By type",
+  "valueHistory": "Value over time"
 }

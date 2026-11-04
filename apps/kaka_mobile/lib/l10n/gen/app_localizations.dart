@@ -2623,6 +2623,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Count property and vehicles in net worth'**
   String get includeIlliquid;
+
+  /// No description provided for @platforms.
+  ///
+  /// In en, this message translates to:
+  /// **'Where assets are kept'**
+  String get platforms;
+
+  /// No description provided for @newPlatform.
+  ///
+  /// In en, this message translates to:
+  /// **'New place'**
+  String get newPlatform;
+
+  /// No description provided for @platformsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Exchanges, brokers, wallets, apps, a safe at home — name them as you like. Assets without a place stay under Not specified.'**
+  String get platformsHint;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// No description provided for @nothingHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing here'**
+  String get nothingHere;
+
+  /// No description provided for @platformName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get platformName;
+
+  /// No description provided for @errNothingToTransfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing of this asset in the place you picked'**
+  String get errNothingToTransfer;
+
+  /// No description provided for @transferAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Move between places'**
+  String get transferAction;
+
+  /// No description provided for @transferFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get transferFrom;
+
+  /// No description provided for @transferTo.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get transferTo;
+
+  /// No description provided for @quantitySent.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity sent'**
+  String get quantitySent;
+
+  /// No description provided for @networkFeeQty.
+  ///
+  /// In en, this message translates to:
+  /// **'Network fee taken from it (optional)'**
+  String get networkFeeQty;
+
+  /// No description provided for @networkFeeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Cost stays the same; only the quantity shrinks.'**
+  String get networkFeeHint;
+
+  /// No description provided for @allocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Allocation'**
+  String get allocation;
+
+  /// No description provided for @byPlatform.
+  ///
+  /// In en, this message translates to:
+  /// **'By place'**
+  String get byPlatform;
+
+  /// No description provided for @byType.
+  ///
+  /// In en, this message translates to:
+  /// **'By type'**
+  String get byType;
+
+  /// No description provided for @valueHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Value over time'**
+  String get valueHistory;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

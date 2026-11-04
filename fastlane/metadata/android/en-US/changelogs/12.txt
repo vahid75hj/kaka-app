@@ -1,0 +1,6 @@
+Assets, part 2:
+- Places: name your exchanges, brokers, wallets or a safe at home and keep track of what is where
+- Move an asset between places; cost stays the same, a network fee only lowers the quantity
+- Allocation chart by type or by place
+- Value-over-time chart (one point per day, saved on your phone)
+Still offline-first. If you used a version before 0.6.0, uninstall it or reset data first.

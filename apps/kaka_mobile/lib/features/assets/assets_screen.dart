@@ -7,17 +7,64 @@ import '../../core/l10n_x.dart';
 import '../../core/widgets.dart';
 import '../../theme/kaka_colors.dart';
 import 'asset_ui.dart';
+import 'charts.dart';
 import 'event_form_screen.dart';
 import 'holding_screen.dart';
 import 'instrument_form_screen.dart';
+import 'platforms_screen.dart';
 import 'prices_screen.dart';
+import 'transfer_form_screen.dart';
 
 /// Portfolio overview: total value, gain, and holdings grouped by class.
-class AssetsScreen extends ConsumerWidget {
+class AssetsScreen extends ConsumerStatefulWidget {
   const AssetsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AssetsScreen> createState() => _AssetsScreenState();
+}
+
+enum _Split { byClass, byPlatform }
+
+class _AssetsScreenState extends ConsumerState<AssetsScreen> {
+  _Split _split = _Split.byClass;
+
+  /// Keeps one valuation point per day for the history chart (last value of the day wins).
+  void _logSnapshot(Money assetsValue, int unrealized) {
+    final loaded =
+        ref.read(portfolioEventsProvider).hasValue &&
+        ref.read(priceQuotesProvider).hasValue &&
+        ref.read(balancesProvider).hasValue &&
+        ref.read(valuationSnapshotsProvider).hasValue;
+    if (!loaded) return;
+    final snaps = ref.read(valuationSnapshotsProvider).value!;
+    if (snaps.isEmpty && assetsValue.isZero) return;
+    final nw = ref.read(netWorthProvider).total;
+    final now = DateTime.now();
+    final id = '${now.year}-${now.month}-${now.day}';
+    final today = snaps.where((s) => s.id == id).firstOrNull;
+    if (today != null &&
+        today.netWorth == nw.minor &&
+        today.assetsValue == assetsValue.minor &&
+        today.unrealized == unrealized &&
+        today.base == nw.currency) {
+      return;
+    }
+    ref
+        .read(portfolioRepositoryProvider)
+        .upsertSnapshot(
+          ValuationSnapshot(
+            id: id,
+            at: now,
+            base: nw.currency,
+            netWorth: nw.minor,
+            assetsValue: assetsValue.minor,
+            unrealized: unrealized,
+          ),
+        );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l = context.l10n;
     final c = KakaColors.of(context);
     final f = ref.watch(formatProvider);
@@ -43,6 +90,31 @@ class AssetsScreen extends ConsumerWidget {
     for (final v in views) {
       byClass.putIfAbsent(v.instrument.assetClass, () => []).add(v);
     }
+    // Watched so the snapshot logger sees loaded data, not a cold provider.
+    ref
+      ..watch(portfolioEventsProvider)
+      ..watch(priceQuotesProvider)
+      ..watch(balancesProvider);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _logSnapshot(total, unrealized);
+    });
+    // Allocation in base currency (values without a rate are left out of the chart).
+    final slices = <String, int>{};
+    for (final v in views) {
+      final b = fx.toBase(v.bestValue);
+      if (b == null || b.minor <= 0) continue;
+      final label = _split == _Split.byClass
+          ? className(l, v.instrument.assetClass)
+          : (platforms[v.state.platformId]?.name ?? l.noPlatform);
+      slices.update(label, (x) => x + b.minor, ifAbsent: () => b.minor);
+    }
+    final sliceList = slices.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
+    final sliceTotal = sliceList.fold<int>(0, (s, e) => s + e.value);
+    final snaps = ref.watch(valuationSnapshotsProvider).value ?? const <ValuationSnapshot>[];
+    final history = [
+      for (final s in snaps)
+        if (s.base == fx.base) (s.at, s.netWorth, s.assetsValue),
+    ];
 
     return Scaffold(
       appBar: AppBar(
@@ -52,6 +124,11 @@ class AssetsScreen extends ConsumerWidget {
             tooltip: hide ? l.showAmounts : l.hideAmounts,
             icon: Icon(hide ? Icons.visibility_off_outlined : Icons.visibility_outlined),
             onPressed: () => ref.read(settingsProvider.notifier).update((s) => s.copyWith(hideAmounts: !hide)),
+          ),
+          IconButton(
+            tooltip: l.platforms,
+            icon: const Icon(Icons.account_balance_wallet_outlined),
+            onPressed: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const PlatformsScreen())),
           ),
           IconButton(
             tooltip: l.unitPrices,
@@ -99,6 +176,68 @@ class AssetsScreen extends ConsumerWidget {
               ],
             ),
           ),
+          if (sliceList.length > 1 || platforms.isNotEmpty && sliceList.isNotEmpty) ...[
+            SectionHeader(
+              l.allocation,
+              action: _split == _Split.byClass ? l.byPlatform : l.byType,
+              onAction: () => setState(() => _split = _split == _Split.byClass ? _Split.byPlatform : _Split.byClass),
+            ),
+            Row(
+              children: [
+                DonutChart(values: [for (final e in sliceList) e.value], size: 104),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (var k = 0; k < sliceList.length; k++)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 2),
+                          child: Row(
+                            children: [
+                              Container(width: 10, height: 10, color: chartPalette[k % chartPalette.length]),
+                              const SizedBox(width: 6),
+                              Expanded(child: Text(sliceList[k].key, overflow: TextOverflow.ellipsis)),
+                              Text(percentText(f, sliceList[k].value, sliceTotal).replaceFirst('+', '')),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+          if (history.length > 1) ...[
+            SectionHeader(l.valueHistory),
+            Directionality(
+              textDirection: TextDirection.ltr,
+              child: TwoLineChart(points: history),
+            ),
+            const SizedBox(height: 6),
+            Wrap(
+              spacing: 16,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(width: 10, height: 3, color: chartPalette[1]),
+                    const SizedBox(width: 6),
+                    Text(l.netWorth),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(width: 10, height: 3, color: chartPalette[0]),
+                    const SizedBox(width: 6),
+                    Text(l.assetsValue),
+                  ],
+                ),
+                Text('${f.date(history.first.$1)} – ${f.date(history.last.$1)}', style: TextStyle(color: c.textMuted)),
+              ],
+            ),
+          ],
           if (views.isEmpty) ...[
             const SizedBox(height: 24),
             Text(l.noHoldingsYet, style: TextStyle(color: c.textMuted)),
@@ -194,6 +333,11 @@ Future<void> showAssetActions(BuildContext context, WidgetRef ref, {String? inst
             item(Icons.redeem, l.evGiftOut, () => form(EventKind.giftOut)),
             item(Icons.call_split, l.evSplit, () => form(EventKind.split)),
             item(Icons.tune, l.adjustAction, () => form(EventKind.adjustIn)),
+            item(
+              Icons.move_up,
+              l.transferAction,
+              () => openTransferForm(context, instrumentId: instrumentId, fromPlatformId: platformId),
+            ),
             item(
               Icons.add_box_outlined,
               l.newAsset,

@@ -1366,4 +1366,56 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get includeIlliquid => 'Count property and vehicles in net worth';
+
+  @override
+  String get platforms => 'Where assets are kept';
+
+  @override
+  String get newPlatform => 'New place';
+
+  @override
+  String get platformsHint =>
+      'Exchanges, brokers, wallets, apps, a safe at home — name them as you like. Assets without a place stay under Not specified.';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get nothingHere => 'Nothing here';
+
+  @override
+  String get platformName => 'Name';
+
+  @override
+  String get errNothingToTransfer => 'Nothing of this asset in the place you picked';
+
+  @override
+  String get transferAction => 'Move between places';
+
+  @override
+  String get transferFrom => 'From';
+
+  @override
+  String get transferTo => 'To';
+
+  @override
+  String get quantitySent => 'Quantity sent';
+
+  @override
+  String get networkFeeQty => 'Network fee taken from it (optional)';
+
+  @override
+  String get networkFeeHint => 'Cost stays the same; only the quantity shrinks.';
+
+  @override
+  String get allocation => 'Allocation';
+
+  @override
+  String get byPlatform => 'By place';
+
+  @override
+  String get byType => 'By type';
+
+  @override
+  String get valueHistory => 'Value over time';
 }

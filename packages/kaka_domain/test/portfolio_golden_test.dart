@@ -435,6 +435,26 @@ void main() {
       expect(await balance(PortfolioAccounts.realizedGain(irr)), 100);
     });
 
+    test('transfer between places moves quantity and cost, no money moves', () async {
+      await runExample1();
+      final txBefore = txns.items.length;
+      await svc.transfer(instrumentId: 'coin', currency: irr, qty: 1, toPlatformId: 'safe');
+      final res = await svc.compute();
+      expect(res.holdings[holdingKey('coin', null, irr)]!.qty, 0);
+      final moved = res.holdings[holdingKey('coin', 'safe', irr)]!;
+      expect((moved.qty, moved.cost), (1, 850666667));
+      expect(txns.items.length, txBefore);
+      await expectLater(
+        svc.transfer(instrumentId: 'coin', currency: irr, qty: 1, toPlatformId: 'x'),
+        throwsA(isA<DomainException>()),
+      );
+      // Voiding one leg voids both.
+      final leg = (await repo.events()).firstWhere((e) => e.kind == EventKind.transferIn);
+      await svc.voidEvent(leg);
+      final back = await svc.compute();
+      expect(back.holdings[holdingKey('coin', null, irr)]!.qty, 1);
+    });
+
     test('cash account must match the event currency', () async {
       await expectLater(
         svc.record(instrumentId: 'coin', kind: EventKind.buy, currency: usd, qty: 1, gross: 5, cash: bank),

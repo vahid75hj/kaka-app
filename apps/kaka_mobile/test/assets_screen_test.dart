@@ -8,6 +8,7 @@ import 'package:kaka_data/kaka_data.dart';
 import 'package:kaka_domain/kaka_domain.dart';
 import 'package:kaka_mobile/app/providers.dart';
 import 'package:kaka_mobile/features/assets/assets_screen.dart';
+import 'package:kaka_mobile/features/assets/charts.dart';
 import 'package:kaka_mobile/features/assets/event_form_screen.dart';
 import 'package:kaka_mobile/l10n/gen/app_localizations.dart';
 import 'package:kaka_mobile/theme/kaka_theme.dart';
@@ -56,6 +57,21 @@ void main() {
           costMode: CostMode.unknown,
         );
         await svc.setPrice('coin', const Money(1050000000, Currency.irr), DateTime.now());
+        final safe = await svc.savePlatform(name: lang == 'fa' ? 'گاوصندوق' : 'Safe', kind: PlatformKind.home);
+        await svc.transfer(instrumentId: 'coin', currency: Currency.irr, qty: 1, toPlatformId: safe.id);
+        final repo = container.read(portfolioRepositoryProvider);
+        for (final d in [1, 2]) {
+          await repo.upsertSnapshot(
+            ValuationSnapshot(
+              id: 'old$d',
+              at: DateTime(2026, 1, d),
+              base: container.read(settingsProvider).baseUnit.currency,
+              netWorth: 1000 * d,
+              assetsValue: 500 * d,
+              unrealized: 0,
+            ),
+          );
+        }
 
         await tester.pumpWidget(
           UncontrolledProviderScope(
@@ -84,10 +100,29 @@ void main() {
         await settle();
         expect(tester.takeException(), isNull);
         final coinName = lang == 'fa' ? 'سکه امامی' : 'Emami gold coin';
-        expect(find.text(coinName), findsOneWidget);
-        expect(find.text(lang == 'fa' ? 'بیت‌کوین' : 'Bitcoin'), findsOneWidget);
+        expect(find.text(coinName, skipOffstage: false), findsWidgets);
+        // en base is USD with no IRR rate, so only fa has a convertible allocation.
+        expect(find.byType(DonutChart, skipOffstage: false), lang == 'fa' ? findsOneWidget : findsNothing);
+        await tester.scrollUntilVisible(
+          find.text(lang == 'fa' ? 'بیت‌کوین' : 'Bitcoin'),
+          200,
+          scrollable: find.byType(Scrollable).first,
+        );
+        await tester.scrollUntilVisible(find.byType(TwoLineChart), -200, scrollable: find.byType(Scrollable).first);
+        expect(find.byType(TwoLineChart), findsOneWidget);
+        await tester.tap(find.byTooltip(lang == 'fa' ? 'محل‌های نگهداری' : 'Where assets are kept'));
+        await settle();
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+        expect(find.text(lang == 'fa' ? 'گاوصندوق' : 'Safe'), findsOneWidget);
+        tester.state<NavigatorState>(find.byType(Navigator).first).pop();
+        await tester.pumpAndSettle();
+        await tester.scrollUntilVisible(find.text(coinName).first, 200, scrollable: find.byType(Scrollable).first);
+        await settle();
+        final snaps = await repo.watchSnapshots().first;
+        expect(snaps.length, 3, reason: "today's point is logged");
 
-        await tester.tap(find.text(coinName));
+        await tester.tap(find.text(coinName).first);
         await settle();
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);

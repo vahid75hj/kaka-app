@@ -1358,4 +1358,56 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get includeIlliquid => 'ملک و خودرو در دارایی خالص حساب شوند';
+
+  @override
+  String get platforms => 'محل‌های نگهداری';
+
+  @override
+  String get newPlatform => 'محل جدید';
+
+  @override
+  String get platformsHint =>
+      'صرافی، کارگزاری، کیف پول، اپلیکیشن، گاوصندوق خانه؛ هر اسمی که می‌خواهی. دارایی‌های بدون محل زیر «مشخص نشده» می‌مانند.';
+
+  @override
+  String get edit => 'ویرایش';
+
+  @override
+  String get nothingHere => 'چیزی اینجا نیست';
+
+  @override
+  String get platformName => 'نام';
+
+  @override
+  String get errNothingToTransfer => 'از این دارایی در محلی که انتخاب کردی چیزی نیست';
+
+  @override
+  String get transferAction => 'انتقال بین محل‌ها';
+
+  @override
+  String get transferFrom => 'از';
+
+  @override
+  String get transferTo => 'به';
+
+  @override
+  String get quantitySent => 'مقدار ارسالی';
+
+  @override
+  String get networkFeeQty => 'کارمزد شبکه که از آن کم شد (اختیاری)';
+
+  @override
+  String get networkFeeHint => 'قیمت تمام‌شده تغییر نمی‌کند؛ فقط مقدار کم می‌شود.';
+
+  @override
+  String get allocation => 'ترکیب دارایی‌ها';
+
+  @override
+  String get byPlatform => 'بر اساس محل';
+
+  @override
+  String get byType => 'بر اساس نوع';
+
+  @override
+  String get valueHistory => 'ارزش در طول زمان';
 }

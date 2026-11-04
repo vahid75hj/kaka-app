@@ -77,7 +77,8 @@ Phases: **MVP-1** = first usable APK · **MVP-2** = v0.1 feature-complete · **L
 - [x] v0.5.1: xlsx import, repeat from transaction, coming-up card, budget limits in report, list_recurring tool, encrypted pending SMS, full-history fixes
 
 - [x] v0.6.0 portfolio core (docs/portfolio-design.md phase 1): generic instruments (any class/unit/decimals/currency, starter catalog), append-only portfolio events, weighted-average + FIFO cost engine with unknown cost, holdings accounts at cost + realized gain in the ledger, back-dated/void re-posting, swap, gifts, income, split, adjust, manual prices with staleness, schema v6 (pre-v6 ledgers refused with a fresh-start screen, no migration)
-- [ ] v0.7.0 portfolio phase 2: platforms (wallets/exchanges/brokers), transfers, allocation chart, valuation snapshots + net-worth chart, composite prices
+- [x] v0.7.0 portfolio phase 2: platforms, transfers between places, allocation chart (type/place), daily valuation snapshots + value chart
+- [ ] later: composite prices (instrument-quoted), platform-linked cash accounts, loans module, real-device QA
 - [ ] Portfolio later: price-source catalog (online, opt-in), AI/MCP portfolio tools, Sheets tabs, broker/exchange CSV import, XIRR
 
 ## Later (v0.2+)
