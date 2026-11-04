@@ -18,7 +18,7 @@ class AccountsScreen extends ConsumerWidget {
     final l = context.l10n;
     final c = KakaColors.of(context);
     final all = (ref.watch(balancesProvider).value ?? const <AccountBalance>[])
-        .where((b) => b.account.type.isBalanceSheet)
+        .where((b) => b.account.type.isBalanceSheet && !b.account.isSystem)
         .toList();
     final active = all.where((b) => !b.account.archived).toList();
     final archived = all.where((b) => b.account.archived).toList();

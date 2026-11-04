@@ -558,7 +558,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get delete => 'حذف';
 
   @override
-  String get assets => 'طلا و سکه';
+  String get assets => 'دارایی‌ها';
 
   @override
   String get buySell => 'خرید / فروش';
@@ -1045,4 +1045,317 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get repeatSaved => 'تکرار می‌شه؛ سر موعد توی صف میاد.';
+
+  @override
+  String get acMetal => 'فلز گران‌بها';
+
+  @override
+  String get acCoin => 'سکه';
+
+  @override
+  String get acCrypto => 'ارز دیجیتال';
+
+  @override
+  String get acStock => 'سهام';
+
+  @override
+  String get acFund => 'صندوق‌ها';
+
+  @override
+  String get acBond => 'اوراق';
+
+  @override
+  String get acRealEstate => 'ملک';
+
+  @override
+  String get acVehicle => 'خودرو';
+
+  @override
+  String get acCollectible => 'کلکسیونی';
+
+  @override
+  String get acOther => 'سایر';
+
+  @override
+  String get addAssetAction => 'افزودن';
+
+  @override
+  String get adjustAction => 'اصلاح مقدار';
+
+  @override
+  String get asset => 'دارایی';
+
+  @override
+  String get assetClass => 'نوع';
+
+  @override
+  String get atCost => 'به قیمت خرید';
+
+  @override
+  String get averageCost => 'میانگین قیمت خرید';
+
+  @override
+  String get baseCurrency => 'ارز اصلی';
+
+  @override
+  String get costAmount => 'قیمت تمام‌شده (کل)';
+
+  @override
+  String get costBasis => 'قیمت تمام‌شده';
+
+  @override
+  String get costKnown => 'می‌دانم چقدر تمام شده';
+
+  @override
+  String get costQuestion => 'چقدر برایت تمام شده؟';
+
+  @override
+  String get costTodayValue => 'ارزش امروزش (از آخرین قیمت)';
+
+  @override
+  String get costUnknown => 'نمی‌دانم';
+
+  @override
+  String get decimalsHint => 'برای بیشتر ارزهای دیجیتال ۸، برای گرم ۳، برای سهم یا عدد ۰.';
+
+  @override
+  String get decimalsLocked => 'تعداد رقم اعشار بعد از ساختن تغییر نمی‌کند.';
+
+  @override
+  String get editAsset => 'ویرایش دارایی';
+
+  @override
+  String get errBreaksLater => 'این کار باعث می‌شود یک فروش بعدی بیشتر از موجودی باشد. اول آن فروش را باطل کن.';
+
+  @override
+  String get errCurrencyMismatch => 'ارز حساب باید با ارز معامله یکی باشد';
+
+  @override
+  String get errNameRequired => 'یک نام بنویس';
+
+  @override
+  String get errNoPriceForValue => 'هنوز قیمتی ثبت نشده؛ یک قیمت ثبت کن یا مبلغ را بنویس';
+
+  @override
+  String get errOversell => 'بیشتر از موجودیِ آن تاریخ نمی‌شود فروخت';
+
+  @override
+  String get errSamePlatform => 'دو محل متفاوت انتخاب کن';
+
+  @override
+  String get evAdjustIn => 'اصلاح +';
+
+  @override
+  String get evAdjustOut => 'اصلاح −';
+
+  @override
+  String get evGiftIn => 'هدیه یا ارث دریافتی';
+
+  @override
+  String get evGiftOut => 'هدیه دادم';
+
+  @override
+  String get evIncome => 'سود (سود نقدی، بهره، استیکینگ)';
+
+  @override
+  String get evOpening => 'از قبل داشتم';
+
+  @override
+  String get evOpeningAction => 'چیزی که از قبل دارم';
+
+  @override
+  String get evSplit => 'تجزیه یا افزایش سرمایه';
+
+  @override
+  String get evTransferIn => 'انتقال ورودی';
+
+  @override
+  String get evTransferOut => 'انتقال خروجی';
+
+  @override
+  String get fairValueOptional => 'ارزش در زمان دریافت (اختیاری)';
+
+  @override
+  String get feeIncludedBuy => 'داخل مبلغ کل حساب شده و جزو قیمت تمام‌شده می‌شود.';
+
+  @override
+  String get feeIncludedSell => 'از مبلغ دریافتی کم شده است.';
+
+  @override
+  String get feeOptional => 'کارمزد (اختیاری، برای سابقه)';
+
+  @override
+  String get feesPaid => 'کارمزد پرداختی';
+
+  @override
+  String get fifoHint => 'خاموش = میانگین موزون (پیشنهادی). روشن = اول‌خرید، اول‌فروش.';
+
+  @override
+  String get fifoTitle => 'روش FIFO';
+
+  @override
+  String get hideAmounts => 'پنهان کردن مبالغ';
+
+  @override
+  String get showAmounts => 'نمایش مبالغ';
+
+  @override
+  String get incomeInKind => 'به صورت واحد دریافت شد';
+
+  @override
+  String get incomeInKindHint => 'استیکینگ، ایردراپ، سود به شکل سهم';
+
+  @override
+  String get investmentIncome => 'سود سرمایه‌گذاری';
+
+  @override
+  String get lastPrice => 'آخرین قیمت';
+
+  @override
+  String get longPressToVoid => 'برای باطل کردن، روی یک مورد نگه دار.';
+
+  @override
+  String get marketValue => 'ارزش فعلی';
+
+  @override
+  String get nameEn => 'نام (انگلیسی)';
+
+  @override
+  String get nameFa => 'نام (فارسی)';
+
+  @override
+  String get newAsset => 'دارایی جدید';
+
+  @override
+  String get noHoldingsYet => 'هنوز چیزی ثبت نشده. چیزهایی که از قبل داری را اضافه کن یا یک خرید ثبت کن.';
+
+  @override
+  String get noPlatform => 'مشخص نشده';
+
+  @override
+  String get noRate => 'بدون نرخ';
+
+  @override
+  String get old => 'قدیمی';
+
+  @override
+  String get optional => 'اختیاری';
+
+  @override
+  String get orCustom => 'جزئیات';
+
+  @override
+  String get partlyUnknown => 'بخشی نامعلوم';
+
+  @override
+  String get pickAsset => 'یک دارایی انتخاب کن';
+
+  @override
+  String get pickFromList => 'از فهرست انتخاب کن';
+
+  @override
+  String get pkApp => 'اپلیکیشن';
+
+  @override
+  String get pkBank => 'بانک';
+
+  @override
+  String get pkBroker => 'کارگزاری';
+
+  @override
+  String get pkExchange => 'صرافی';
+
+  @override
+  String get pkHome => 'خانه / گاوصندوق';
+
+  @override
+  String get pkOther => 'سایر';
+
+  @override
+  String get pkPerson => 'شخص';
+
+  @override
+  String get pkWallet => 'کیف پول';
+
+  @override
+  String get platform => 'محل نگهداری';
+
+  @override
+  String get priceCurrency => 'ارز معمول قیمت';
+
+  @override
+  String priceOld(Object date) {
+    return 'قیمتِ $date';
+  }
+
+  @override
+  String get pricesManualHint =>
+      'کاکا هیچ‌وقت قیمت را حدس نمی‌زند. قیمتی که می‌بینی را وارد کن؛ قیمت‌های قدیمی علامت می‌خورند.';
+
+  @override
+  String pricesNeedUpdate(Object n) {
+    return '$n قیمت ثبت نشده یا قدیمی است';
+  }
+
+  @override
+  String get realizedGain => 'سود/زیان محقق‌شده';
+
+  @override
+  String get splitNew => 'جدید';
+
+  @override
+  String get splitOld => 'قدیم';
+
+  @override
+  String get swapAction => 'تبدیل یک دارایی به دارایی دیگر';
+
+  @override
+  String get swapGet => 'گرفتم';
+
+  @override
+  String get swapGive => 'دادم';
+
+  @override
+  String get swapHint =>
+      'هزینه نیست: دارایی داده‌شده به ارزش توافقی فروخته‌شده حساب می‌شود و همین ارزش قیمت تمام‌شده‌ی دارایی جدید است.';
+
+  @override
+  String get swapValue => 'ارزش توافقی';
+
+  @override
+  String get swapValueHint => 'ارزش پولی معامله';
+
+  @override
+  String get symbolOptional => 'نماد (اختیاری)';
+
+  @override
+  String get totalPaidInclFees => 'مبلغ کل پرداختی (با کارمزد)';
+
+  @override
+  String get totalReceivedNet => 'مبلغ کل دریافتی (بعد از کارمزد)';
+
+  @override
+  String get unitEn => 'واحد (انگلیسی)';
+
+  @override
+  String get unitFa => 'واحد (فارسی)';
+
+  @override
+  String get unrealizedGain => 'سود/زیان شناور';
+
+  @override
+  String upToDecimals(Object n) {
+    return 'تا $n رقم اعشار';
+  }
+
+  @override
+  String qtyDecimals(Object n) {
+    return 'تعداد رقم اعشار مقدار: $n';
+  }
+
+  @override
+  String get tooOldTitle => 'این دفتر مال یک نسخه‌ی آزمایشی است';
+
+  @override
+  String get includeIlliquid => 'ملک و خودرو در دارایی خالص حساب شوند';
 }

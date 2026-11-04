@@ -1,0 +1,5 @@
+• New Assets section: any asset (gold, coins, crypto, stocks, funds, property, vehicles, or your own), with exact quantities (up to 12 decimals)
+• Buy and sell from an account: money moves, average cost and realized gain are calculated (weighted average; FIFO optional)
+• Add what you already own, with unknown cost or today's value; gifts, income/staking, splits, corrections, asset-for-asset exchange
+• Manual prices with "old price" marks; value, unrealized gain, hide amounts
+• Older test ledgers (before 0.6) are not migrated: uninstall first or tap "Start fresh"

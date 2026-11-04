@@ -97,26 +97,12 @@ class LedgerService {
     ),
   );
 
-  /// Cash side of a gold/coin buy or sell. Returns the transaction id so the
-  /// asset movement can point at it.
-  Future<String> recordAssetTrade({
-    required Account cash,
-    required Money total,
-    required bool buy,
-    DateTime? at,
-    String note = '',
-  }) async {
-    final txn = TransactionFactory.assetTrade(
-      cash: cash,
-      holdings: await _systemEquity('Assets:${total.currency.code}', total.currency),
-      total: total,
-      buy: buy,
-      at: at ?? _now(),
-      note: note,
-    );
-    await _record(txn);
-    return txn.id;
-  }
+  /// Validates and stores a transaction built elsewhere (portfolio postings).
+  Future<void> recordBuilt(LedgerTransaction txn) => _record(txn);
+
+  /// A Kaka-managed account (hidden from pickers), created on first use.
+  Future<Account> systemAccount(String name, AccountType type, Currency currency) =>
+      _systemEquity(name, currency, type: type);
 
   /// Voids by id (used when the linked asset movement is voided).
   Future<void> voidById(String id) => _transactions.markVoided(id, _now());
@@ -124,18 +110,11 @@ class LedgerService {
   /// The system `FX:<cur>` equity account for [currency].
   Future<Account> fxAccount(Currency currency) => _systemEquity('FX:${currency.code}', currency);
 
-  Future<Account> _systemEquity(String name, Currency currency) async {
+  Future<Account> _systemEquity(String name, Currency currency, {AccountType type = AccountType.equity}) async {
     final all = await _accounts.getAll();
-    final found = all.where((a) => a.isSystem && a.name == name && a.currency == currency);
+    final found = all.where((a) => a.isSystem && a.name == name && a.currency == currency && a.type == type);
     if (found.isNotEmpty) return found.first;
-    final fx = Account(
-      id: Ids.next(),
-      name: name,
-      type: AccountType.equity,
-      currency: currency,
-      createdAt: _now(),
-      isSystem: true,
-    );
+    final fx = Account(id: Ids.next(), name: name, type: type, currency: currency, createdAt: _now(), isSystem: true);
     await _accounts.upsert(fx);
     return fx;
   }

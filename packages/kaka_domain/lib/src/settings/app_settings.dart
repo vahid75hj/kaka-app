@@ -32,6 +32,8 @@ class AppSettings {
     this.lastBackupAt,
     this.backupReminderDays = 14,
     this.hideGettingStarted = false,
+    this.excludeIlliquidFromNetWorth = false,
+    this.hideAmounts = false,
   });
 
   factory AppSettings.defaultsFor(String localeCode) {
@@ -85,6 +87,12 @@ class AppSettings {
   /// The home "getting started" checklist was dismissed.
   final bool hideGettingStarted;
 
+  /// Leave real estate and vehicles out of the home net worth.
+  final bool excludeIlliquidFromNetWorth;
+
+  /// Mask amounts on the assets screen (for showing the phone to others).
+  final bool hideAmounts;
+
   /// Whether a backup reminder is due at [now]: there is data worth saving and
   /// the last backup is older than [backupReminderDays] (or never happened).
   bool backupDue(DateTime now, {required DateTime? firstActivity}) {
@@ -115,6 +123,8 @@ class AppSettings {
     DateTime? Function()? lastBackupAt,
     int? backupReminderDays,
     bool? hideGettingStarted,
+    bool? excludeIlliquidFromNetWorth,
+    bool? hideAmounts,
   }) => AppSettings(
     localeCode: localeCode ?? this.localeCode,
     calendar: calendar ?? this.calendar,
@@ -135,6 +145,8 @@ class AppSettings {
     lastBackupAt: lastBackupAt != null ? lastBackupAt() : this.lastBackupAt,
     backupReminderDays: backupReminderDays ?? this.backupReminderDays,
     hideGettingStarted: hideGettingStarted ?? this.hideGettingStarted,
+    excludeIlliquidFromNetWorth: excludeIlliquidFromNetWorth ?? this.excludeIlliquidFromNetWorth,
+    hideAmounts: hideAmounts ?? this.hideAmounts,
   );
 
   Map<String, Object?> toJson() => {
@@ -157,6 +169,8 @@ class AppSettings {
     'last_backup_at': lastBackupAt?.toUtc().toIso8601String(),
     'backup_reminder_days': backupReminderDays,
     'hide_getting_started': hideGettingStarted,
+    'exclude_illiquid': excludeIlliquidFromNetWorth,
+    'hide_amounts': hideAmounts,
   };
 
   factory AppSettings.fromJson(Map<String, Object?> j) => AppSettings(
@@ -179,5 +193,7 @@ class AppSettings {
     lastBackupAt: j['last_backup_at'] == null ? null : DateTime.parse(j['last_backup_at'] as String).toLocal(),
     backupReminderDays: j['backup_reminder_days'] as int? ?? 14,
     hideGettingStarted: j['hide_getting_started'] as bool? ?? false,
+    excludeIlliquidFromNetWorth: j['exclude_illiquid'] as bool? ?? false,
+    hideAmounts: j['hide_amounts'] as bool? ?? false,
   );
 }

@@ -3,13 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kaka_domain/kaka_domain.dart';
 
 import '../../app/providers.dart';
-import '../../core/date_picker.dart';
 import '../../core/l10n_x.dart';
-import '../../core/money_input.dart';
 import '../../core/widgets.dart';
 import '../../theme/kaka_colors.dart';
+import 'asset_ui.dart';
+import 'event_form_screen.dart';
+import 'holding_screen.dart';
+import 'instrument_form_screen.dart';
+import 'prices_screen.dart';
 
-/// Gold & coins: holdings, buy/sell movements and manual unit prices.
+/// Portfolio overview: total value, gain, and holdings grouped by class.
 class AssetsScreen extends ConsumerWidget {
   const AssetsScreen({super.key});
 
@@ -18,41 +21,49 @@ class AssetsScreen extends ConsumerWidget {
     final l = context.l10n;
     final c = KakaColors.of(context);
     final f = ref.watch(formatProvider);
-    final fa = ref.watch(settingsProvider).isPersian;
-    final allTypes = ref.watch(assetTypesProvider).value ?? const <AssetType>[];
-    final types = allTypes.where((t) => !t.archived).toList();
-    final all = AssetMath.holdings(
-      types,
-      ref.watch(assetMovementsProvider).value ?? const [],
-      ref.watch(assetPricesProvider).value ?? const [],
-      includeEmpty: true,
-    );
-    final held = all.where((h) => h.quantityMilli != 0).toList();
+    final settings = ref.watch(settingsProvider);
+    final fa = settings.isPersian;
+    final hide = settings.hideAmounts;
     final fx = ref.watch(converterProvider);
-    var total = Money.zero(fx.base);
-    for (final h in held) {
-      final v = h.value == null ? null : fx.toBase(h.value!);
-      if (v != null) total += v;
+    final views = ref.watch(holdingViewsProvider);
+    final platforms = {for (final p in ref.watch(platformsProvider).value ?? const <AssetPlatform>[]) p.id: p};
+    final (total, unconverted) = PortfolioValuation.total(views, fx);
+    var unrealized = 0;
+    var unrealizedCost = 0;
+    for (final v in views) {
+      final u = v.unrealized(fx);
+      final cost = fx.toBase(v.cost);
+      if (u != null && cost != null) {
+        unrealized += u.minor;
+        unrealizedCost += cost.minor;
+      }
     }
-    String name(AssetType t) => fa ? t.nameFa : t.nameEn;
-    final movements = ref.watch(assetMovementsProvider).value ?? const <AssetMovement>[];
-    String typeName(String id) => allTypes.where((t) => t.id == id).map(name).firstOrNull ?? id;
-    // Cash account of a linked movement, read from its ledger transaction.
-    final txns = {for (final t in ref.watch(transactionsProvider).value ?? const <LedgerTransaction>[]) t.id: t};
-    final accounts = {for (final a in ref.watch(accountsProvider).value ?? const <Account>[]) a.id: a};
-    String? accountFor(AssetMovement m) => txns[m.transactionId]?.postings
-        .map((p) => accounts[p.accountId])
-        .where((a) => a != null && !a.isSystem)
-        .firstOrNull
-        ?.name;
-    String unit(AssetType t) => t.unit == AssetUnit.gram ? l.unitGram : l.unitCoin;
+    final stale = views.where((v) => v.isStale || v.price == null).length;
+    final byClass = <AssetClass, List<HoldingView>>{};
+    for (final v in views) {
+      byClass.putIfAbsent(v.instrument.assetClass, () => []).add(v);
+    }
 
     return Scaffold(
-      appBar: AppBar(title: Text(l.assets)),
+      appBar: AppBar(
+        title: Text(l.assets),
+        actions: [
+          IconButton(
+            tooltip: hide ? l.showAmounts : l.hideAmounts,
+            icon: Icon(hide ? Icons.visibility_off_outlined : Icons.visibility_outlined),
+            onPressed: () => ref.read(settingsProvider.notifier).update((s) => s.copyWith(hideAmounts: !hide)),
+          ),
+          IconButton(
+            tooltip: l.unitPrices,
+            icon: const Icon(Icons.price_change_outlined),
+            onPressed: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const PricesScreen())),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: types.isEmpty ? null : () => _move(context, ref, types, all),
+        onPressed: () => showAssetActions(context, ref),
         icon: const Icon(Icons.add_rounded),
-        label: Text(l.buySell),
+        label: Text(l.addAssetAction),
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 110),
@@ -63,49 +74,89 @@ class AssetsScreen extends ConsumerWidget {
               children: [
                 Text(l.assetsValue, style: TextStyle(color: c.textMuted)),
                 const SizedBox(height: 6),
-                AmountText(f.money(total), style: const TextStyle(fontSize: 26)),
+                AmountText(moneyOrHidden(f, total, hide: hide), style: const TextStyle(fontSize: 26)),
+                for (final m in unconverted)
+                  Text(
+                    '+ ${moneyOrHidden(f, m, hide: hide)} (${l.noRate})',
+                    style: TextStyle(color: c.textMuted),
+                  ),
+                if (unrealizedCost != 0) ...[
+                  const SizedBox(height: 6),
+                  Text(
+                    '${l.unrealizedGain}: ${moneyOrHidden(f, Money(unrealized, fx.base), signed: true, hide: hide)}'
+                    '  ${percentText(f, unrealized, unrealizedCost)}',
+                    style: TextStyle(color: unrealized >= 0 ? c.positive : c.negative),
+                  ),
+                ],
+                if (stale > 0)
+                  TextButton.icon(
+                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                    icon: const Icon(Icons.schedule, size: 18),
+                    label: Text(l.pricesNeedUpdate(f.digits('$stale'))),
+                    onPressed: () =>
+                        Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const PricesScreen())),
+                  ),
               ],
             ),
           ),
-          SectionHeader(l.holdings),
-          if (held.isEmpty) Text(l.noHoldings, style: TextStyle(color: c.textMuted)),
-          for (final h in held)
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Icon(h.type.unit == AssetUnit.gram ? Icons.diamond_outlined : Icons.toll_outlined),
-              title: Text(name(h.type)),
-              subtitle: Text(
-                '${f.digits(AssetMath.formatQuantity(h.quantityMilli))} ${unit(h.type)}'
-                '${h.price == null ? ' · ${l.noPrice}' : ' · ${f.date(h.price!.date)}'}',
-              ),
-              trailing: h.value == null ? null : AmountText(f.money(h.value!)),
+          if (views.isEmpty) ...[
+            const SizedBox(height: 24),
+            Text(l.noHoldingsYet, style: TextStyle(color: c.textMuted)),
+            const SizedBox(height: 12),
+            FilledButton.tonal(
+              onPressed: () => openEventForm(context, EventKind.opening),
+              child: Text(l.evOpeningAction),
             ),
-          SectionHeader(l.unitPrices),
-          for (final h in all)
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(name(h.type)),
-              subtitle: Text(
-                h.price == null ? l.noPrice : '${f.money(h.price!.price)} / ${unit(h.type)} · ${f.date(h.price!.date)}',
-              ),
-              trailing: TextButton(onPressed: () => _price(context, ref, h.type), child: Text(l.setPrice)),
-            ),
-          if (movements.isNotEmpty) SectionHeader(l.assetHistory),
-          for (final m in movements)
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              onLongPress: m.voidedAt != null ? null : () => _voidMovement(context, ref, m),
-              leading: Icon(m.quantityMilli > 0 ? Icons.add_circle_outline : Icons.remove_circle_outline),
-              title: Text(
-                '${m.quantityMilli > 0 ? l.buy : l.sell} · ${typeName(m.assetTypeId)} · '
-                '${f.digits(AssetMath.formatQuantity(m.quantityMilli.abs()))}',
-                style: TextStyle(decoration: m.voidedAt != null ? TextDecoration.lineThrough : null),
-              ),
-              subtitle: Text(
-                '${m.voidedAt != null ? '${l.voided} · ' : ''}${f.date(m.date)}'
-                '${m.transactionId != null && accountFor(m) != null ? ' · ${accountFor(m)}' : ''}',
-              ),
-              trailing: m.total == null ? null : AmountText(f.money(m.total!)),
+            const SizedBox(height: 8),
+            OutlinedButton(onPressed: () => openEventForm(context, EventKind.buy), child: Text(l.buy)),
+          ],
+          for (final e in byClass.entries) ...[
+            SectionHeader(className(l, e.key)),
+            for (final v in e.value) _HoldingTile(view: v, platform: platforms[v.state.platformId], fa: fa, hide: hide),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _HoldingTile extends ConsumerWidget {
+  const _HoldingTile({required this.view, required this.platform, required this.fa, required this.hide});
+  final HoldingView view;
+  final AssetPlatform? platform;
+  final bool fa;
+  final bool hide;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
+    final c = KakaColors.of(context);
+    final f = ref.watch(formatProvider);
+    final i = view.instrument;
+    final gain = view.unrealizedNative;
+    final sub = [
+      qtyText(f, i, view.state.qty, fa),
+      if (platform != null) platform!.name,
+      if (view.price == null) l.noPrice else if (view.isStale) l.priceOld(f.date(view.price!.asOf)),
+    ].join(' · ');
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: Icon(classIcon(i.assetClass)),
+      title: Text(i.name(fa)),
+      subtitle: Text(sub),
+      onTap: () =>
+          Navigator.push(context, MaterialPageRoute<void>(builder: (_) => HoldingScreen(holdingKey: view.state.key))),
+      trailing: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          AmountText(moneyOrHidden(f, view.bestValue, hide: hide)),
+          if (view.marketValue == null)
+            Text(l.atCost, style: TextStyle(fontSize: 12, color: c.textMuted))
+          else if (gain != null)
+            Text(
+              percentText(f, gain.minor, view.state.cost),
+              style: TextStyle(fontSize: 12, color: gain.minor >= 0 ? c.positive : c.negative),
             ),
         ],
       ),
@@ -113,234 +164,44 @@ class AssetsScreen extends ConsumerWidget {
   }
 }
 
-Future<void> _price(BuildContext context, WidgetRef ref, AssetType type) async {
+/// Bottom sheet with every way to add something to the portfolio.
+Future<void> showAssetActions(BuildContext context, WidgetRef ref, {String? instrumentId, String? platformId}) {
   final l = context.l10n;
-  final f = ref.read(formatProvider);
-  final base = ref.read(settingsProvider).baseUnit.currency;
-  final ctrl = TextEditingController();
-  var date = DateTime.now();
-  String? error;
-  await showDialog<void>(
+  Widget item(IconData icon, String label, VoidCallback onTap) => ListTile(
+    leading: Icon(icon),
+    title: Text(label),
+    onTap: () {
+      Navigator.pop(context);
+      onTap();
+    },
+  );
+  void form(EventKind k) => openEventForm(context, k, instrumentId: instrumentId, platformId: platformId);
+  return showModalBottomSheet<void>(
     context: context,
-    builder: (dialogContext) => StatefulBuilder(
-      builder: (dialogContext, setState) => AlertDialog(
-        title: Text(l.setPrice),
-        content: Column(
+    showDragHandle: true,
+    isScrollControlled: true,
+    builder: (_) => SafeArea(
+      child: SingleChildScrollView(
+        child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(
-              controller: ctrl,
-              autofocus: true,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              decoration: InputDecoration(labelText: l.pricePerUnit, suffixText: f.symbol(base), errorText: error),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.event_outlined),
-              title: Text(f.date(date)),
-              onTap: () async {
-                final d = await pickDate(dialogContext, f, initial: date);
-                if (d != null) setState(() => date = d);
-              },
+            item(Icons.add_shopping_cart, l.buy, () => form(EventKind.buy)),
+            item(Icons.sell_outlined, l.sell, () => form(EventKind.sell)),
+            item(Icons.inventory_2_outlined, l.evOpeningAction, () => form(EventKind.opening)),
+            item(Icons.swap_horiz, l.swapAction, () => openSwapForm(context, instrumentId: instrumentId)),
+            item(Icons.payments_outlined, l.evIncome, () => form(EventKind.income)),
+            item(Icons.card_giftcard, l.evGiftIn, () => form(EventKind.giftIn)),
+            item(Icons.redeem, l.evGiftOut, () => form(EventKind.giftOut)),
+            item(Icons.call_split, l.evSplit, () => form(EventKind.split)),
+            item(Icons.tune, l.adjustAction, () => form(EventKind.adjustIn)),
+            item(
+              Icons.add_box_outlined,
+              l.newAsset,
+              () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const InstrumentFormScreen())),
             ),
           ],
         ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(dialogContext), child: Text(l.cancel)),
-          FilledButton(
-            onPressed: () async {
-              try {
-                final day = DateTime(date.year, date.month, date.day);
-                await ref
-                    .read(assetRepositoryProvider)
-                    .upsertPrice(
-                      AssetPrice(
-                        id: '${type.id}-${day.toIso8601String().substring(0, 10)}',
-                        assetTypeId: type.id,
-                        date: day,
-                        price: parseUserMoney(f, ctrl.text, base),
-                      ),
-                    );
-                if (dialogContext.mounted) Navigator.pop(dialogContext);
-              } on DomainException {
-                setState(() => error = l.errAmount);
-              }
-            },
-            child: Text(l.save),
-          ),
-        ],
       ),
     ),
   );
-  ctrl.dispose();
-}
-
-Future<void> _move(BuildContext context, WidgetRef ref, List<AssetType> types, List<AssetHolding> all) async {
-  final l = context.l10n;
-  final f = ref.read(formatProvider);
-  final fa = ref.read(settingsProvider).isPersian;
-  final base = ref.read(settingsProvider).baseUnit.currency;
-  final cashAccounts = (ref.read(accountsProvider).value ?? const <Account>[])
-      .where((a) => a.type.isBalanceSheet && !a.isSystem && !a.archived)
-      .toList();
-  var type = types.first;
-  var buy = true;
-  var date = DateTime.now();
-  Account? cash;
-  final qty = TextEditingController();
-  final total = TextEditingController();
-  String? qtyError;
-  String? totalError;
-  int held(AssetType t) => all.where((h) => h.type.id == t.id).firstOrNull?.quantityMilli ?? 0;
-  String unit(AssetType t) => t.unit == AssetUnit.gram ? l.unitGram : l.unitCoin;
-  await showDialog<void>(
-    context: context,
-    builder: (dialogContext) => StatefulBuilder(
-      builder: (dialogContext, setState) {
-        final currency = cash?.currency ?? base;
-        // Suggest price × quantity when a price in the same currency is known.
-        String? estimate;
-        try {
-          final p = all.where((h) => h.type.id == type.id).firstOrNull?.price;
-          final q = AssetMath.parseQuantity(qty.text);
-          if (p != null && p.price.currency == currency && q > 0) {
-            estimate = l.estimateFromPrice(f.money(AssetHolding(type, q, p).value!));
-          }
-        } on FormatException {
-          estimate = null;
-        }
-        return AlertDialog(
-          title: Text(l.buySell),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SegmentedButton<bool>(
-                  showSelectedIcon: false,
-                  segments: [
-                    ButtonSegment(value: true, label: Text(l.buy)),
-                    ButtonSegment(value: false, label: Text(l.sell)),
-                  ],
-                  selected: {buy},
-                  onSelectionChanged: (v) => setState(() => buy = v.first),
-                ),
-                const SizedBox(height: 12),
-                DropdownButtonFormField<AssetType>(
-                  initialValue: type,
-                  isExpanded: true,
-                  items: [for (final t in types) DropdownMenuItem(value: t, child: Text(fa ? t.nameFa : t.nameEn))],
-                  onChanged: (t) => setState(() => type = t!),
-                ),
-                TextField(
-                  controller: qty,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  onChanged: (_) => setState(() {}),
-                  decoration: InputDecoration(labelText: l.quantity, suffixText: unit(type), errorText: qtyError),
-                ),
-                DropdownButtonFormField<Account?>(
-                  initialValue: cash,
-                  isExpanded: true,
-                  decoration: InputDecoration(labelText: buy ? l.payFrom : l.receiveInto),
-                  items: [
-                    DropdownMenuItem(value: null, child: Text(l.noCashAccount)),
-                    for (final a in cashAccounts)
-                      DropdownMenuItem(value: a, child: Text('${a.name} (${f.symbol(a.currency)})')),
-                  ],
-                  onChanged: (a) => setState(() => cash = a),
-                ),
-                TextField(
-                  controller: total,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(
-                    labelText: cash == null ? l.totalOptional : l.amount,
-                    suffixText: f.symbol(currency),
-                    helperText: estimate,
-                    errorText: totalError,
-                  ),
-                ),
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: const Icon(Icons.event_outlined),
-                  title: Text(f.date(date)),
-                  onTap: () async {
-                    final d = await pickDate(dialogContext, f, initial: date);
-                    if (d != null) setState(() => date = d);
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(onPressed: () => Navigator.pop(dialogContext), child: Text(l.cancel)),
-            FilledButton(
-              onPressed: () async {
-                setState(() => qtyError = totalError = null);
-                final int q;
-                try {
-                  q = AssetMath.parseQuantity(qty.text);
-                  if (q <= 0) throw const FormatException('quantity');
-                } on FormatException {
-                  setState(() => qtyError = l.errAmount);
-                  return;
-                }
-                Money? paid;
-                try {
-                  paid = total.text.trim().isEmpty ? null : parseUserMoney(f, total.text, currency);
-                } on DomainException {
-                  setState(() => totalError = l.errAmount);
-                  return;
-                }
-                try {
-                  await ref
-                      .read(assetTradingProvider)
-                      .trade(
-                        assetTypeId: type.id,
-                        quantityMilli: q,
-                        buy: buy,
-                        total: paid,
-                        cash: cash,
-                        heldMilli: held(type),
-                        at: date,
-                      );
-                  if (dialogContext.mounted) Navigator.pop(dialogContext);
-                } on DomainException catch (e) {
-                  setState(() {
-                    switch (e.code) {
-                      case 'asset.sell_more_than_held':
-                        qtyError = l.errSellMoreThanHeld(
-                          '${f.digits(AssetMath.formatQuantity(held(type)))} ${unit(type)}',
-                        );
-                      case 'asset.total_required':
-                        totalError = l.errTotalRequired;
-                      default:
-                        totalError = l.errAmount;
-                    }
-                  });
-                }
-              },
-              child: Text(l.save),
-            ),
-          ],
-        );
-      },
-    ),
-  );
-  qty.dispose();
-  total.dispose();
-}
-
-Future<void> _voidMovement(BuildContext context, WidgetRef ref, AssetMovement m) async {
-  final l = context.l10n;
-  final ok = await showDialog<bool>(
-    context: context,
-    builder: (c) => AlertDialog(
-      title: Text(l.voidTitle),
-      content: Text(l.assetVoidBody),
-      actions: [
-        TextButton(onPressed: () => Navigator.pop(c, false), child: Text(l.cancel)),
-        TextButton(onPressed: () => Navigator.pop(c, true), child: Text(l.voidAction)),
-      ],
-    ),
-  );
-  if (ok == true) await ref.read(assetTradingProvider).voidMovement(m);
 }

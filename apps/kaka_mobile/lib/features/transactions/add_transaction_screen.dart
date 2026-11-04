@@ -205,7 +205,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     final c = KakaColors.of(context);
     final f = ref.watch(formatProvider);
     final accounts = ref.watch(accountsProvider).value ?? const <Account>[];
-    final wallets = accounts.where((a) => a.type.isBalanceSheet && !a.archived).toList();
+    final wallets = accounts.where((a) => a.type.isBalanceSheet && !a.archived && !a.isSystem).toList();
     _accountId ??= widget.initialAccountId ?? wallets.firstOrNull?.id;
     final from = wallets.where((a) => a.id == _accountId).firstOrNull;
     final to = wallets.where((a) => a.id == _toAccountId).firstOrNull;

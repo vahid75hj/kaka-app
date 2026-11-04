@@ -83,7 +83,7 @@ class ToolRunner {
 
   Future<Map<String, Object?>> _getBalance(String? id) async {
     final balances = (await ledger.watchBalances().first).where(
-      (b) => b.account.type.isBalanceSheet && (id == null || b.account.id == id),
+      (b) => b.account.type.isBalanceSheet && !b.account.isSystem && (id == null || b.account.id == id),
     );
     return {
       'balances': [
@@ -207,14 +207,14 @@ class ToolRunner {
   Future<Map<String, Object?>> _addDraft(Map<String, Object?> args) async {
     final visible = {for (final a in await _visible()) a.id: a};
     final account = visible[args['account_id'] as String? ?? ''];
-    if (account == null || account.archived || !account.type.isBalanceSheet) {
+    if (account == null || account.archived || account.isSystem || !account.type.isBalanceSheet) {
       return _error('unknown_account', args['account_id'] as String?);
     }
     final kind = args['kind'] as String? ?? 'expense';
     if (!const {'expense', 'income', 'transfer'}.contains(kind)) return _error('bad_kind', kind);
     if (kind == 'transfer') {
       final to = visible[args['to_account_id'] as String? ?? ''];
-      if (to == null || to.archived || !to.type.isBalanceSheet) {
+      if (to == null || to.archived || to.isSystem || !to.type.isBalanceSheet) {
         return _error('unknown_to_account', args['to_account_id'] as String?);
       }
       if (to.id == account.id) return _error('same_account');

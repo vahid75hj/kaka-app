@@ -566,7 +566,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delete => 'Delete';
 
   @override
-  String get assets => 'Gold & coins';
+  String get assets => 'Assets';
 
   @override
   String get buySell => 'Buy / sell';
@@ -780,7 +780,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get assetHistory => 'History';
 
   @override
-  String get assetVoidBody => 'Void this movement? Linked cash is returned too.';
+  String get assetVoidBody => 'Void this entry? Linked money is returned too.';
 
   @override
   String get goldAndCoins => 'Gold & coins';
@@ -1054,4 +1054,316 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get repeatSaved => 'It will repeat; due ones appear in the queue.';
+
+  @override
+  String get acMetal => 'Precious metals';
+
+  @override
+  String get acCoin => 'Coins';
+
+  @override
+  String get acCrypto => 'Crypto';
+
+  @override
+  String get acStock => 'Stocks';
+
+  @override
+  String get acFund => 'Funds & ETFs';
+
+  @override
+  String get acBond => 'Bonds';
+
+  @override
+  String get acRealEstate => 'Real estate';
+
+  @override
+  String get acVehicle => 'Vehicles';
+
+  @override
+  String get acCollectible => 'Collectibles';
+
+  @override
+  String get acOther => 'Other';
+
+  @override
+  String get addAssetAction => 'Add';
+
+  @override
+  String get adjustAction => 'Correct quantity';
+
+  @override
+  String get asset => 'Asset';
+
+  @override
+  String get assetClass => 'Type';
+
+  @override
+  String get atCost => 'at cost';
+
+  @override
+  String get averageCost => 'Average cost';
+
+  @override
+  String get baseCurrency => 'Base currency';
+
+  @override
+  String get costAmount => 'Cost (total)';
+
+  @override
+  String get costBasis => 'Cost';
+
+  @override
+  String get costKnown => 'I know what it cost';
+
+  @override
+  String get costQuestion => 'What did it cost?';
+
+  @override
+  String get costTodayValue => 'Use today\'s value (from the last price)';
+
+  @override
+  String get costUnknown => 'Don\'t know';
+
+  @override
+  String get decimalsHint => '8 for most crypto, 3 for grams, 0 for shares or pieces.';
+
+  @override
+  String get decimalsLocked => 'Decimals can\'t change after creation.';
+
+  @override
+  String get editAsset => 'Edit asset';
+
+  @override
+  String get errBreaksLater => 'A later sale would then sell more than you held. Void that sale first.';
+
+  @override
+  String get errCurrencyMismatch => 'The account\'s currency must match';
+
+  @override
+  String get errNameRequired => 'Enter a name';
+
+  @override
+  String get errNoPriceForValue => 'No price yet: set one, or enter the cost';
+
+  @override
+  String get errOversell => 'You can\'t sell more than you hold on that date';
+
+  @override
+  String get errSamePlatform => 'Pick two different places';
+
+  @override
+  String get evAdjustIn => 'Found / correction +';
+
+  @override
+  String get evAdjustOut => 'Lost / correction −';
+
+  @override
+  String get evGiftIn => 'Gift or inheritance received';
+
+  @override
+  String get evGiftOut => 'Given as a gift';
+
+  @override
+  String get evIncome => 'Income (dividend, interest, staking)';
+
+  @override
+  String get evOpening => 'Already owned';
+
+  @override
+  String get evOpeningAction => 'Add something I already own';
+
+  @override
+  String get evSplit => 'Split / bonus shares';
+
+  @override
+  String get evTransferIn => 'Transfer in';
+
+  @override
+  String get evTransferOut => 'Transfer out';
+
+  @override
+  String get fairValueOptional => 'Value when received (optional)';
+
+  @override
+  String get feeIncludedBuy => 'Already included in the total: it becomes part of the cost.';
+
+  @override
+  String get feeIncludedSell => 'Already taken out of the amount received.';
+
+  @override
+  String get feeOptional => 'Fee (optional, for your records)';
+
+  @override
+  String get feesPaid => 'Fees paid';
+
+  @override
+  String get fifoHint => 'Off = weighted average (recommended). On = first bought, first sold.';
+
+  @override
+  String get fifoTitle => 'FIFO cost';
+
+  @override
+  String get hideAmounts => 'Hide amounts';
+
+  @override
+  String get showAmounts => 'Show amounts';
+
+  @override
+  String get incomeInKind => 'Received as units';
+
+  @override
+  String get incomeInKindHint => 'Staking, airdrop, dividend paid in shares';
+
+  @override
+  String get investmentIncome => 'Investment income';
+
+  @override
+  String get lastPrice => 'Last price';
+
+  @override
+  String get longPressToVoid => 'Long-press an entry to void it.';
+
+  @override
+  String get marketValue => 'Value now';
+
+  @override
+  String get nameEn => 'Name (English)';
+
+  @override
+  String get nameFa => 'Name (Persian)';
+
+  @override
+  String get newAsset => 'New asset';
+
+  @override
+  String get noHoldingsYet => 'Nothing here yet. Add what you already own, or record a buy.';
+
+  @override
+  String get noPlatform => 'Not specified';
+
+  @override
+  String get noRate => 'no rate';
+
+  @override
+  String get old => 'old';
+
+  @override
+  String get optional => 'optional';
+
+  @override
+  String get orCustom => 'Details';
+
+  @override
+  String get partlyUnknown => 'partly unknown';
+
+  @override
+  String get pickAsset => 'Pick an asset';
+
+  @override
+  String get pickFromList => 'Start from a common one';
+
+  @override
+  String get pkApp => 'App';
+
+  @override
+  String get pkBank => 'Bank';
+
+  @override
+  String get pkBroker => 'Broker';
+
+  @override
+  String get pkExchange => 'Exchange';
+
+  @override
+  String get pkHome => 'At home / safe';
+
+  @override
+  String get pkOther => 'Other';
+
+  @override
+  String get pkPerson => 'Person';
+
+  @override
+  String get pkWallet => 'Wallet';
+
+  @override
+  String get platform => 'Where it\'s kept';
+
+  @override
+  String get priceCurrency => 'Usual price currency';
+
+  @override
+  String priceOld(Object date) {
+    return 'price from $date';
+  }
+
+  @override
+  String get pricesManualHint => 'Kaka never guesses prices. Enter the price you see; old prices are marked.';
+
+  @override
+  String pricesNeedUpdate(Object n) {
+    return '$n prices missing or old';
+  }
+
+  @override
+  String get realizedGain => 'Realized gain';
+
+  @override
+  String get splitNew => 'New';
+
+  @override
+  String get splitOld => 'Old';
+
+  @override
+  String get swapAction => 'Exchange one asset for another';
+
+  @override
+  String get swapGet => 'I received';
+
+  @override
+  String get swapGive => 'I gave';
+
+  @override
+  String get swapHint =>
+      'Not an expense: the given asset counts as sold at the agreed value, and that value becomes the new asset\'s cost.';
+
+  @override
+  String get swapValue => 'Agreed value';
+
+  @override
+  String get swapValueHint => 'What the deal was worth in money';
+
+  @override
+  String get symbolOptional => 'Symbol / ticker (optional)';
+
+  @override
+  String get totalPaidInclFees => 'Total paid (fees included)';
+
+  @override
+  String get totalReceivedNet => 'Total received (after fees)';
+
+  @override
+  String get unitEn => 'Unit (English)';
+
+  @override
+  String get unitFa => 'Unit (Persian)';
+
+  @override
+  String get unrealizedGain => 'Unrealized gain';
+
+  @override
+  String upToDecimals(Object n) {
+    return 'Up to $n decimals';
+  }
+
+  @override
+  String qtyDecimals(Object n) {
+    return 'Quantity decimals: $n';
+  }
+
+  @override
+  String get tooOldTitle => 'This ledger is from a test version';
+
+  @override
+  String get includeIlliquid => 'Count property and vehicles in net worth';
 }

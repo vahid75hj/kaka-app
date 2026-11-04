@@ -1145,7 +1145,7 @@ abstract class AppLocalizations {
   /// No description provided for @assets.
   ///
   /// In en, this message translates to:
-  /// **'Gold & coins'**
+  /// **'Assets'**
   String get assets;
 
   /// No description provided for @buySell.
@@ -1541,7 +1541,7 @@ abstract class AppLocalizations {
   /// No description provided for @assetVoidBody.
   ///
   /// In en, this message translates to:
-  /// **'Void this movement? Linked cash is returned too.'**
+  /// **'Void this entry? Linked money is returned too.'**
   String get assetVoidBody;
 
   /// No description provided for @goldAndCoins.
@@ -2017,6 +2017,612 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'It will repeat; due ones appear in the queue.'**
   String get repeatSaved;
+
+  /// No description provided for @acMetal.
+  ///
+  /// In en, this message translates to:
+  /// **'Precious metals'**
+  String get acMetal;
+
+  /// No description provided for @acCoin.
+  ///
+  /// In en, this message translates to:
+  /// **'Coins'**
+  String get acCoin;
+
+  /// No description provided for @acCrypto.
+  ///
+  /// In en, this message translates to:
+  /// **'Crypto'**
+  String get acCrypto;
+
+  /// No description provided for @acStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Stocks'**
+  String get acStock;
+
+  /// No description provided for @acFund.
+  ///
+  /// In en, this message translates to:
+  /// **'Funds & ETFs'**
+  String get acFund;
+
+  /// No description provided for @acBond.
+  ///
+  /// In en, this message translates to:
+  /// **'Bonds'**
+  String get acBond;
+
+  /// No description provided for @acRealEstate.
+  ///
+  /// In en, this message translates to:
+  /// **'Real estate'**
+  String get acRealEstate;
+
+  /// No description provided for @acVehicle.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicles'**
+  String get acVehicle;
+
+  /// No description provided for @acCollectible.
+  ///
+  /// In en, this message translates to:
+  /// **'Collectibles'**
+  String get acCollectible;
+
+  /// No description provided for @acOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get acOther;
+
+  /// No description provided for @addAssetAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get addAssetAction;
+
+  /// No description provided for @adjustAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct quantity'**
+  String get adjustAction;
+
+  /// No description provided for @asset.
+  ///
+  /// In en, this message translates to:
+  /// **'Asset'**
+  String get asset;
+
+  /// No description provided for @assetClass.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get assetClass;
+
+  /// No description provided for @atCost.
+  ///
+  /// In en, this message translates to:
+  /// **'at cost'**
+  String get atCost;
+
+  /// No description provided for @averageCost.
+  ///
+  /// In en, this message translates to:
+  /// **'Average cost'**
+  String get averageCost;
+
+  /// No description provided for @baseCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'Base currency'**
+  String get baseCurrency;
+
+  /// No description provided for @costAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Cost (total)'**
+  String get costAmount;
+
+  /// No description provided for @costBasis.
+  ///
+  /// In en, this message translates to:
+  /// **'Cost'**
+  String get costBasis;
+
+  /// No description provided for @costKnown.
+  ///
+  /// In en, this message translates to:
+  /// **'I know what it cost'**
+  String get costKnown;
+
+  /// No description provided for @costQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'What did it cost?'**
+  String get costQuestion;
+
+  /// No description provided for @costTodayValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Use today\'s value (from the last price)'**
+  String get costTodayValue;
+
+  /// No description provided for @costUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t know'**
+  String get costUnknown;
+
+  /// No description provided for @decimalsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'8 for most crypto, 3 for grams, 0 for shares or pieces.'**
+  String get decimalsHint;
+
+  /// No description provided for @decimalsLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Decimals can\'t change after creation.'**
+  String get decimalsLocked;
+
+  /// No description provided for @editAsset.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit asset'**
+  String get editAsset;
+
+  /// No description provided for @errBreaksLater.
+  ///
+  /// In en, this message translates to:
+  /// **'A later sale would then sell more than you held. Void that sale first.'**
+  String get errBreaksLater;
+
+  /// No description provided for @errCurrencyMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'The account\'s currency must match'**
+  String get errCurrencyMismatch;
+
+  /// No description provided for @errNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a name'**
+  String get errNameRequired;
+
+  /// No description provided for @errNoPriceForValue.
+  ///
+  /// In en, this message translates to:
+  /// **'No price yet: set one, or enter the cost'**
+  String get errNoPriceForValue;
+
+  /// No description provided for @errOversell.
+  ///
+  /// In en, this message translates to:
+  /// **'You can\'t sell more than you hold on that date'**
+  String get errOversell;
+
+  /// No description provided for @errSamePlatform.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick two different places'**
+  String get errSamePlatform;
+
+  /// No description provided for @evAdjustIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Found / correction +'**
+  String get evAdjustIn;
+
+  /// No description provided for @evAdjustOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Lost / correction −'**
+  String get evAdjustOut;
+
+  /// No description provided for @evGiftIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift or inheritance received'**
+  String get evGiftIn;
+
+  /// No description provided for @evGiftOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Given as a gift'**
+  String get evGiftOut;
+
+  /// No description provided for @evIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'Income (dividend, interest, staking)'**
+  String get evIncome;
+
+  /// No description provided for @evOpening.
+  ///
+  /// In en, this message translates to:
+  /// **'Already owned'**
+  String get evOpening;
+
+  /// No description provided for @evOpeningAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add something I already own'**
+  String get evOpeningAction;
+
+  /// No description provided for @evSplit.
+  ///
+  /// In en, this message translates to:
+  /// **'Split / bonus shares'**
+  String get evSplit;
+
+  /// No description provided for @evTransferIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer in'**
+  String get evTransferIn;
+
+  /// No description provided for @evTransferOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer out'**
+  String get evTransferOut;
+
+  /// No description provided for @fairValueOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Value when received (optional)'**
+  String get fairValueOptional;
+
+  /// No description provided for @feeIncludedBuy.
+  ///
+  /// In en, this message translates to:
+  /// **'Already included in the total: it becomes part of the cost.'**
+  String get feeIncludedBuy;
+
+  /// No description provided for @feeIncludedSell.
+  ///
+  /// In en, this message translates to:
+  /// **'Already taken out of the amount received.'**
+  String get feeIncludedSell;
+
+  /// No description provided for @feeOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Fee (optional, for your records)'**
+  String get feeOptional;
+
+  /// No description provided for @feesPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Fees paid'**
+  String get feesPaid;
+
+  /// No description provided for @fifoHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Off = weighted average (recommended). On = first bought, first sold.'**
+  String get fifoHint;
+
+  /// No description provided for @fifoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'FIFO cost'**
+  String get fifoTitle;
+
+  /// No description provided for @hideAmounts.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide amounts'**
+  String get hideAmounts;
+
+  /// No description provided for @showAmounts.
+  ///
+  /// In en, this message translates to:
+  /// **'Show amounts'**
+  String get showAmounts;
+
+  /// No description provided for @incomeInKind.
+  ///
+  /// In en, this message translates to:
+  /// **'Received as units'**
+  String get incomeInKind;
+
+  /// No description provided for @incomeInKindHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Staking, airdrop, dividend paid in shares'**
+  String get incomeInKindHint;
+
+  /// No description provided for @investmentIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'Investment income'**
+  String get investmentIncome;
+
+  /// No description provided for @lastPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Last price'**
+  String get lastPrice;
+
+  /// No description provided for @longPressToVoid.
+  ///
+  /// In en, this message translates to:
+  /// **'Long-press an entry to void it.'**
+  String get longPressToVoid;
+
+  /// No description provided for @marketValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Value now'**
+  String get marketValue;
+
+  /// No description provided for @nameEn.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (English)'**
+  String get nameEn;
+
+  /// No description provided for @nameFa.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (Persian)'**
+  String get nameFa;
+
+  /// No description provided for @newAsset.
+  ///
+  /// In en, this message translates to:
+  /// **'New asset'**
+  String get newAsset;
+
+  /// No description provided for @noHoldingsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing here yet. Add what you already own, or record a buy.'**
+  String get noHoldingsYet;
+
+  /// No description provided for @noPlatform.
+  ///
+  /// In en, this message translates to:
+  /// **'Not specified'**
+  String get noPlatform;
+
+  /// No description provided for @noRate.
+  ///
+  /// In en, this message translates to:
+  /// **'no rate'**
+  String get noRate;
+
+  /// No description provided for @old.
+  ///
+  /// In en, this message translates to:
+  /// **'old'**
+  String get old;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'optional'**
+  String get optional;
+
+  /// No description provided for @orCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get orCustom;
+
+  /// No description provided for @partlyUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'partly unknown'**
+  String get partlyUnknown;
+
+  /// No description provided for @pickAsset.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick an asset'**
+  String get pickAsset;
+
+  /// No description provided for @pickFromList.
+  ///
+  /// In en, this message translates to:
+  /// **'Start from a common one'**
+  String get pickFromList;
+
+  /// No description provided for @pkApp.
+  ///
+  /// In en, this message translates to:
+  /// **'App'**
+  String get pkApp;
+
+  /// No description provided for @pkBank.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank'**
+  String get pkBank;
+
+  /// No description provided for @pkBroker.
+  ///
+  /// In en, this message translates to:
+  /// **'Broker'**
+  String get pkBroker;
+
+  /// No description provided for @pkExchange.
+  ///
+  /// In en, this message translates to:
+  /// **'Exchange'**
+  String get pkExchange;
+
+  /// No description provided for @pkHome.
+  ///
+  /// In en, this message translates to:
+  /// **'At home / safe'**
+  String get pkHome;
+
+  /// No description provided for @pkOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get pkOther;
+
+  /// No description provided for @pkPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'Person'**
+  String get pkPerson;
+
+  /// No description provided for @pkWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get pkWallet;
+
+  /// No description provided for @platform.
+  ///
+  /// In en, this message translates to:
+  /// **'Where it\'s kept'**
+  String get platform;
+
+  /// No description provided for @priceCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'Usual price currency'**
+  String get priceCurrency;
+
+  /// No description provided for @priceOld.
+  ///
+  /// In en, this message translates to:
+  /// **'price from {date}'**
+  String priceOld(Object date);
+
+  /// No description provided for @pricesManualHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Kaka never guesses prices. Enter the price you see; old prices are marked.'**
+  String get pricesManualHint;
+
+  /// No description provided for @pricesNeedUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} prices missing or old'**
+  String pricesNeedUpdate(Object n);
+
+  /// No description provided for @realizedGain.
+  ///
+  /// In en, this message translates to:
+  /// **'Realized gain'**
+  String get realizedGain;
+
+  /// No description provided for @splitNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get splitNew;
+
+  /// No description provided for @splitOld.
+  ///
+  /// In en, this message translates to:
+  /// **'Old'**
+  String get splitOld;
+
+  /// No description provided for @swapAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Exchange one asset for another'**
+  String get swapAction;
+
+  /// No description provided for @swapGet.
+  ///
+  /// In en, this message translates to:
+  /// **'I received'**
+  String get swapGet;
+
+  /// No description provided for @swapGive.
+  ///
+  /// In en, this message translates to:
+  /// **'I gave'**
+  String get swapGive;
+
+  /// No description provided for @swapHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Not an expense: the given asset counts as sold at the agreed value, and that value becomes the new asset\'s cost.'**
+  String get swapHint;
+
+  /// No description provided for @swapValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Agreed value'**
+  String get swapValue;
+
+  /// No description provided for @swapValueHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What the deal was worth in money'**
+  String get swapValueHint;
+
+  /// No description provided for @symbolOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Symbol / ticker (optional)'**
+  String get symbolOptional;
+
+  /// No description provided for @totalPaidInclFees.
+  ///
+  /// In en, this message translates to:
+  /// **'Total paid (fees included)'**
+  String get totalPaidInclFees;
+
+  /// No description provided for @totalReceivedNet.
+  ///
+  /// In en, this message translates to:
+  /// **'Total received (after fees)'**
+  String get totalReceivedNet;
+
+  /// No description provided for @unitEn.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit (English)'**
+  String get unitEn;
+
+  /// No description provided for @unitFa.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit (Persian)'**
+  String get unitFa;
+
+  /// No description provided for @unrealizedGain.
+  ///
+  /// In en, this message translates to:
+  /// **'Unrealized gain'**
+  String get unrealizedGain;
+
+  /// No description provided for @upToDecimals.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to {n} decimals'**
+  String upToDecimals(Object n);
+
+  /// No description provided for @qtyDecimals.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity decimals: {n}'**
+  String qtyDecimals(Object n);
+
+  /// No description provided for @tooOldTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This ledger is from a test version'**
+  String get tooOldTitle;
+
+  /// No description provided for @includeIlliquid.
+  ///
+  /// In en, this message translates to:
+  /// **'Count property and vehicles in net worth'**
+  String get includeIlliquid;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

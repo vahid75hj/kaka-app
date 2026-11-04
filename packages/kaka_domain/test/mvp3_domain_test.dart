@@ -63,34 +63,6 @@ void main() {
     expect(t.kind, TransactionKind.exchange);
   });
 
-  group('assets', () {
-    test('quantities in thousandths and holdings value', () {
-      expect(AssetMath.parseQuantity('۲٫۵'), 2500);
-      expect(AssetMath.formatQuantity(2500), '2.5');
-      final gold = AssetType.builtIn.first;
-      final h = AssetMath.holdings(
-        [gold],
-        [
-          AssetMovement(id: 'a', assetTypeId: gold.id, quantityMilli: 3000, date: DateTime(2026)),
-          AssetMovement(id: 'b', assetTypeId: gold.id, quantityMilli: -500, date: DateTime(2026, 2)),
-          AssetMovement(
-            id: 'c',
-            assetTypeId: gold.id,
-            quantityMilli: 9000,
-            date: DateTime(2026, 3),
-            voidedAt: DateTime(2026, 3),
-          ),
-        ],
-        [
-          AssetPrice(id: 'p1', assetTypeId: gold.id, date: DateTime(2026), price: const Money(1000, Currency.irr)),
-          AssetPrice(id: 'p2', assetTypeId: gold.id, date: DateTime(2026, 5), price: const Money(2000, Currency.irr)),
-        ],
-      ).single;
-      expect(h.quantityMilli, 2500);
-      expect(h.value, const Money(5000, Currency.irr));
-    });
-  });
-
   test('net worth converts accounts and assets; unknown rates are listed apart', () {
     final fx = CurrencyConverter(Currency.irr, [
       ExchangeRate(
@@ -108,13 +80,7 @@ void main() {
         AccountBalance(_acc('e', AccountType.asset, Currency.eur), const Money(700, Currency.eur)),
         AccountBalance(_acc('food', AccountType.expense, Currency.irr), const Money(99, Currency.irr)),
       ],
-      [
-        AssetHolding(
-          AssetType.builtIn.first,
-          1000,
-          AssetPrice(id: 'p', assetTypeId: 'gold18', date: DateTime(2026), price: const Money(300, Currency.irr)),
-        ),
-      ],
+      [const Money(300, Currency.irr)],
       fx,
     );
     expect(nw.total, const Money(1350, Currency.irr));

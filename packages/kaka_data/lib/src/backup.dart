@@ -122,9 +122,11 @@ class LedgerSnapshot {
     'drafts',
     'sms_links',
     'fx_rates',
-    'asset_types',
-    'asset_movements',
-    'asset_prices',
+    'instruments',
+    'platforms',
+    'portfolio_events',
+    'price_quotes',
+    'valuation_snapshots',
     'custom_parsers',
     'budgets',
     'recurring_rules',
@@ -144,6 +146,7 @@ class LedgerSnapshot {
     if (snapshot['format'] != 'kaka.snapshot') throw const BackupException('backup.corrupt');
     final schema = snapshot['schema'] as int? ?? 0;
     if (schema > _db.schemaVersion) throw const BackupException('backup.unsupported');
+    if (schema < 6) throw const BackupException('backup.too_old');
     final tables = (snapshot['tables'] as Map).cast<String, Object?>();
     final columns = {for (final t in _db.allTables) t.actualTableName: t.$columns.map((c) => c.name).toSet()};
     await _db.transaction(() async {

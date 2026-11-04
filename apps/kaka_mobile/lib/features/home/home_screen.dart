@@ -59,7 +59,7 @@ class HomeScreen extends ConsumerWidget {
     final f = ref.watch(formatProvider);
     final summary = ref.watch(homeSummaryProvider);
     final recent = ref
-        .watch(transactionViewsProvider((opening: l.opening, asset: l.goldAndCoins, all: false)))
+        .watch(transactionViewsProvider((opening: l.opening, asset: l.assets, all: false)))
         .take(5)
         .toList();
     final now = DateTime.now();

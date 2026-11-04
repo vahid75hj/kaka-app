@@ -76,6 +76,10 @@ Phases: **MVP-1** = first usable APK · **MVP-2** = v0.1 feature-complete · **L
 
 - [x] v0.5.1: xlsx import, repeat from transaction, coming-up card, budget limits in report, list_recurring tool, encrypted pending SMS, full-history fixes
 
+- [x] v0.6.0 portfolio core (docs/portfolio-design.md phase 1): generic instruments (any class/unit/decimals/currency, starter catalog), append-only portfolio events, weighted-average + FIFO cost engine with unknown cost, holdings accounts at cost + realized gain in the ledger, back-dated/void re-posting, swap, gifts, income, split, adjust, manual prices with staleness, schema v6 (pre-v6 ledgers refused with a fresh-start screen, no migration)
+- [ ] v0.7.0 portfolio phase 2: platforms (wallets/exchanges/brokers), transfers, allocation chart, valuation snapshots + net-worth chart, composite prices
+- [ ] Portfolio later: price-source catalog (online, opt-in), AI/MCP portfolio tools, Sheets tabs, broker/exchange CSV import, XIRR
+
 ## Later (v0.2+)
 - [~] On-device models: catalog (3 open Qwen models, real sha256/sizes), resumable mirror-aware sha256-verified downloader, device fit check — runtime adapter (`flutter_edge_ai`, ex-flutter_gemma) pending device testing, see `docs/on-device-models.md`
 - [ ] Fill `model_catalog/catalog.v1.json` after on-device benchmark

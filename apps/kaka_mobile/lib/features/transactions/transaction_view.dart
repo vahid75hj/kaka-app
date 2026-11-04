@@ -16,7 +16,7 @@ class TransactionView {
     LedgerTransaction t,
     Map<String, Account> accounts, {
     required String openingLabel,
-    String assetLabel = 'Gold & coins',
+    String assetLabel = 'Assets',
   }) {
     Account? acc(Posting p) => accounts[p.accountId];
     final debit = t.postings.firstWhere((p) => p.amount.isPositive);
@@ -51,16 +51,17 @@ class TransactionView {
         final route = '${acc(out)?.name ?? '?'} → ${acc(into)?.name ?? '?'}';
         return TransactionView(txn: t, title: withNote(route), subtitle: route, amount: into.amount);
       }(),
-      // Buy: cash → Assets:<cur>; sell: Assets:<cur> → cash. Signed like income/expense.
+      // Portfolio event: the user's cash account (if any) signs it like income/expense.
       TransactionKind.asset => () {
-        final buy = acc(debit)?.isSystem ?? false;
-        final cash = buy ? credit : debit;
-        final name = acc(cash)?.name ?? '?';
+        final cash = t.postings.where((p) => !(acc(p)?.isSystem ?? true)).firstOrNull;
+        final holding = t.postings.where((p) => acc(p)?.name.startsWith('Holdings:') ?? false).firstOrNull;
+        final shown = cash ?? holding ?? debit;
+        final name = cash == null ? assetLabel : acc(cash)?.name ?? '?';
         return TransactionView(
           txn: t,
           title: withNote(assetLabel),
           subtitle: t.note.isEmpty ? name : '$assetLabel · $name',
-          amount: cash.amount,
+          amount: cash != null ? cash.amount : -shown.amount,
         );
       }(),
       TransactionKind.opening => TransactionView(

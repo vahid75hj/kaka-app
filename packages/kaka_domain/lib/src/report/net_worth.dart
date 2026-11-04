@@ -1,4 +1,3 @@
-import '../assets/assets.dart';
 import '../fx/exchange_rate.dart';
 import '../ledger/account.dart';
 import '../ledger/ledger_service.dart';
@@ -18,7 +17,8 @@ class NetWorth {
   /// Date of the oldest rate used, for a "rates from …" label.
   final DateTime? oldestRate;
 
-  static NetWorth of(List<AccountBalance> balances, List<AssetHolding> assets, CurrencyConverter fx) {
+  /// [assets] are holding values (market value, or cost without a price).
+  static NetWorth of(List<AccountBalance> balances, List<Money> assets, CurrencyConverter fx) {
     var total = 0;
     final missing = <Currency, int>{};
     DateTime? oldest;
@@ -35,12 +35,13 @@ class NetWorth {
       }
     }
 
-    for (final b in balances.where((b) => b.account.type.isBalanceSheet && !b.account.archived)) {
+    for (final b in balances.where(
+      (b) => b.account.type.isBalanceSheet && !b.account.archived && !b.account.isSystem,
+    )) {
       add(b.balance);
     }
-    for (final h in assets) {
-      final v = h.value;
-      if (v != null) add(v);
+    for (final v in assets) {
+      add(v);
     }
     return NetWorth(
       total: Money(total, fx.base),

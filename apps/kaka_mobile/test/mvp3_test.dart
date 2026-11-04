@@ -133,33 +133,36 @@ void main() {
       currency: Currency.irr,
       openingBalance: const Money(10000000, Currency.irr),
     );
-    await container.read(assetRepositoryProvider).ensureBuiltIns();
-    final m = await container
-        .read(assetTradingProvider)
-        .trade(
-          assetTypeId: 'gold18',
-          quantityMilli: 2000,
-          buy: true,
-          total: const Money(8000000, Currency.irr),
-          cash: wallet,
-        );
-    final assets = container.read(assetRepositoryProvider);
-    await assets.upsertPrice(
-      AssetPrice(id: 'p', assetTypeId: 'gold18', date: DateTime(2026), price: const Money(4500000, Currency.irr)),
+    final svc = container.read(portfolioServiceProvider);
+    final gold = InstrumentCatalog.entries.firstWhere((e) => e.id == 'gold_18k_g').toInstrument('g18');
+    await svc.saveInstrument(gold);
+    final m = await svc.record(
+      instrumentId: 'g18',
+      kind: EventKind.buy,
+      currency: Currency.irr,
+      qty: 2000,
+      gross: 8000000,
+      cash: wallet,
     );
-    final holdings = AssetMath.holdings(
-      await assets.watchTypes().first,
-      await assets.watchMovements().first,
-      await assets.watchPrices().first,
+    await svc.setPrice('g18', const Money(4500000, Currency.irr), DateTime(2026));
+    final repo = container.read(portfolioRepositoryProvider);
+    final views = PortfolioValuation.views(
+      CostBasis.compute(await repo.instruments(), await repo.events()),
+      await repo.watchPrices().first,
     );
     final balances = await ledger.watchBalances().first;
     expect(balances.firstWhere((b) => b.account.id == wallet.id).balance.minor, 2000000);
-    expect(NetWorth.of(balances, holdings, CurrencyConverter(Currency.irr, const [])).total.minor, 2000000 + 9000000);
+    expect(
+      NetWorth.of(balances, [
+        for (final v in views) v.bestValue,
+      ], CurrencyConverter(Currency.irr, const [])).total.minor,
+      2000000 + 9000000,
+    );
 
-    await container.read(assetTradingProvider).voidMovement(m);
+    await svc.voidEvent(m);
     final after = await ledger.watchBalances().first;
     expect(after.firstWhere((b) => b.account.id == wallet.id).balance.minor, 10000000);
-    expect((await assets.watchMovements().first).single.voidedAt, isNotNull);
+    expect((await repo.events()).single.voidedAt, isNotNull);
   });
 
   test('AI transfer becomes a real transfer draft (from → to), not an expense', () async {

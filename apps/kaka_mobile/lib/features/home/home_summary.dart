@@ -32,7 +32,9 @@ final homeSummaryProvider = Provider<HomeSummary>((ref) {
   final txns = ref.watch(transactionsProvider).value ?? const <LedgerTransaction>[];
   final monthStart = ref.watch(formatProvider).startOfMonth(DateTime.now());
 
-  final visible = balances.where((b) => b.account.type.isBalanceSheet && !b.account.archived).toList();
+  final visible = balances
+      .where((b) => b.account.type.isBalanceSheet && !b.account.archived && !b.account.isSystem)
+      .toList();
   final totals = <Currency, int>{};
   for (final b in visible) {
     totals.update(b.account.currency, (v) => v + b.balance.minor, ifAbsent: () => b.balance.minor);

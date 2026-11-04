@@ -17,9 +17,11 @@ part 'database.g.dart';
     Drafts,
     SmsLinks,
     FxRates,
-    AssetTypes,
-    AssetMovements,
-    AssetPrices,
+    Instruments,
+    Platforms,
+    PortfolioEvents,
+    PriceQuotes,
+    ValuationSnapshots,
     CustomParsers,
     Budgets,
     RecurringRules,
@@ -48,7 +50,7 @@ class KakaDatabase extends _$KakaDatabase {
   }
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -56,41 +58,18 @@ class KakaDatabase extends _$KakaDatabase {
       await m.createAll();
       await customStatement('CREATE INDEX postings_account ON postings(account_id)');
       await customStatement('CREATE INDEX transactions_occurred ON transactions(occurred_at DESC)');
+      await customStatement('CREATE INDEX portfolio_events_inst ON portfolio_events(instrument_id, at)');
     },
-    onUpgrade: (m, from, to) async {
-      if (from < 2) await m.createTable(drafts);
-      if (from == 2) {
-        await m.addColumn(drafts, drafts.accountId);
-        await m.addColumn(drafts, drafts.balanceMinor);
-        await m.addColumn(drafts, drafts.sender);
-        await m.addColumn(drafts, drafts.confidence);
-      }
-      if (from < 3) await m.createTable(smsLinks);
-      if (from < 4) {
-        for (final TableInfo<Table, dynamic> t in [fxRates, assetTypes, assetMovements, assetPrices, customParsers]) {
-          await m.createTable(t);
-        }
-      }
-      // v5 columns. Tables created by an earlier step already have them, so add only when missing.
-      if (from < 5) {
-        await _addIfMissing(m, assetMovements, assetMovements.transactionId);
-        await _addIfMissing(m, drafts, drafts.toAccountId);
-        await _addIfMissing(m, drafts, drafts.category);
-        await _addIfMissing(m, accounts, accounts.icon);
-        for (final TableInfo<Table, dynamic> t in [budgets, recurringRules]) {
-          final has = await customSelect(
-            "SELECT 1 FROM sqlite_master WHERE type='table' AND name=?",
-            variables: [Variable(t.actualTableName)],
-          ).get();
-          if (has.isEmpty) await m.createTable(t);
-        }
-      }
-    },
+    // Kaka was never released with real data before v6, so old ledgers are
+    // not migrated: the app offers to move them aside and start fresh.
+    onUpgrade: (m, from, to) async => throw LedgerTooOldException(from),
   );
+}
 
-  Future<void> _addIfMissing(Migrator m, TableInfo<Table, dynamic> table, GeneratedColumn<Object> column) async {
-    final cols = await customSelect('PRAGMA table_info("${table.actualTableName}")').get();
-    if (cols.any((r) => r.read<String>('name') == column.name)) return;
-    await m.addColumn(table, column);
-  }
+/// The ledger file predates schema 6 (pre-portfolio test builds).
+class LedgerTooOldException implements Exception {
+  const LedgerTooOldException(this.version);
+  final int version;
+  @override
+  String toString() => 'LedgerTooOldException: ledger schema v$version is older than v6 and is not migrated';
 }

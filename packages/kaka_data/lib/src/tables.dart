@@ -109,43 +109,86 @@ class FxRates extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-@DataClassName('AssetTypeRow')
-class AssetTypes extends Table {
+@DataClassName('InstrumentRow')
+class Instruments extends Table {
   TextColumn get id => text()();
+  TextColumn get assetClass => text()();
   TextColumn get nameFa => text()();
   TextColumn get nameEn => text()();
-  TextColumn get unit => text()();
+  TextColumn get unitFa => text()();
+  TextColumn get unitEn => text()();
+  IntColumn get qtyScale => integer()();
+  TextColumn get symbol => text().withDefault(const Constant(''))();
+  TextColumn get quoteCurrency => text().nullable()();
+  TextColumn get costMethod => text().withDefault(const Constant('average'))();
+  TextColumn get catalogId => text().nullable()();
   BoolColumn get archived => boolean().withDefault(const Constant(false))();
 
   @override
   Set<Column> get primaryKey => {id};
 }
 
-@DataClassName('AssetMovementRow')
-class AssetMovements extends Table {
+@DataClassName('PlatformRow')
+class Platforms extends Table {
   TextColumn get id => text()();
-  TextColumn get assetTypeId => text().references(AssetTypes, #id)();
-  IntColumn get quantityMilli => integer()();
-  DateTimeColumn get movedAt => dateTime()();
-  IntColumn get totalMinor => integer().nullable()();
-  TextColumn get totalCurrency => text().nullable()();
-  TextColumn get note => text().withDefault(const Constant(''))();
-  DateTimeColumn get voidedAt => dateTime().nullable()();
-
-  /// v5: the ledger transaction that moved cash for this buy/sell.
-  TextColumn get transactionId => text().nullable()();
+  TextColumn get name => text()();
+  TextColumn get kind => text()();
+  BoolColumn get archived => boolean().withDefault(const Constant(false))();
 
   @override
   Set<Column> get primaryKey => {id};
 }
 
-@DataClassName('AssetPriceRow')
-class AssetPrices extends Table {
+/// Append-only portfolio events (buy, sell, opening, income, split, transfer…).
+@DataClassName('PortfolioEventRow')
+class PortfolioEvents extends Table {
   TextColumn get id => text()();
-  TextColumn get assetTypeId => text().references(AssetTypes, #id)();
-  DateTimeColumn get priceDate => dateTime()();
+  TextColumn get instrumentId => text().references(Instruments, #id)();
+  TextColumn get platformId => text().nullable()();
+  TextColumn get kind => text()();
+  DateTimeColumn get at => dateTime()();
+  TextColumn get currency => text()();
+  IntColumn get qty => integer().withDefault(const Constant(0))();
+  IntColumn get gross => integer().nullable()();
+  IntColumn get fee => integer().withDefault(const Constant(0))();
+  TextColumn get costMode => text().withDefault(const Constant('paid'))();
+  IntColumn get cost => integer().nullable()();
+  IntColumn get splitNum => integer().nullable()();
+  IntColumn get splitDen => integer().nullable()();
+  TextColumn get groupId => text().nullable()();
+  TextColumn get cashAccountId => text().nullable()();
+  TextColumn get txnId => text().nullable()();
+  TextColumn get txnSig => text().nullable()();
+  TextColumn get source => text().withDefault(const Constant('manual'))();
+  TextColumn get note => text().withDefault(const Constant(''))();
+  DateTimeColumn get voidedAt => dateTime().nullable()();
+  DateTimeColumn get createdAt => dateTime().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+@DataClassName('PriceQuoteRow')
+class PriceQuotes extends Table {
+  TextColumn get id => text()();
+  TextColumn get instrumentId => text().references(Instruments, #id)();
   IntColumn get priceMinor => integer()();
   TextColumn get currency => text()();
+  DateTimeColumn get asOf => dateTime()();
+  TextColumn get source => text().withDefault(const Constant('manual'))();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+@DataClassName('ValuationSnapshotRow')
+class ValuationSnapshots extends Table {
+  TextColumn get id => text()();
+  DateTimeColumn get at => dateTime()();
+  TextColumn get base => text()();
+  IntColumn get netWorth => integer()();
+  IntColumn get assetsValue => integer()();
+  IntColumn get unrealized => integer()();
 
   @override
   Set<Column> get primaryKey => {id};

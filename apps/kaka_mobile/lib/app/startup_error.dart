@@ -24,6 +24,8 @@ class StartupErrorApp extends StatefulWidget {
 class _StartupErrorAppState extends State<StartupErrorApp> {
   bool _busy = false;
 
+  bool get _tooOld => '${widget.error}'.contains('LedgerTooOldException');
+
   String get _report => 'Kaka startup error\n${widget.error}\n\n${widget.stack}';
 
   Future<void> _confirmReset(BuildContext context) async {
@@ -67,10 +69,20 @@ class _StartupErrorAppState extends State<StartupErrorApp> {
                 ),
                 const Text("Kaka couldn't start", style: TextStyle(fontSize: 16)),
                 const SizedBox(height: 8),
-                const Text(
-                  'متن خطا را کپی کن و برای سازنده بفرست. / Copy the error and send it to the developer.',
-                  textDirection: TextDirection.rtl,
-                ),
+                if (_tooOld)
+                  const Text(
+                    'این دفتر از یک نسخه‌ی آزمایشی قدیمی‌تر (پیش از ۰.۶) است و منتقل نمی‌شود. '
+                    '«شروع از نو» را بزن: دفتر قدیمی پاک نمی‌شود، فقط کنار گذاشته می‌شود.\n'
+                    'This ledger is from an older test version (before 0.6) and is not migrated. '
+                    'Tap "Start fresh": the old ledger is moved aside, not deleted.',
+                    textDirection: TextDirection.rtl,
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  )
+                else
+                  const Text(
+                    'متن خطا را کپی کن و برای سازنده بفرست. / Copy the error and send it to the developer.',
+                    textDirection: TextDirection.rtl,
+                  ),
                 const SizedBox(height: 12),
                 Expanded(
                   child: Container(

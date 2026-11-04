@@ -2,9 +2,9 @@ import 'package:meta/meta.dart';
 
 import 'posting.dart';
 
-/// `asset`: cash paid for (or received from) gold/coins; the other side is a
-/// system `Assets:<cur>` equity account so net worth counts the holding at its
-/// market value instead of its cost.
+/// `asset`: posted by a portfolio event (buy, sell, income…) against the
+/// system `Holdings:<instrument>:<cur>` account, which carries cost. Net worth
+/// skips it and counts holdings at market value instead.
 enum TransactionKind { opening, income, expense, transfer, exchange, asset }
 
 /// A balanced set of postings written atomically. Never edited in place:

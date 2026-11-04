@@ -8,6 +8,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../app/providers.dart';
 import '../../core/l10n_x.dart';
+import '../../l10n/gen/app_localizations.dart';
 import '../../core/widgets.dart';
 import '../../theme/kaka_colors.dart';
 
@@ -60,7 +61,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
                   Row(
                     children: [
                       Expanded(
-                        child: Text(i.name, style: const TextStyle(fontWeight: FontWeight.w600)),
+                        child: Text(systemCategoryName(i.name, l), style: const TextStyle(fontWeight: FontWeight.w600)),
                       ),
                       Flexible(
                         child: FittedBox(
@@ -171,4 +172,11 @@ class _Stat extends StatelessWidget {
       FittedBox(child: AmountText(value, color: color)),
     ],
   );
+}
+
+/// Kaka-made categories (portfolio gains/income) carry English ids; show them localized.
+String systemCategoryName(String name, AppLocalizations l) {
+  if (name.startsWith('Realized gain ')) return l.realizedGain;
+  if (name.startsWith('Investment income ')) return l.investmentIncome;
+  return name;
 }

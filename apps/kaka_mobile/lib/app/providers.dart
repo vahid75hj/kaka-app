@@ -106,32 +106,59 @@ final converterProvider = Provider<CurrencyConverter>(
   ),
 );
 
-final assetRepositoryProvider = Provider<DriftAssetRepository>((ref) {
-  final repo = DriftAssetRepository(ref.watch(databaseProvider));
-  repo.ensureBuiltIns().ignore();
-  return repo;
+final portfolioRepositoryProvider = Provider<PortfolioRepository>(
+  (ref) => DriftPortfolioRepository(ref.watch(databaseProvider)),
+);
+final portfolioServiceProvider = Provider<PortfolioService>(
+  (ref) => PortfolioService(
+    ref.watch(portfolioRepositoryProvider),
+    ref.watch(ledgerProvider),
+    ref.watch(accountRepositoryProvider),
+    label: (i) => i.name(ref.read(settingsProvider).isPersian),
+  ),
+);
+final instrumentsProvider = StreamProvider<List<Instrument>>(
+  (ref) => ref.watch(portfolioRepositoryProvider).watchInstruments(),
+);
+final platformsProvider = StreamProvider<List<AssetPlatform>>(
+  (ref) => ref.watch(portfolioRepositoryProvider).watchPlatforms(),
+);
+final portfolioEventsProvider = StreamProvider<List<PortfolioEvent>>(
+  (ref) => ref.watch(portfolioRepositoryProvider).watchEvents(),
+);
+final priceQuotesProvider = StreamProvider<List<PriceQuote>>(
+  (ref) => ref.watch(portfolioRepositoryProvider).watchPrices(),
+);
+final valuationSnapshotsProvider = StreamProvider<List<ValuationSnapshot>>(
+  (ref) => ref.watch(portfolioRepositoryProvider).watchSnapshots(),
+);
+final costBasisProvider = Provider<CostBasisResult>(
+  (ref) => CostBasis.compute(
+    ref.watch(instrumentsProvider).value ?? const [],
+    ref.watch(portfolioEventsProvider).value ?? const [],
+  ),
+);
+
+/// Every holding with quantity, its latest price applied.
+final holdingViewsProvider = Provider<List<HoldingView>>(
+  (ref) => PortfolioValuation.views(ref.watch(costBasisProvider), ref.watch(priceQuotesProvider).value ?? const []),
+);
+
+/// Holdings counted in net worth (real estate / vehicles can be left out in settings).
+final netWorthHoldingsProvider = Provider<List<HoldingView>>((ref) {
+  final excludeIlliquid = ref.watch(settingsProvider.select((s) => s.excludeIlliquidFromNetWorth));
+  return [
+    for (final v in ref.watch(holdingViewsProvider))
+      if (!excludeIlliquid ||
+          (v.instrument.assetClass != AssetClass.realEstate && v.instrument.assetClass != AssetClass.vehicle))
+        v,
+  ];
 });
-final assetTradingProvider = Provider<AssetTrading>(
-  (ref) => AssetTrading(ref.watch(assetRepositoryProvider), ref.watch(ledgerProvider)),
-);
-final assetTypesProvider = StreamProvider<List<AssetType>>((ref) => ref.watch(assetRepositoryProvider).watchTypes());
-final assetMovementsProvider = StreamProvider<List<AssetMovement>>(
-  (ref) => ref.watch(assetRepositoryProvider).watchMovements(),
-);
-final assetPricesProvider = StreamProvider<List<AssetPrice>>((ref) => ref.watch(assetRepositoryProvider).watchPrices());
-final holdingsProvider = Provider<List<AssetHolding>>(
-  (ref) => AssetMath.holdings(
-    ref.watch(assetTypesProvider).value ?? const [],
-    ref.watch(assetMovementsProvider).value ?? const [],
-    ref.watch(assetPricesProvider).value ?? const [],
-  ),
-);
+
 final netWorthProvider = Provider<NetWorth>(
-  (ref) => NetWorth.of(
-    ref.watch(balancesProvider).value ?? const [],
-    ref.watch(holdingsProvider),
-    ref.watch(converterProvider),
-  ),
+  (ref) => NetWorth.of(ref.watch(balancesProvider).value ?? const [], [
+    for (final v in ref.watch(netWorthHoldingsProvider)) v.bestValue,
+  ], ref.watch(converterProvider)),
 );
 
 final budgetRepositoryProvider = Provider<DriftBudgetRepository>(

@@ -91,6 +91,13 @@ class SettingsScreen extends ConsumerWidget {
             trailing: const Icon(Icons.chevron_right_rounded),
             onTap: () => context.push(Routes.assets),
           ),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            secondary: const Icon(Icons.home_work_outlined),
+            title: Text(l.includeIlliquid),
+            value: !s.excludeIlliquidFromNetWorth,
+            onChanged: (on) => update((s) => s.copyWith(excludeIlliquidFromNetWorth: !on)),
+          ),
           SectionHeader(l.settingsTools),
           ListTile(
             contentPadding: EdgeInsets.zero,
