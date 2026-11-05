@@ -2725,6 +2725,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Value over time'**
   String get valueHistory;
+
+  /// No description provided for @priceSources.
+  ///
+  /// In en, this message translates to:
+  /// **'Price sources'**
+  String get priceSources;
+
+  /// No description provided for @priceSourcesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'All online sources are off until you enable them. Kaka never invents prices; manual entry always works. Only the symbol is sent — never your holdings.'**
+  String get priceSourcesHint;
+
+  /// No description provided for @priceSourcesEnabledCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} enabled'**
+  String priceSourcesEnabledCount(Object n);
+
+  /// No description provided for @priceRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh prices'**
+  String get priceRefresh;
+
+  /// No description provided for @priceRefreshNoneEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable a price source first'**
+  String get priceRefreshNoneEnabled;
+
+  /// No description provided for @priceRefreshResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated {ok}, failed {fail}'**
+  String priceRefreshResult(Object ok, Object fail);
+
+  /// No description provided for @priceExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get priceExport;
+
+  /// No description provided for @priceImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get priceImport;
+
+  /// No description provided for @priceImportOk.
+  ///
+  /// In en, this message translates to:
+  /// **'Source imported'**
+  String get priceImportOk;
+
+  /// No description provided for @priceImportFail.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not import'**
+  String get priceImportFail;
+
+  /// No description provided for @priceUserSource.
+  ///
+  /// In en, this message translates to:
+  /// **'imported'**
+  String get priceUserSource;
+
+  /// No description provided for @priceBind.
+  ///
+  /// In en, this message translates to:
+  /// **'Bind assets'**
+  String get priceBind;
+
+  /// No description provided for @priceBindHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell this source which symbol to use for each of your assets. Suggestions appear when the catalog knows a mapping.'**
+  String get priceBindHint;
+
+  /// No description provided for @priceSourceSymbol.
+  ///
+  /// In en, this message translates to:
+  /// **'Symbol on this source'**
+  String get priceSourceSymbol;
+
+  /// No description provided for @priceSuggested.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested'**
+  String get priceSuggested;
+
+  /// No description provided for @priceParserHelpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How to write a price parser'**
+  String get priceParserHelpTitle;
+
+  /// No description provided for @priceUsePage.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this page'**
+  String get priceUsePage;
+
+  /// No description provided for @pricePreviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Parsed price'**
+  String get pricePreviewTitle;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

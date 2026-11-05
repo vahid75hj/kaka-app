@@ -1,0 +1,22 @@
+name: kaka_prices
+description: Pluggable price-source catalog for Kaka — HTTP JSON/CSV/HTML parsers as data, never code.
+publish_to: none
+version: 0.1.0
+resolution: workspace
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  http: ^1.2.0
+  kaka_domain:
+    path: ../kaka_domain
+  meta: ^1.15.0
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0
+
+flutter:
+  assets:
+    - assets/price_sources.v1.json

@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "catalog_version": "2026.11.05-1",
+  "note": "All sources are OFF by default. Enable only what you choose. Parsers are data (URL + extract), never code. Verify ToS for your region before enabling. Nobitex TLS could not be verified from the CI host; shipped as an Iran-reachable community template.",
+  "sources": [
+    {
+      "id": "coingecko_simple",
+      "kind": "http_json",
+      "name": { "en": "CoinGecko (simple price)", "fa": "کوین‌گکو (قیمت ساده)" },
+      "classes": ["crypto"],
+      "url": "https://api.coingecko.com/api/v3/simple/price?ids={sym}&vs_currencies=usd",
+      "extract": "$.{sym}.usd",
+      "quote_currency": "USD",
+      "region_note": "Global; free, no key for low volume. Verified 2026-11-05.",
+      "rate_limit_s": 30,
+      "enabled_by_default": false,
+      "symbol_hints": {
+        "BTC": "bitcoin",
+        "ETH": "ethereum",
+        "USDT": "tether",
+        "USDC": "usd-coin",
+        "DAI": "dai",
+        "btc": "bitcoin",
+        "eth": "ethereum",
+        "usdt": "tether"
+      },
+      "notes": "Use CoinGecko coin id as the symbol (bitcoin, ethereum, …)."
+    },
+    {
+      "id": "kraken_ticker",
+      "kind": "http_json",
+      "name": { "en": "Kraken public ticker", "fa": "تیکر عمومی کراکن" },
+      "classes": ["crypto"],
+      "url": "https://api.kraken.com/0/public/Ticker?pair={sym}",
+      "extract": "$.result.{sym}.c[0]",
+      "quote_currency": "USD",
+      "region_note": "Global public ticker. Verified 2026-11-05 (XBTUSD → result.XXBTZUSD).",
+      "rate_limit_s": 10,
+      "enabled_by_default": false,
+      "symbol_hints": {
+        "BTC": "XBTUSD",
+        "ETH": "ETHUSD",
+        "USDT": "USDTZUSD"
+      },
+      "notes": "Kraken pair codes: XBTUSD becomes result key XXBTZUSD — set extract to match the result key, or bind symbol to the result key name. For BTC bind symbol XXBTZUSD and extract $.result.XXBTZUSD.c[0] via a custom copy if needed."
+    },
+    {
+      "id": "kraken_xbtusd",
+      "kind": "http_json",
+      "name": { "en": "Kraken BTC/USD", "fa": "کراکن بیت‌کوین/دلار" },
+      "classes": ["crypto"],
+      "url": "https://api.kraken.com/0/public/Ticker?pair=XBTUSD",
+      "extract": "$.result.XXBTZUSD.c[0]",
+      "quote_currency": "USD",
+      "region_note": "Global. Verified 2026-11-05.",
+      "rate_limit_s": 10,
+      "enabled_by_default": false,
+      "symbol_hints": { "BTC": "XBTUSD", "btc": "XBTUSD" },
+      "notes": "Fixed pair for Bitcoin. Bind BTC → any symbol (ignored in URL)."
+    },
+    {
+      "id": "nobitex_public",
+      "kind": "http_json",
+      "name": { "en": "Nobitex public stats", "fa": "نوبیتکس (آمار عمومی)" },
+      "classes": ["crypto"],
+      "url": "https://api.nobitex.ir/market/stats?srcCurrency={sym}&dstCurrency=rls",
+      "extract": "$.stats['{sym}-rls'].latest",
+      "quote_currency": "IRR",
+      "region_note": "Reachable from Iran. TLS failed from CI host (2026-11-05); community template — enable at your own choice.",
+      "rate_limit_s": 60,
+      "enabled_by_default": false,
+      "symbol_hints": {
+        "BTC": "btc",
+        "ETH": "eth",
+        "USDT": "usdt",
+        "btc": "btc",
+        "eth": "eth",
+        "usdt": "usdt"
+      },
+      "notes": "Prices in rial (RLS). Optional; not called until you enable it."
+    },
+    {
+      "id": "frankfurter_fx",
+      "kind": "http_json",
+      "name": { "en": "Frankfurter / ECB FX", "fa": "فرانکفورتر / نرخ ارز ECB" },
+      "classes": ["fx", "cash"],
+      "url": "https://api.frankfurter.app/latest?from=USD&to={sym}",
+      "extract": "$.rates.{sym}",
+      "as_of_extract": "$.date",
+      "quote_currency": "USD",
+      "region_note": "ECB reference rates via frankfurter.app (no key). Verified 2026-11-05. as_of is the ECB date (may be yesterday).",
+      "rate_limit_s": 60,
+      "enabled_by_default": false,
+      "symbol_hints": { "EUR": "EUR", "GBP": "GBP", "AED": "AED" },
+      "notes": "Returns how many {sym} per 1 USD. Store as a FX helper instrument if you need it; as_of comes from the feed date."
+    },
+    {
+      "id": "coinbase_xau",
+      "kind": "http_json",
+      "name": { "en": "Coinbase XAU/USD spot", "fa": "کوین‌بیس اونس طلا/دلار" },
+      "classes": ["metal"],
+      "url": "https://api.coinbase.com/v2/prices/XAU-USD/spot",
+      "extract": "$.data.amount",
+      "quote_currency": "USD",
+      "region_note": "Global public spot. Verified 2026-11-05.",
+      "rate_limit_s": 30,
+      "enabled_by_default": false,
+      "symbol_hints": { "XAU": "XAU", "gold_oz": "XAU" },
+      "notes": "Troy ounce of gold in USD. Bind your gold_oz / XAU instrument."
+    },
+    {
+      "id": "tgju_html_metals",
+      "kind": "http_html",
+      "name": { "en": "tgju.org metals (HTML)", "fa": "tgju فلز و سکه (صفحه وب)" },
+      "classes": ["metal", "coin"],
+      "url": "https://www.tgju.org/",
+      "css": "li#l-{sym} span.info-price",
+      "quote_currency": "IRR",
+      "region_note": "Iran community HTML template; fragile if the site markup changes. Page fetchable 2026-11-05. Enable at your own choice. Refresh opens an in-app browser.",
+      "rate_limit_s": 120,
+      "enabled_by_default": false,
+      "symbol_hints": {
+        "gold_18k_g": "geram18",
+        "coin_emami": "sekee",
+        "coin_bahar": "sekeb",
+        "geram18": "geram18",
+        "sekee": "sekee"
+      },
+      "notes": "Symbol is the tgju row id (geram18, sekee, …). User must tap Refresh; Kaka never scrapes this in the background."
+    },
+    {
+      "id": "example_html_price_card",
+      "kind": "http_html",
+      "name": { "en": "Example HTML price card", "fa": "نمونه پارسر صفحه وب" },
+      "classes": ["other"],
+      "url": "https://example.invalid/price-card",
+      "css": "div.price-card span.value",
+      "regex": "data-price=\"(?<price>[0-9.,]+)\"",
+      "quote_currency": "USD",
+      "region_note": "Teaching template only — not a live feed. Use fixtures / your own page.",
+      "rate_limit_s": 60,
+      "enabled_by_default": false,
+      "notes": "Copy this source, change url/css/regex, export JSON, and share. See docs/price-parsers.md."
+    },
+    {
+      "id": "manual",
+      "kind": "manual",
+      "name": { "en": "Manual entry", "fa": "ثبت دستی" },
+      "classes": ["metal", "coin", "crypto", "stock", "fund", "bond", "realEstate", "vehicle", "collectible", "other"],
+      "enabled_by_default": true,
+      "notes": "Always available. Last fallback in every chain."
+    }
+  ]
+}

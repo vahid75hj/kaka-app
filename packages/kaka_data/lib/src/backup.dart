@@ -130,6 +130,8 @@ class LedgerSnapshot {
     'custom_parsers',
     'budgets',
     'recurring_rules',
+    'price_bindings',
+    'user_price_sources',
   ];
 
   Future<Map<String, Object?>> export({DateTime? now}) async => {

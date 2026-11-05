@@ -1418,4 +1418,64 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get valueHistory => 'Value over time';
+
+  @override
+  String get priceSources => 'Price sources';
+
+  @override
+  String get priceSourcesHint =>
+      'All online sources are off until you enable them. Kaka never invents prices; manual entry always works. Only the symbol is sent — never your holdings.';
+
+  @override
+  String priceSourcesEnabledCount(Object n) {
+    return '$n enabled';
+  }
+
+  @override
+  String get priceRefresh => 'Refresh prices';
+
+  @override
+  String get priceRefreshNoneEnabled => 'Enable a price source first';
+
+  @override
+  String priceRefreshResult(Object ok, Object fail) {
+    return 'Updated $ok, failed $fail';
+  }
+
+  @override
+  String get priceExport => 'Export';
+
+  @override
+  String get priceImport => 'Import';
+
+  @override
+  String get priceImportOk => 'Source imported';
+
+  @override
+  String get priceImportFail => 'Could not import';
+
+  @override
+  String get priceUserSource => 'imported';
+
+  @override
+  String get priceBind => 'Bind assets';
+
+  @override
+  String get priceBindHint =>
+      'Tell this source which symbol to use for each of your assets. Suggestions appear when the catalog knows a mapping.';
+
+  @override
+  String get priceSourceSymbol => 'Symbol on this source';
+
+  @override
+  String get priceSuggested => 'Suggested';
+
+  @override
+  String get priceParserHelpTitle => 'How to write a price parser';
+
+  @override
+  String get priceUsePage => 'Use this page';
+
+  @override
+  String get pricePreviewTitle => 'Parsed price';
 }

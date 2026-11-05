@@ -27,11 +27,14 @@ dependencies:
     path: ../../packages/kaka_domain
   kaka_sms:
     path: ../../packages/kaka_sms
+  kaka_prices:
+    path: ../../packages/kaka_prices
   kaka_tools:
     path: ../../packages/kaka_tools
   local_auth: ^3.0.2
   path_provider: ^2.1.6
   shamsi_date: ^1.1.1
+  webview_flutter: ^4.13.0
   share_plus: ^13.3.1
   xml: ^7.1.0
 

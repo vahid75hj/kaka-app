@@ -1,0 +1,13 @@
+{
+  "status": "ok",
+  "stats": {
+    "btc-rls": {
+      "isClosed": false,
+      "bestSell": "112000000000",
+      "bestBuy": "111900000000",
+      "latest": "111950000000",
+      "dayLow": "110000000000",
+      "dayHigh": "113000000000"
+    }
+  }
+}

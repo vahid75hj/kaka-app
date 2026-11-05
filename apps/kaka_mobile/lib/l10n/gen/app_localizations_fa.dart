@@ -1410,4 +1410,64 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get valueHistory => 'ارزش در طول زمان';
+
+  @override
+  String get priceSources => 'منابع قیمت';
+
+  @override
+  String get priceSourcesHint =>
+      'همهٔ منابع آنلاین خاموش‌اند تا خودت روشن‌شان کنی. کاکا قیمت نمی‌سازد؛ ثبت دستی همیشه کار می‌کند. فقط نماد فرستاده می‌شود، نه موجودی.';
+
+  @override
+  String priceSourcesEnabledCount(Object n) {
+    return '$n منبع روشن';
+  }
+
+  @override
+  String get priceRefresh => 'به‌روز کردن قیمت';
+
+  @override
+  String get priceRefreshNoneEnabled => 'اول یک منبع قیمت را روشن کن';
+
+  @override
+  String priceRefreshResult(Object ok, Object fail) {
+    return '$ok به‌روز شد، $fail ناموفق';
+  }
+
+  @override
+  String get priceExport => 'خروجی';
+
+  @override
+  String get priceImport => 'ورود';
+
+  @override
+  String get priceImportOk => 'منبع وارد شد';
+
+  @override
+  String get priceImportFail => 'ورود ناموفق بود';
+
+  @override
+  String get priceUserSource => 'واردشده';
+
+  @override
+  String get priceBind => 'وصل کردن دارایی';
+
+  @override
+  String get priceBindHint =>
+      'برای هر دارایی بگو این منبع چه نمادی را بخواند. اگر کاتالوگ نگاشت داشته باشد پیشنهاد می‌شود.';
+
+  @override
+  String get priceSourceSymbol => 'نماد در این منبع';
+
+  @override
+  String get priceSuggested => 'پیشنهادی';
+
+  @override
+  String get priceParserHelpTitle => 'چطور پارسر بسازیم';
+
+  @override
+  String get priceUsePage => 'از این صفحه استفاده کن';
+
+  @override
+  String get pricePreviewTitle => 'قیمت خوانده‌شده';
 }

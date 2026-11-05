@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:kaka_domain/kaka_domain.dart';
 import 'package:kaka_sms/kaka_sms.dart';
+import 'package:kaka_prices/kaka_prices.dart';
 
 import '../core/app_format.dart';
 
@@ -184,3 +185,57 @@ final recurringServiceProvider = Provider<RecurringService>(
 final allTransactionsProvider = StreamProvider.autoDispose<List<LedgerTransaction>>(
   (ref) => ref.watch(transactionRepositoryProvider).watchRecent(limit: 1 << 30),
 );
+
+// ---- price sources (v0.8 catalog) ----
+
+final priceBindingStoreProvider = Provider<DriftPriceBindingStore>(
+  (ref) => DriftPriceBindingStore(ref.watch(databaseProvider)),
+);
+final userPriceSourceStoreProvider = Provider<DriftUserPriceSourceStore>(
+  (ref) => DriftUserPriceSourceStore(ref.watch(databaseProvider)),
+);
+final priceSourceEnabledStoreProvider = Provider<DriftPriceSourceEnabledStore>(
+  (ref) => DriftPriceSourceEnabledStore(ref.watch(databaseProvider)),
+);
+
+final priceSourceEnabledProvider = StreamProvider<Set<String>>(
+  (ref) => ref.watch(priceSourceEnabledStoreProvider).watch(),
+);
+
+final priceBindingsProvider = StreamProvider<List<PriceBinding>>((ref) {
+  return ref.watch(priceBindingStoreProvider).watchAll().map(
+    (rows) => [
+      for (final r in rows)
+        PriceBinding(
+          id: r.id,
+          instrumentId: r.instrumentId,
+          sourceId: r.sourceId,
+          symbol: r.symbol,
+          priority: r.priority,
+          enabled: r.enabled,
+        ),
+    ],
+  );
+});
+
+final userPriceSourcesProvider = StreamProvider<List<PriceSource>>((ref) {
+  return ref.watch(userPriceSourceStoreProvider).watchAll().map((rows) {
+    final out = <PriceSource>[];
+    for (final (_, json) in rows) {
+      try {
+        final cat = PriceCatalog.parse(json);
+        out.addAll(cat.sources);
+      } on Object {
+        // skip corrupt rows
+      }
+    }
+    return out;
+  });
+});
+
+final priceCatalogProvider = FutureProvider<PriceCatalog>((ref) async {
+  final json = await rootBundle.loadString('packages/kaka_prices/assets/price_sources.v1.json');
+  final bundled = PriceCatalog.parseStrict(json, builtin: true);
+  final user = ref.watch(userPriceSourcesProvider).value ?? const <PriceSource>[];
+  return bundled.mergeUser(user);
+});

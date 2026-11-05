@@ -236,3 +236,28 @@ class RecurringRules extends Table {
   @override
   Set<Column> get primaryKey => {id};
 }
+
+/// v7: which online price source feeds an instrument (manual is always last resort).
+@DataClassName('PriceBindingRow')
+class PriceBindings extends Table {
+  TextColumn get id => text()();
+  TextColumn get instrumentId => text().references(Instruments, #id)();
+  TextColumn get sourceId => text()();
+  TextColumn get symbol => text()();
+  IntColumn get priority => integer().withDefault(const Constant(100))();
+  BoolColumn get enabled => boolean().withDefault(const Constant(true))();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+/// v7: user-imported / custom price sources (JSON), same idea as CustomParsers.
+@DataClassName('UserPriceSourceRow')
+class UserPriceSources extends Table {
+  TextColumn get id => text()();
+  TextColumn get json => text()();
+  DateTimeColumn get createdAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}

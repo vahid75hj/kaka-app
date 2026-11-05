@@ -9,6 +9,7 @@ workspace:
   - packages/kaka_data
   - packages/kaka_tools
   - packages/kaka_sms
+  - packages/kaka_prices
   - packages/kaka_ai
   - apps/kaka_mobile
   - tools/kaka_mcp

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:kaka_domain/kaka_domain.dart';
 
@@ -236,4 +237,80 @@ class DriftCustomParserStore {
       .into(_db.customParsers)
       .insertOnConflictUpdate(CustomParsersCompanion.insert(id: id, json: json, createdAt: DateTime.now()));
   Future<void> delete(String id) => (_db.delete(_db.customParsers)..where((r) => r.id.equals(id))).go();
+}
+
+/// v7: instrument → price source bindings.
+class DriftPriceBindingStore {
+  DriftPriceBindingStore(this._db);
+  final KakaDatabase _db;
+
+  Stream<List<PriceBindingRow>> watchAll() => _db.select(_db.priceBindings).watch();
+
+  Future<List<PriceBindingRow>> getAll() => _db.select(_db.priceBindings).get();
+
+  Future<void> upsert({
+    required String id,
+    required String instrumentId,
+    required String sourceId,
+    required String symbol,
+    int priority = 100,
+    bool enabled = true,
+  }) =>
+      _db.into(_db.priceBindings).insertOnConflictUpdate(
+        PriceBindingsCompanion.insert(
+          id: id,
+          instrumentId: instrumentId,
+          sourceId: sourceId,
+          symbol: symbol,
+          priority: Value(priority),
+          enabled: Value(enabled),
+        ),
+      );
+
+  Future<void> delete(String id) => (_db.delete(_db.priceBindings)..where((r) => r.id.equals(id))).go();
+}
+
+/// v7: imported / custom price source JSON documents.
+class DriftUserPriceSourceStore {
+  DriftUserPriceSourceStore(this._db);
+  final KakaDatabase _db;
+
+  Stream<List<(String id, String json)>> watchAll() =>
+      _db.select(_db.userPriceSources).watch().map((rows) => [for (final r in rows) (r.id, r.json)]);
+
+  Future<List<(String id, String json)>> getAll() async => [
+    for (final r in await _db.select(_db.userPriceSources).get()) (r.id, r.json),
+  ];
+
+  Future<void> save(String id, String json) => _db
+      .into(_db.userPriceSources)
+      .insertOnConflictUpdate(UserPriceSourcesCompanion.insert(id: id, json: json, createdAt: DateTime.now()));
+
+  Future<void> delete(String id) => (_db.delete(_db.userPriceSources)..where((r) => r.id.equals(id))).go();
+}
+
+/// Enabled built-in / user source ids (JSON string list in settings).
+class DriftPriceSourceEnabledStore {
+  DriftPriceSourceEnabledStore(this._db);
+  final KakaDatabase _db;
+  static const _key = 'price_sources_enabled';
+
+  Future<Set<String>> load() async {
+    final row = await (_db.select(_db.settings)..where((s) => s.key.equals(_key))).getSingleOrNull();
+    if (row == null) return {};
+    final decoded = jsonDecode(row.value);
+    if (decoded is! List) return {};
+    return {for (final e in decoded) '$e'};
+  }
+
+  Stream<Set<String>> watch() => (_db.select(_db.settings)..where((s) => s.key.equals(_key))).watch().map((rows) {
+    if (rows.isEmpty) return <String>{};
+    final decoded = jsonDecode(rows.first.value);
+    if (decoded is! List) return <String>{};
+    return {for (final e in decoded) '$e'};
+  });
+
+  Future<void> save(Set<String> ids) => _db
+      .into(_db.settings)
+      .insertOnConflictUpdate(SettingRow(key: _key, value: jsonEncode(ids.toList()..sort())));
 }

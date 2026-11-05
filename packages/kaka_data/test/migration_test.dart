@@ -59,4 +59,36 @@ void main() {
       throwsA(isA<BackupException>().having((b) => b.code, 'code', 'backup.too_old')),
     );
   });
+
+  test('v6 ledger upgrades to v7 and keeps prices', () async {
+    final dir = Directory.systemTemp.createTempSync('kaka_v6');
+    addTearDown(() => dir.deleteSync(recursive: true));
+    final file = File('${dir.path}/l.db');
+
+    var db = KakaDatabase.open(file, key: 'k');
+    await db.customSelect('SELECT 1').get();
+    final repo = DriftPortfolioRepository(db);
+    final i = InstrumentCatalog.entries.firstWhere((e) => e.id == 'btc').toInstrument('btc1');
+    await repo.upsertInstrument(i);
+    await repo.upsertPrice(
+      PriceQuote(id: 'q', instrumentId: 'btc1', price: const Money(7000000, Currency.usd), asOf: DateTime(2026)),
+    );
+    await db.close();
+
+    // Simulate a v6 file: drop v7 tables and set user_version=6.
+    db = KakaDatabase.open(file, key: 'k');
+    await db.customStatement('DROP TABLE IF EXISTS price_bindings');
+    await db.customStatement('DROP TABLE IF EXISTS user_price_sources');
+    await db.customStatement('PRAGMA user_version = 6');
+    await db.close();
+
+    db = KakaDatabase.open(file, key: 'k');
+    addTearDown(db.close);
+    expect(db.schemaVersion, 7);
+    await db.customSelect('SELECT 1').get();
+    final prices = await DriftPortfolioRepository(db).watchPrices().first;
+    expect(prices.single.price.minor, 7000000);
+    final tables = await db.customSelect("SELECT name FROM sqlite_master WHERE name='price_bindings'").get();
+    expect(tables, isNotEmpty);
+  });
 }

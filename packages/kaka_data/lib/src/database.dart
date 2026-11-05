@@ -25,6 +25,8 @@ part 'database.g.dart';
     CustomParsers,
     Budgets,
     RecurringRules,
+    PriceBindings,
+    UserPriceSources,
   ],
 )
 class KakaDatabase extends _$KakaDatabase {
@@ -50,7 +52,7 @@ class KakaDatabase extends _$KakaDatabase {
   }
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -59,10 +61,17 @@ class KakaDatabase extends _$KakaDatabase {
       await customStatement('CREATE INDEX postings_account ON postings(account_id)');
       await customStatement('CREATE INDEX transactions_occurred ON transactions(occurred_at DESC)');
       await customStatement('CREATE INDEX portfolio_events_inst ON portfolio_events(instrument_id, at)');
+      await customStatement('CREATE INDEX price_bindings_inst ON price_bindings(instrument_id)');
     },
-    // Kaka was never released with real data before v6, so old ledgers are
-    // not migrated: the app offers to move them aside and start fresh.
-    onUpgrade: (m, from, to) async => throw LedgerTooOldException(from),
+    onUpgrade: (m, from, to) async {
+      // Pre-portfolio test builds (schema < 6) are refused so the app can offer a fresh start.
+      if (from < 6) throw LedgerTooOldException(from);
+      if (from < 7) {
+        await m.createTable(priceBindings);
+        await m.createTable(userPriceSources);
+        await customStatement('CREATE INDEX IF NOT EXISTS price_bindings_inst ON price_bindings(instrument_id)');
+      }
+    },
   );
 }
 
