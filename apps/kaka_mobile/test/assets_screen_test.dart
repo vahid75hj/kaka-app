@@ -135,7 +135,7 @@ void main() {
         expect(find.byType(EventFormScreen), findsOneWidget);
         await tester.enterText(find.byType(TextField).first, '5');
         await settle();
-        expect(find.textContaining(lang == 'fa' ? 'موجودی' : 'You hold only'), findsWidgets);
+        expect(find.textContaining(lang == 'fa' ? 'موجودی' : 'You hold only', skipOffstage: false), findsWidgets);
 
         await tester.pumpWidget(const SizedBox());
         container.dispose();

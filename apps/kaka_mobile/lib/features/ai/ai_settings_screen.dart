@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
 import '../../core/l10n_x.dart';
+import '../../core/widgets.dart';
 import '../../theme/kaka_colors.dart';
 import 'ai_config.dart';
 
@@ -111,7 +112,7 @@ class _AiSettingsScreenState extends ConsumerState<AiSettingsScreen> {
             Text(l.aiPrivacy, style: TextStyle(color: c.textFaint, fontSize: 12, height: 1.6)),
           ],
           const SizedBox(height: 24),
-          FilledButton(onPressed: _save, child: Text(l.save)),
+          KPrimaryButton(onPressed: _save, child: Text(l.save)),
         ],
       ),
     );

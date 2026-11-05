@@ -5,6 +5,7 @@ import 'package:kaka_domain/kaka_domain.dart';
 import '../../app/providers.dart';
 import '../../core/date_picker.dart';
 import '../../core/l10n_x.dart';
+import '../../core/widgets.dart';
 import '../../theme/kaka_colors.dart';
 import 'asset_ui.dart';
 import 'event_form_screen.dart';
@@ -110,8 +111,8 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(l.transferAction)),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 40),
-        children: [
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 40),
+        children: spacedForm([
           if (platforms.isEmpty) ...[
             Text(l.platformsHint, style: TextStyle(color: c.textMuted)),
             TextButton(onPressed: () => editPlatform(context, ref), child: Text(l.newPlatform)),
@@ -134,12 +135,13 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
             items: items(),
             onChanged: (v) => setState(() => _to = v),
           ),
-          if (_instrument != null) ...[
+          if (_instrument != null)
             TextField(
               controller: _qty,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(labelText: l.quantitySent, suffixText: _instrument!.unit(fa)),
             ),
+          if (_instrument != null)
             TextField(
               controller: _fee,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -149,9 +151,10 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
                 suffixText: _instrument!.unit(fa),
               ),
             ),
-          ],
           ListTile(
             contentPadding: EdgeInsets.zero,
+            dense: true,
+            visualDensity: VisualDensity.compact,
             leading: const Icon(Icons.event_outlined),
             title: Text(f.date(_date)),
             onTap: () async {
@@ -164,9 +167,8 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
             decoration: InputDecoration(labelText: l.note),
           ),
           if (_error != null) Text(_error!, style: TextStyle(color: c.negative)),
-          const SizedBox(height: 12),
-          FilledButton(onPressed: _save, child: Text(l.save)),
-        ],
+          KPrimaryButton(onPressed: _save, child: Text(l.save)),
+        ]),
       ),
     );
   }

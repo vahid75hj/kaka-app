@@ -128,20 +128,26 @@ Future<String?> _askPassword(BuildContext context, {required bool confirm}) {
         title: Text(confirm ? l.backupPasswordTitle : l.backupEnterPassword),
         content: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (confirm) Text(l.backupPasswordHint, style: const TextStyle(fontSize: 13, height: 1.5)),
+            if (confirm) ...[
+              Text(l.backupPasswordHint, style: const TextStyle(fontSize: 13, height: 1.5)),
+              const SizedBox(height: 16),
+            ],
             TextField(
               controller: a,
               obscureText: true,
               autofocus: true,
               decoration: InputDecoration(labelText: l.password, errorText: confirm ? null : error),
             ),
-            if (confirm)
+            if (confirm) ...[
+              const SizedBox(height: 12),
               TextField(
                 controller: b,
                 obscureText: true,
                 decoration: InputDecoration(labelText: l.passwordRepeat, errorText: error),
               ),
+            ],
           ],
         ),
         actions: [

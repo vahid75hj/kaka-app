@@ -5,6 +5,7 @@ import 'package:kaka_domain/kaka_domain.dart';
 
 import '../../app/providers.dart';
 import '../../core/l10n_x.dart';
+import '../../core/widgets.dart';
 import '../../theme/kaka_colors.dart';
 
 /// Create a new account, or rename/archive an existing one ([accountId]).
@@ -121,7 +122,7 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
               child: Text(_error!, style: TextStyle(color: KakaColors.of(context).negative)),
             ),
           const SizedBox(height: 24),
-          FilledButton(onPressed: _save, child: Text(l.save)),
+          KPrimaryButton(onPressed: _save, child: Text(l.save)),
           if (_existing != null) ...[
             const SizedBox(height: 8),
             TextButton(onPressed: _toggleArchive, child: Text(_existing!.archived ? l.unarchive : l.archive)),

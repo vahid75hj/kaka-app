@@ -107,76 +107,78 @@ class _InstrumentFormScreenState extends ConsumerState<InstrumentFormScreen> {
             ),
             SectionHeader(l.orCustom),
           ],
-          DropdownButtonFormField<AssetClass>(
-            initialValue: _class,
-            decoration: InputDecoration(labelText: l.assetClass),
-            items: [
-              for (final a in AssetClass.values)
-                DropdownMenuItem(
-                  value: a,
-                  child: Row(children: [Icon(classIcon(a), size: 18), const SizedBox(width: 8), Text(className(l, a))]),
+          ...spacedForm([
+            DropdownButtonFormField<AssetClass>(
+              initialValue: _class,
+              decoration: InputDecoration(labelText: l.assetClass),
+              items: [
+                for (final a in AssetClass.values)
+                  DropdownMenuItem(
+                    value: a,
+                    child: Row(
+                      children: [Icon(classIcon(a), size: 18), const SizedBox(width: 8), Text(className(l, a))],
+                    ),
+                  ),
+              ],
+              onChanged: (v) => setState(() => _class = v!),
+            ),
+            TextField(
+              controller: _nameFa,
+              decoration: InputDecoration(labelText: l.nameFa),
+            ),
+            TextField(
+              controller: _nameEn,
+              decoration: InputDecoration(labelText: l.nameEn),
+            ),
+            TextField(
+              controller: _symbol,
+              decoration: InputDecoration(labelText: l.symbolOptional),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _unitFa,
+                    decoration: InputDecoration(labelText: l.unitFa),
+                  ),
                 ),
-            ],
-            onChanged: (v) => setState(() => _class = v!),
-          ),
-          TextField(
-            controller: _nameFa,
-            decoration: InputDecoration(labelText: l.nameFa),
-          ),
-          TextField(
-            controller: _nameEn,
-            decoration: InputDecoration(labelText: l.nameEn),
-          ),
-          TextField(
-            controller: _symbol,
-            decoration: InputDecoration(labelText: l.symbolOptional),
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _unitFa,
-                  decoration: InputDecoration(labelText: l.unitFa),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: TextField(
+                    controller: _unitEn,
+                    decoration: InputDecoration(labelText: l.unitEn),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: TextField(
-                  controller: _unitEn,
-                  decoration: InputDecoration(labelText: l.unitEn),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(l.qtyDecimals(f.digits('$_scale')), style: TextStyle(color: editing ? c.textFaint : null)),
-          Slider(
-            value: _scale.toDouble(),
-            max: 12,
-            divisions: 12,
-            label: f.digits('$_scale'),
-            onChanged: editing ? null : (v) => setState(() => _scale = v.round()),
-          ),
-          Text(editing ? l.decimalsLocked : l.decimalsHint, style: TextStyle(color: c.textMuted, fontSize: 12)),
-          DropdownButtonFormField<Currency?>(
-            initialValue: _quote,
-            decoration: InputDecoration(labelText: l.priceCurrency),
-            items: [
-              DropdownMenuItem(value: null, child: Text(l.baseCurrency)),
-              for (final cur in Currency.builtIn) DropdownMenuItem(value: cur, child: Text(f.symbol(cur))),
-            ],
-            onChanged: (v) => setState(() => _quote = v),
-          ),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(l.fifoTitle),
-            subtitle: Text(l.fifoHint),
-            value: _method == CostMethod.fifo,
-            onChanged: (v) => setState(() => _method = v ? CostMethod.fifo : CostMethod.average),
-          ),
-          if (_error != null) Text(_error!, style: TextStyle(color: c.negative)),
-          const SizedBox(height: 12),
-          FilledButton(onPressed: _save, child: Text(l.save)),
+              ],
+            ),
+            Text(l.qtyDecimals(f.digits('$_scale')), style: TextStyle(color: editing ? c.textFaint : null)),
+            Slider(
+              value: _scale.toDouble(),
+              max: 12,
+              divisions: 12,
+              label: f.digits('$_scale'),
+              onChanged: editing ? null : (v) => setState(() => _scale = v.round()),
+            ),
+            Text(editing ? l.decimalsLocked : l.decimalsHint, style: TextStyle(color: c.textMuted, fontSize: 12)),
+            DropdownButtonFormField<Currency?>(
+              initialValue: _quote,
+              decoration: InputDecoration(labelText: l.priceCurrency),
+              items: [
+                DropdownMenuItem(value: null, child: Text(l.baseCurrency)),
+                for (final cur in Currency.builtIn) DropdownMenuItem(value: cur, child: Text(f.symbol(cur))),
+              ],
+              onChanged: (v) => setState(() => _quote = v),
+            ),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(l.fifoTitle),
+              subtitle: Text(l.fifoHint),
+              value: _method == CostMethod.fifo,
+              onChanged: (v) => setState(() => _method = v ? CostMethod.fifo : CostMethod.average),
+            ),
+            if (_error != null) Text(_error!, style: TextStyle(color: c.negative)),
+            KPrimaryButton(onPressed: _save, child: Text(l.save)),
+          ]),
           if (editing)
             TextButton(
               onPressed: () async {

@@ -301,8 +301,8 @@ class _EventFormScreenState extends ConsumerState<EventFormScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(kindName(l, _kind))),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 40),
-        children: [
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 40),
+        children: spacedForm([
           if (_kind == EventKind.adjustIn || _kind == EventKind.adjustOut)
             SegmentedButton<EventKind>(
               showSelectedIcon: false,
@@ -394,25 +394,43 @@ class _EventFormScreenState extends ConsumerState<EventFormScreen> {
               ],
               onChanged: (a) => setState(() => _cash = a),
             ),
-          if (_hasCostMode) ...[
-            const SizedBox(height: 12),
-            Text(l.costQuestion, style: const TextStyle(fontWeight: FontWeight.w600)),
-            RadioGroup<CostMode>(
-              groupValue: _costMode,
-              onChanged: (v) => setState(() => _costMode = v!),
-              child: Column(
-                children: [
-                  RadioListTile(contentPadding: EdgeInsets.zero, value: CostMode.custom, title: Text(l.costKnown)),
-                  RadioListTile(
-                    contentPadding: EdgeInsets.zero,
-                    value: CostMode.fairValue,
-                    title: Text(l.costTodayValue),
+          if (_hasCostMode)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(l.costQuestion, style: const TextStyle(fontWeight: FontWeight.w600)),
+                const SizedBox(height: 4),
+                RadioGroup<CostMode>(
+                  groupValue: _costMode,
+                  onChanged: (v) => setState(() => _costMode = v!),
+                  child: Column(
+                    children: [
+                      RadioListTile(
+                        dense: true,
+                        visualDensity: VisualDensity.compact,
+                        contentPadding: EdgeInsets.zero,
+                        value: CostMode.custom,
+                        title: Text(l.costKnown),
+                      ),
+                      RadioListTile(
+                        dense: true,
+                        visualDensity: VisualDensity.compact,
+                        contentPadding: EdgeInsets.zero,
+                        value: CostMode.fairValue,
+                        title: Text(l.costTodayValue),
+                      ),
+                      RadioListTile(
+                        dense: true,
+                        visualDensity: VisualDensity.compact,
+                        contentPadding: EdgeInsets.zero,
+                        value: CostMode.unknown,
+                        title: Text(l.costUnknown),
+                      ),
+                    ],
                   ),
-                  RadioListTile(contentPadding: EdgeInsets.zero, value: CostMode.unknown, title: Text(l.costUnknown)),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
           if (_kind != EventKind.split &&
               _kind != EventKind.giftOut &&
               _kind != EventKind.adjustOut &&
@@ -447,6 +465,8 @@ class _EventFormScreenState extends ConsumerState<EventFormScreen> {
             ),
           ListTile(
             contentPadding: EdgeInsets.zero,
+            dense: true,
+            visualDensity: VisualDensity.compact,
             leading: const Icon(Icons.event_outlined),
             title: Text(f.date(_date)),
             onTap: () async {
@@ -462,14 +482,9 @@ class _EventFormScreenState extends ConsumerState<EventFormScreen> {
             KCard(
               child: Text(preview, style: TextStyle(color: c.textMuted)),
             ),
-          if (_error != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Text(_error!, style: TextStyle(color: c.negative)),
-            ),
-          const SizedBox(height: 12),
-          FilledButton(onPressed: _busy ? null : _save, child: Text(l.save)),
-        ],
+          if (_error != null) Text(_error!, style: TextStyle(color: c.negative)),
+          KPrimaryButton(onPressed: _busy ? null : _save, child: Text(l.save)),
+        ]),
       ),
     );
   }
@@ -559,8 +574,8 @@ class _SwapFormScreenState extends ConsumerState<SwapFormScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(l.swapAction)),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 40),
-        children: [
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 40),
+        children: spacedForm([
           Text(l.swapHint, style: TextStyle(color: c.textMuted)),
           InstrumentPicker(label: l.swapGive, value: _give, onChanged: (v) => setState(() => _give = v)),
           if (_give != null)
@@ -589,6 +604,8 @@ class _SwapFormScreenState extends ConsumerState<SwapFormScreen> {
           ),
           ListTile(
             contentPadding: EdgeInsets.zero,
+            dense: true,
+            visualDensity: VisualDensity.compact,
             leading: const Icon(Icons.event_outlined),
             title: Text(f.date(_date)),
             onTap: () async {
@@ -601,9 +618,8 @@ class _SwapFormScreenState extends ConsumerState<SwapFormScreen> {
             decoration: InputDecoration(labelText: l.note),
           ),
           if (_error != null) Text(_error!, style: TextStyle(color: c.negative)),
-          const SizedBox(height: 12),
-          FilledButton(onPressed: _save, child: Text(l.save)),
-        ],
+          KPrimaryButton(onPressed: _save, child: Text(l.save)),
+        ]),
       ),
     );
   }

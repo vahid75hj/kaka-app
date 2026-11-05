@@ -126,7 +126,7 @@ class _LearnBankScreenState extends ConsumerState<LearnBankScreen> {
                         style: const TextStyle(height: 1.7),
                       ),
               ),
-            if (r.ok) ...[const SizedBox(height: 12), FilledButton(onPressed: _save, child: Text(l.learnConfirm))],
+            if (r.ok) ...[const SizedBox(height: 12), KPrimaryButton(onPressed: _save, child: Text(l.learnConfirm))],
           ],
           if (local.isNotEmpty) ...[
             SectionHeader(l.learnedBanks),

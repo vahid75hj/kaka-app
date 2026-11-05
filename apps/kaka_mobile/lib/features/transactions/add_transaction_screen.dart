@@ -8,6 +8,7 @@ import '../../app/providers.dart';
 import '../../core/category_icons.dart';
 import '../../core/date_picker.dart';
 import '../../core/l10n_x.dart';
+import '../../core/widgets.dart';
 import '../../theme/kaka_colors.dart';
 
 class AddTransactionScreen extends ConsumerStatefulWidget {
@@ -300,11 +301,14 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
           const SizedBox(height: 16),
           ListTile(
             contentPadding: EdgeInsets.zero,
+            dense: true,
+            visualDensity: VisualDensity.compact,
             leading: const Icon(Icons.event_outlined),
             title: Text(l.date),
             trailing: Text(f.date(_date), style: const TextStyle(fontWeight: FontWeight.w700)),
             onTap: _pickDate,
           ),
+          const SizedBox(height: 12),
           TextField(
             controller: _note,
             decoration: InputDecoration(labelText: l.note),
@@ -331,7 +335,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
               child: Text(_error!, style: TextStyle(color: c.negative)),
             ),
           const SizedBox(height: 24),
-          FilledButton(onPressed: _saving ? null : () => _save(wallets), child: Text(l.save)),
+          KPrimaryButton(onPressed: _saving ? null : () => _save(wallets), child: Text(l.save)),
         ],
       ),
     );

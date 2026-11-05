@@ -114,22 +114,32 @@ class HoldingScreen extends ConsumerWidget {
               ],
             ),
           ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
+          const SizedBox(height: 16),
+          Row(
             children: [
-              FilledButton.tonal(
-                onPressed: () => openEventForm(context, EventKind.buy, instrumentId: i.id, platformId: h.platformId),
-                child: Text(l.buy),
+              Expanded(
+                child: FilledButton.tonal(
+                  style: FilledButton.styleFrom(minimumSize: const Size(0, 48)),
+                  onPressed: () => openEventForm(context, EventKind.buy, instrumentId: i.id, platformId: h.platformId),
+                  child: Text(l.buy),
+                ),
               ),
-              FilledButton.tonal(
-                onPressed: h.qty == 0
-                    ? null
-                    : () => openEventForm(context, EventKind.sell, instrumentId: i.id, platformId: h.platformId),
-                child: Text(l.sell),
+              const SizedBox(width: 8),
+              Expanded(
+                child: FilledButton.tonal(
+                  style: FilledButton.styleFrom(minimumSize: const Size(0, 48)),
+                  onPressed: h.qty == 0
+                      ? null
+                      : () => openEventForm(context, EventKind.sell, instrumentId: i.id, platformId: h.platformId),
+                  child: Text(l.sell),
+                ),
               ),
-              OutlinedButton(onPressed: () => showSetPriceDialog(context, ref, i), child: Text(l.setPrice)),
             ],
+          ),
+          const SizedBox(height: 8),
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: OutlinedButton(onPressed: () => showSetPriceDialog(context, ref, i), child: Text(l.setPrice)),
           ),
           SectionHeader(l.assetHistory),
           for (final e in events) EventTile(event: e, instrument: i),

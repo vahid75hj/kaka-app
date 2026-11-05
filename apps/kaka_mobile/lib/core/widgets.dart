@@ -111,3 +111,25 @@ class EmptyState extends StatelessWidget {
     );
   }
 }
+
+/// Inserts even vertical gaps between stacked form controls.
+List<Widget> spacedForm(List<Widget> children, {double gap = 12}) {
+  if (children.isEmpty) return children;
+  return [
+    children.first,
+    for (final child in children.skip(1)) ...[SizedBox(height: gap), child],
+  ];
+}
+
+/// Full-width primary action at the bottom of a form.
+class KPrimaryButton extends StatelessWidget {
+  const KPrimaryButton({super.key, required this.onPressed, required this.child});
+  final VoidCallback? onPressed;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: double.infinity,
+    child: FilledButton(onPressed: onPressed, child: child),
+  );
+}

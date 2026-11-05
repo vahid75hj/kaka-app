@@ -65,7 +65,8 @@ abstract final class KakaTheme {
         style: FilledButton.styleFrom(
           backgroundColor: c.accent,
           foregroundColor: c.onAccent,
-          minimumSize: const Size.fromHeight(52),
+          // Height only: an infinite min width stacked every filled button full-bleed.
+          minimumSize: const Size(88, 52),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           textStyle: const TextStyle(fontFamily: 'Vazirmatn', fontSize: 16, fontWeight: FontWeight.w700),
         ),

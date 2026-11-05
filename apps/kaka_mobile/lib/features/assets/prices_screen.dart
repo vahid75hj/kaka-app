@@ -85,6 +85,7 @@ Future<void> showSetPriceDialog(BuildContext context, WidgetRef ref, Instrument 
                 errorText: error,
               ),
             ),
+            const SizedBox(height: 12),
             DropdownButtonFormField<Currency>(
               initialValue: currency,
               decoration: InputDecoration(labelText: l.currency),
@@ -93,6 +94,8 @@ Future<void> showSetPriceDialog(BuildContext context, WidgetRef ref, Instrument 
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
+              dense: true,
+              visualDensity: VisualDensity.compact,
               leading: const Icon(Icons.event_outlined),
               title: Text(f.date(date)),
               onTap: () async {
