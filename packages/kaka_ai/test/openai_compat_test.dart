@@ -60,4 +60,46 @@ void main() {
     final merged = ModelCatalog.parse(a).merge(ModelCatalog.parse(b));
     expect(merged.models.single.nameEn, 'M2');
   });
+
+
+  test('normalizeCompatBaseUrl strips a pasted chat/completions path', () {
+    expect(
+      normalizeCompatBaseUrl('https://api.deepseek.com/chat/completions'),
+      'https://api.deepseek.com',
+    );
+    expect(
+      normalizeCompatBaseUrl('https://api.openai.com/v1/chat/completions/'),
+      'https://api.openai.com/v1',
+    );
+    expect(normalizeCompatBaseUrl('https://api.deepseek.com/'), 'https://api.deepseek.com');
+    expect(normalizeCompatBaseUrl('https://api.deepseek.com/v1'), 'https://api.deepseek.com/v1');
+  });
+
+  test('OpenAiCompatProvider posts DeepSeek full URL to /chat/completions once', () async {
+    Uri? posted;
+    final client = MockClient((req) async {
+      posted = req.url;
+      return http.Response(
+        jsonEncode({
+          'choices': [
+            {
+              'message': {'role': 'assistant', 'content': 'hi'},
+            },
+          ],
+        }),
+        200,
+        headers: {'content-type': 'application/json'},
+      );
+    });
+    final provider = OpenAiCompatProvider(
+      baseUrl: 'https://api.deepseek.com/chat/completions',
+      model: 'deepseek-flash',
+      apiKey: 'sk-test',
+      client: client,
+    );
+    final reply = await provider.complete([const ChatMessage(Role.user, 'hi')]);
+    expect(reply.text, 'hi');
+    expect(posted, Uri.parse('https://api.deepseek.com/chat/completions'));
+  });
+
 }

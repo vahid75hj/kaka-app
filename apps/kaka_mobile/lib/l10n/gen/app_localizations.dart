@@ -1394,6 +1394,12 @@ abstract class AppLocalizations {
   /// **'Base URL'**
   String get aiBaseUrl;
 
+  /// No description provided for @aiBaseUrlHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Base URL (https://api.deepseek.com) or the full /chat/completions link — both work.'**
+  String get aiBaseUrlHelper;
+
   /// No description provided for @aiModel.
   ///
   /// In en, this message translates to:

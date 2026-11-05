@@ -695,6 +695,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aiBaseUrl => 'Base URL';
 
   @override
+  String get aiBaseUrlHelper => 'Base URL (https://api.deepseek.com) or the full /chat/completions link — both work.';
+
+  @override
   String get aiModel => 'Model';
 
   @override

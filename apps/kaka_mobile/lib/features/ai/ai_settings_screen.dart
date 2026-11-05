@@ -77,7 +77,9 @@ class _AiSettingsScreenState extends ConsumerState<AiSettingsScreen> {
               onChanged: (_) => setState(() {}),
               decoration: InputDecoration(
                 labelText: l.aiBaseUrl,
-                hintText: _provider == 'ollama' ? 'http://192.168.1.10:11434' : 'https://api.openai.com/v1',
+                hintText: _provider == 'ollama' ? 'http://192.168.1.10:11434' : 'https://api.deepseek.com',
+                helperText: _provider == 'openai' ? l.aiBaseUrlHelper : null,
+                helperMaxLines: 3,
                 errorText: isInsecureEndpoint(_url.text) ? l.aiInsecureUrl : null,
                 errorMaxLines: 3,
               ),

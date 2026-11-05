@@ -217,6 +217,7 @@
   "aiHint": "کاکا سرور و هوش مصنوعی داخلی نداره. مال خودت رو وصل کن: هر API سازگار با OpenAI با کلید خودت، یا Ollama روی کامپیوترت. پیش‌فرض خاموشه.",
   "aiNone": "هیچ",
   "aiBaseUrl": "آدرس سرور",
+  "aiBaseUrlHelper": "آدرس پایه (https://api.deepseek.com) یا لینک کامل /chat/completions — هر دو درست است.",
   "aiModel": "مدل",
   "aiKey": "کلید API",
   "aiKeyHint": "فقط در حافظهٔ امن گوشی؛ هیچ‌وقت توی پشتیبان نمی‌ره",

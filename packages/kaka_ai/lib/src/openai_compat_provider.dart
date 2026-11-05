@@ -5,16 +5,37 @@ import 'package:kaka_tools/kaka_tools.dart';
 
 import 'ai_provider.dart';
 
+
+/// Accepts a root (`https://api.deepseek.com`), an OpenAI-style `/v1` root,
+/// or a pasted full `/chat/completions` URL. The request is always posted to
+/// `{base}/chat/completions`.
+String normalizeCompatBaseUrl(String raw) {
+  var u = raw.trim();
+  if (u.isEmpty) return u;
+  while (u.endsWith('/')) {
+    u = u.substring(0, u.length - 1);
+  }
+  const suffix = '/chat/completions';
+  if (u.toLowerCase().endsWith(suffix)) {
+    u = u.substring(0, u.length - suffix.length);
+    while (u.endsWith('/')) {
+      u = u.substring(0, u.length - 1);
+    }
+  }
+  return u;
+}
+
 /// Any `/v1/chat/completions` server: Gemini's OpenAI endpoint, OpenRouter,
 /// DeepSeek, Groq, or a local Ollama / LM Studio / llama-server.
 class OpenAiCompatProvider implements AiProvider {
   OpenAiCompatProvider({
-    required this.baseUrl,
+    required String baseUrl,
     required this.model,
     this.apiKey,
     this.local = false,
     http.Client? client,
-  }) : _http = client ?? http.Client();
+  }) : baseUrl = normalizeCompatBaseUrl(baseUrl),
+       _http = client ?? http.Client();
 
   /// Ollama on this machine or the LAN; no key needed.
   factory OpenAiCompatProvider.ollama({

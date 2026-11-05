@@ -686,6 +686,9 @@ class AppLocalizationsFa extends AppLocalizations {
   String get aiBaseUrl => 'آدرس سرور';
 
   @override
+  String get aiBaseUrlHelper => 'آدرس پایه (https://api.deepseek.com) یا لینک کامل /chat/completions — هر دو درست است.';
+
+  @override
   String get aiModel => 'مدل';
 
   @override

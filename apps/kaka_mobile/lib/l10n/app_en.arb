@@ -262,6 +262,7 @@
   "aiHint": "Kaka has no server and no built-in AI. Bring your own: any OpenAI-compatible API with your key, or Ollama on your computer. Off by default.",
   "aiNone": "None",
   "aiBaseUrl": "Base URL",
+  "aiBaseUrlHelper": "Base URL (https://api.deepseek.com) or the full /chat/completions link — both work.",
   "aiModel": "Model",
   "aiKey": "API key",
   "aiKeyHint": "Stored only in this phone's secure storage, never in backups",

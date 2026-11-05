@@ -47,7 +47,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       final answer = await loop.ask([ChatMessage(Role.system, _system), ..._history]);
       setState(() => _history.add(ChatMessage(Role.assistant, answer.isEmpty ? '…' : answer)));
     } catch (e) {
-      if (mounted) setState(() => _history.add(ChatMessage(Role.assistant, '⚠️ ${context.l10n.aiError}')));
+      if (mounted) {
+        var detail = e.toString().replaceFirst(RegExp(r'^Exception: '), '');
+        if (detail.length > 280) detail = '${detail.substring(0, 280)}…';
+        setState(() => _history.add(ChatMessage(Role.assistant, '⚠️ ${context.l10n.aiError}\n$detail')));
+      }
     } finally {
       if (mounted) setState(() => _busy = false);
     }
